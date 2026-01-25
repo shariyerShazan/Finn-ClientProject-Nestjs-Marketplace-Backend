@@ -36,40 +36,43 @@ export type SellerProfileSumAggregateOutputType = {
 
 export type SellerProfileMinAggregateOutputType = {
   id: string | null
-  isSeller: boolean | null
   companyName: string | null
   companyWebSite: string | null
-  adress: string | null
+  address: string | null
   city: string | null
   state: string | null
   zip: number | null
   country: string | null
+  status: $Enums.SellerStatus | null
+  adminNote: string | null
   authId: string | null
 }
 
 export type SellerProfileMaxAggregateOutputType = {
   id: string | null
-  isSeller: boolean | null
   companyName: string | null
   companyWebSite: string | null
-  adress: string | null
+  address: string | null
   city: string | null
   state: string | null
   zip: number | null
   country: string | null
+  status: $Enums.SellerStatus | null
+  adminNote: string | null
   authId: string | null
 }
 
 export type SellerProfileCountAggregateOutputType = {
   id: number
-  isSeller: number
   companyName: number
   companyWebSite: number
-  adress: number
+  address: number
   city: number
   state: number
   zip: number
   country: number
+  status: number
+  adminNote: number
   authId: number
   _all: number
 }
@@ -85,40 +88,43 @@ export type SellerProfileSumAggregateInputType = {
 
 export type SellerProfileMinAggregateInputType = {
   id?: true
-  isSeller?: true
   companyName?: true
   companyWebSite?: true
-  adress?: true
+  address?: true
   city?: true
   state?: true
   zip?: true
   country?: true
+  status?: true
+  adminNote?: true
   authId?: true
 }
 
 export type SellerProfileMaxAggregateInputType = {
   id?: true
-  isSeller?: true
   companyName?: true
   companyWebSite?: true
-  adress?: true
+  address?: true
   city?: true
   state?: true
   zip?: true
   country?: true
+  status?: true
+  adminNote?: true
   authId?: true
 }
 
 export type SellerProfileCountAggregateInputType = {
   id?: true
-  isSeller?: true
   companyName?: true
   companyWebSite?: true
-  adress?: true
+  address?: true
   city?: true
   state?: true
   zip?: true
   country?: true
+  status?: true
+  adminNote?: true
   authId?: true
   _all?: true
 }
@@ -211,14 +217,15 @@ export type SellerProfileGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 
 export type SellerProfileGroupByOutputType = {
   id: string
-  isSeller: boolean
   companyName: string
   companyWebSite: string
-  adress: string
+  address: string
   city: string
   state: string
   zip: number
   country: string
+  status: $Enums.SellerStatus
+  adminNote: string | null
   authId: string
   _count: SellerProfileCountAggregateOutputType | null
   _avg: SellerProfileAvgAggregateOutputType | null
@@ -247,28 +254,30 @@ export type SellerProfileWhereInput = {
   OR?: Prisma.SellerProfileWhereInput[]
   NOT?: Prisma.SellerProfileWhereInput | Prisma.SellerProfileWhereInput[]
   id?: Prisma.StringFilter<"SellerProfile"> | string
-  isSeller?: Prisma.BoolFilter<"SellerProfile"> | boolean
   companyName?: Prisma.StringFilter<"SellerProfile"> | string
   companyWebSite?: Prisma.StringFilter<"SellerProfile"> | string
-  adress?: Prisma.StringFilter<"SellerProfile"> | string
+  address?: Prisma.StringFilter<"SellerProfile"> | string
   city?: Prisma.StringFilter<"SellerProfile"> | string
   state?: Prisma.StringFilter<"SellerProfile"> | string
   zip?: Prisma.IntFilter<"SellerProfile"> | number
   country?: Prisma.StringFilter<"SellerProfile"> | string
+  status?: Prisma.EnumSellerStatusFilter<"SellerProfile"> | $Enums.SellerStatus
+  adminNote?: Prisma.StringNullableFilter<"SellerProfile"> | string | null
   authId?: Prisma.StringFilter<"SellerProfile"> | string
   auth?: Prisma.XOR<Prisma.AuthScalarRelationFilter, Prisma.AuthWhereInput>
 }
 
 export type SellerProfileOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  isSeller?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   companyWebSite?: Prisma.SortOrder
-  adress?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   city?: Prisma.SortOrder
   state?: Prisma.SortOrder
   zip?: Prisma.SortOrder
   country?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  adminNote?: Prisma.SortOrderInput | Prisma.SortOrder
   authId?: Prisma.SortOrder
   auth?: Prisma.AuthOrderByWithRelationInput
 }
@@ -280,26 +289,28 @@ export type SellerProfileWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.SellerProfileWhereInput | Prisma.SellerProfileWhereInput[]
   OR?: Prisma.SellerProfileWhereInput[]
   NOT?: Prisma.SellerProfileWhereInput | Prisma.SellerProfileWhereInput[]
-  isSeller?: Prisma.BoolFilter<"SellerProfile"> | boolean
   companyName?: Prisma.StringFilter<"SellerProfile"> | string
-  adress?: Prisma.StringFilter<"SellerProfile"> | string
+  address?: Prisma.StringFilter<"SellerProfile"> | string
   city?: Prisma.StringFilter<"SellerProfile"> | string
   state?: Prisma.StringFilter<"SellerProfile"> | string
   zip?: Prisma.IntFilter<"SellerProfile"> | number
   country?: Prisma.StringFilter<"SellerProfile"> | string
+  status?: Prisma.EnumSellerStatusFilter<"SellerProfile"> | $Enums.SellerStatus
+  adminNote?: Prisma.StringNullableFilter<"SellerProfile"> | string | null
   auth?: Prisma.XOR<Prisma.AuthScalarRelationFilter, Prisma.AuthWhereInput>
 }, "id" | "companyWebSite" | "authId">
 
 export type SellerProfileOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  isSeller?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   companyWebSite?: Prisma.SortOrder
-  adress?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   city?: Prisma.SortOrder
   state?: Prisma.SortOrder
   zip?: Prisma.SortOrder
   country?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  adminNote?: Prisma.SortOrderInput | Prisma.SortOrder
   authId?: Prisma.SortOrder
   _count?: Prisma.SellerProfileCountOrderByAggregateInput
   _avg?: Prisma.SellerProfileAvgOrderByAggregateInput
@@ -313,104 +324,112 @@ export type SellerProfileScalarWhereWithAggregatesInput = {
   OR?: Prisma.SellerProfileScalarWhereWithAggregatesInput[]
   NOT?: Prisma.SellerProfileScalarWhereWithAggregatesInput | Prisma.SellerProfileScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
-  isSeller?: Prisma.BoolWithAggregatesFilter<"SellerProfile"> | boolean
   companyName?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
   companyWebSite?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
-  adress?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
+  address?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
   city?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
   state?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
   zip?: Prisma.IntWithAggregatesFilter<"SellerProfile"> | number
   country?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
+  status?: Prisma.EnumSellerStatusWithAggregatesFilter<"SellerProfile"> | $Enums.SellerStatus
+  adminNote?: Prisma.StringNullableWithAggregatesFilter<"SellerProfile"> | string | null
   authId?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
 }
 
 export type SellerProfileCreateInput = {
   id?: string
-  isSeller?: boolean
   companyName: string
   companyWebSite: string
-  adress: string
+  address: string
   city: string
   state: string
   zip: number
   country: string
+  status?: $Enums.SellerStatus
+  adminNote?: string | null
   auth: Prisma.AuthCreateNestedOneWithoutSellerProfileInput
 }
 
 export type SellerProfileUncheckedCreateInput = {
   id?: string
-  isSeller?: boolean
   companyName: string
   companyWebSite: string
-  adress: string
+  address: string
   city: string
   state: string
   zip: number
   country: string
+  status?: $Enums.SellerStatus
+  adminNote?: string | null
   authId: string
 }
 
 export type SellerProfileUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   companyWebSite?: Prisma.StringFieldUpdateOperationsInput | string
-  adress?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
   zip?: Prisma.IntFieldUpdateOperationsInput | number
   country?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
+  adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   auth?: Prisma.AuthUpdateOneRequiredWithoutSellerProfileNestedInput
 }
 
 export type SellerProfileUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   companyWebSite?: Prisma.StringFieldUpdateOperationsInput | string
-  adress?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
   zip?: Prisma.IntFieldUpdateOperationsInput | number
   country?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
+  adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SellerProfileCreateManyInput = {
   id?: string
-  isSeller?: boolean
   companyName: string
   companyWebSite: string
-  adress: string
+  address: string
   city: string
   state: string
   zip: number
   country: string
+  status?: $Enums.SellerStatus
+  adminNote?: string | null
   authId: string
 }
 
 export type SellerProfileUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   companyWebSite?: Prisma.StringFieldUpdateOperationsInput | string
-  adress?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
   zip?: Prisma.IntFieldUpdateOperationsInput | number
   country?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
+  adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SellerProfileUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   companyWebSite?: Prisma.StringFieldUpdateOperationsInput | string
-  adress?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
   zip?: Prisma.IntFieldUpdateOperationsInput | number
   country?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
+  adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -421,14 +440,15 @@ export type SellerProfileNullableScalarRelationFilter = {
 
 export type SellerProfileCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  isSeller?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   companyWebSite?: Prisma.SortOrder
-  adress?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   city?: Prisma.SortOrder
   state?: Prisma.SortOrder
   zip?: Prisma.SortOrder
   country?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  adminNote?: Prisma.SortOrder
   authId?: Prisma.SortOrder
 }
 
@@ -438,27 +458,29 @@ export type SellerProfileAvgOrderByAggregateInput = {
 
 export type SellerProfileMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  isSeller?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   companyWebSite?: Prisma.SortOrder
-  adress?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   city?: Prisma.SortOrder
   state?: Prisma.SortOrder
   zip?: Prisma.SortOrder
   country?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  adminNote?: Prisma.SortOrder
   authId?: Prisma.SortOrder
 }
 
 export type SellerProfileMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  isSeller?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
   companyWebSite?: Prisma.SortOrder
-  adress?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   city?: Prisma.SortOrder
   state?: Prisma.SortOrder
   zip?: Prisma.SortOrder
   country?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  adminNote?: Prisma.SortOrder
   authId?: Prisma.SortOrder
 }
 
@@ -498,28 +520,34 @@ export type SellerProfileUncheckedUpdateOneWithoutAuthNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.SellerProfileUpdateToOneWithWhereWithoutAuthInput, Prisma.SellerProfileUpdateWithoutAuthInput>, Prisma.SellerProfileUncheckedUpdateWithoutAuthInput>
 }
 
+export type EnumSellerStatusFieldUpdateOperationsInput = {
+  set?: $Enums.SellerStatus
+}
+
 export type SellerProfileCreateWithoutAuthInput = {
   id?: string
-  isSeller?: boolean
   companyName: string
   companyWebSite: string
-  adress: string
+  address: string
   city: string
   state: string
   zip: number
   country: string
+  status?: $Enums.SellerStatus
+  adminNote?: string | null
 }
 
 export type SellerProfileUncheckedCreateWithoutAuthInput = {
   id?: string
-  isSeller?: boolean
   companyName: string
   companyWebSite: string
-  adress: string
+  address: string
   city: string
   state: string
   zip: number
   country: string
+  status?: $Enums.SellerStatus
+  adminNote?: string | null
 }
 
 export type SellerProfileCreateOrConnectWithoutAuthInput = {
@@ -540,86 +568,92 @@ export type SellerProfileUpdateToOneWithWhereWithoutAuthInput = {
 
 export type SellerProfileUpdateWithoutAuthInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   companyWebSite?: Prisma.StringFieldUpdateOperationsInput | string
-  adress?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
   zip?: Prisma.IntFieldUpdateOperationsInput | number
   country?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
+  adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type SellerProfileUncheckedUpdateWithoutAuthInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
   companyWebSite?: Prisma.StringFieldUpdateOperationsInput | string
-  adress?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
   zip?: Prisma.IntFieldUpdateOperationsInput | number
   country?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
+  adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
 
 export type SellerProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  isSeller?: boolean
   companyName?: boolean
   companyWebSite?: boolean
-  adress?: boolean
+  address?: boolean
   city?: boolean
   state?: boolean
   zip?: boolean
   country?: boolean
+  status?: boolean
+  adminNote?: boolean
   authId?: boolean
   auth?: boolean | Prisma.AuthDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["sellerProfile"]>
 
 export type SellerProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  isSeller?: boolean
   companyName?: boolean
   companyWebSite?: boolean
-  adress?: boolean
+  address?: boolean
   city?: boolean
   state?: boolean
   zip?: boolean
   country?: boolean
+  status?: boolean
+  adminNote?: boolean
   authId?: boolean
   auth?: boolean | Prisma.AuthDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["sellerProfile"]>
 
 export type SellerProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  isSeller?: boolean
   companyName?: boolean
   companyWebSite?: boolean
-  adress?: boolean
+  address?: boolean
   city?: boolean
   state?: boolean
   zip?: boolean
   country?: boolean
+  status?: boolean
+  adminNote?: boolean
   authId?: boolean
   auth?: boolean | Prisma.AuthDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["sellerProfile"]>
 
 export type SellerProfileSelectScalar = {
   id?: boolean
-  isSeller?: boolean
   companyName?: boolean
   companyWebSite?: boolean
-  adress?: boolean
+  address?: boolean
   city?: boolean
   state?: boolean
   zip?: boolean
   country?: boolean
+  status?: boolean
+  adminNote?: boolean
   authId?: boolean
 }
 
-export type SellerProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "isSeller" | "companyName" | "companyWebSite" | "adress" | "city" | "state" | "zip" | "country" | "authId", ExtArgs["result"]["sellerProfile"]>
+export type SellerProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "companyWebSite" | "address" | "city" | "state" | "zip" | "country" | "status" | "adminNote" | "authId", ExtArgs["result"]["sellerProfile"]>
 export type SellerProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   auth?: boolean | Prisma.AuthDefaultArgs<ExtArgs>
 }
@@ -637,14 +671,15 @@ export type $SellerProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    isSeller: boolean
     companyName: string
     companyWebSite: string
-    adress: string
+    address: string
     city: string
     state: string
     zip: number
     country: string
+    status: $Enums.SellerStatus
+    adminNote: string | null
     authId: string
   }, ExtArgs["result"]["sellerProfile"]>
   composites: {}
@@ -1071,14 +1106,15 @@ export interface Prisma__SellerProfileClient<T, Null = never, ExtArgs extends ru
  */
 export interface SellerProfileFieldRefs {
   readonly id: Prisma.FieldRef<"SellerProfile", 'String'>
-  readonly isSeller: Prisma.FieldRef<"SellerProfile", 'Boolean'>
   readonly companyName: Prisma.FieldRef<"SellerProfile", 'String'>
   readonly companyWebSite: Prisma.FieldRef<"SellerProfile", 'String'>
-  readonly adress: Prisma.FieldRef<"SellerProfile", 'String'>
+  readonly address: Prisma.FieldRef<"SellerProfile", 'String'>
   readonly city: Prisma.FieldRef<"SellerProfile", 'String'>
   readonly state: Prisma.FieldRef<"SellerProfile", 'String'>
   readonly zip: Prisma.FieldRef<"SellerProfile", 'Int'>
   readonly country: Prisma.FieldRef<"SellerProfile", 'String'>
+  readonly status: Prisma.FieldRef<"SellerProfile", 'SellerStatus'>
+  readonly adminNote: Prisma.FieldRef<"SellerProfile", 'String'>
   readonly authId: Prisma.FieldRef<"SellerProfile", 'String'>
 }
     

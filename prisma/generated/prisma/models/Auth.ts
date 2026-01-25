@@ -44,11 +44,13 @@ export type AuthMinAggregateOutputType = {
   password: string | null
   otp: string | null
   otpExpires: Date | null
+  profilePicture: string | null
   otpAttemp: number | null
   lastLogin: Date | null
   isVerified: boolean | null
   isSuspended: boolean | null
   role: $Enums.Role | null
+  isSeller: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -63,11 +65,13 @@ export type AuthMaxAggregateOutputType = {
   password: string | null
   otp: string | null
   otpExpires: Date | null
+  profilePicture: string | null
   otpAttemp: number | null
   lastLogin: Date | null
   isVerified: boolean | null
   isSuspended: boolean | null
   role: $Enums.Role | null
+  isSeller: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -82,11 +86,13 @@ export type AuthCountAggregateOutputType = {
   password: number
   otp: number
   otpExpires: number
+  profilePicture: number
   otpAttemp: number
   lastLogin: number
   isVerified: number
   isSuspended: number
   role: number
+  isSeller: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -111,11 +117,13 @@ export type AuthMinAggregateInputType = {
   password?: true
   otp?: true
   otpExpires?: true
+  profilePicture?: true
   otpAttemp?: true
   lastLogin?: true
   isVerified?: true
   isSuspended?: true
   role?: true
+  isSeller?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -130,11 +138,13 @@ export type AuthMaxAggregateInputType = {
   password?: true
   otp?: true
   otpExpires?: true
+  profilePicture?: true
   otpAttemp?: true
   lastLogin?: true
   isVerified?: true
   isSuspended?: true
   role?: true
+  isSeller?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -149,11 +159,13 @@ export type AuthCountAggregateInputType = {
   password?: true
   otp?: true
   otpExpires?: true
+  profilePicture?: true
   otpAttemp?: true
   lastLogin?: true
   isVerified?: true
   isSuspended?: true
   role?: true
+  isSeller?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -255,11 +267,13 @@ export type AuthGroupByOutputType = {
   password: string
   otp: string | null
   otpExpires: Date | null
+  profilePicture: string | null
   otpAttemp: number
   lastLogin: Date
   isVerified: boolean
   isSuspended: boolean
   role: $Enums.Role
+  isSeller: boolean
   createdAt: Date
   updatedAt: Date
   _count: AuthCountAggregateOutputType | null
@@ -297,11 +311,13 @@ export type AuthWhereInput = {
   password?: Prisma.StringFilter<"Auth"> | string
   otp?: Prisma.StringNullableFilter<"Auth"> | string | null
   otpExpires?: Prisma.DateTimeNullableFilter<"Auth"> | Date | string | null
+  profilePicture?: Prisma.StringNullableFilter<"Auth"> | string | null
   otpAttemp?: Prisma.IntFilter<"Auth"> | number
   lastLogin?: Prisma.DateTimeFilter<"Auth"> | Date | string
   isVerified?: Prisma.BoolFilter<"Auth"> | boolean
   isSuspended?: Prisma.BoolFilter<"Auth"> | boolean
   role?: Prisma.EnumRoleFilter<"Auth"> | $Enums.Role
+  isSeller?: Prisma.BoolFilter<"Auth"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Auth"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Auth"> | Date | string
   sellerProfile?: Prisma.XOR<Prisma.SellerProfileNullableScalarRelationFilter, Prisma.SellerProfileWhereInput> | null
@@ -317,11 +333,13 @@ export type AuthOrderByWithRelationInput = {
   password?: Prisma.SortOrder
   otp?: Prisma.SortOrderInput | Prisma.SortOrder
   otpExpires?: Prisma.SortOrderInput | Prisma.SortOrder
+  profilePicture?: Prisma.SortOrderInput | Prisma.SortOrder
   otpAttemp?: Prisma.SortOrder
   lastLogin?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isSuspended?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  isSeller?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sellerProfile?: Prisma.SellerProfileOrderByWithRelationInput
@@ -340,11 +358,13 @@ export type AuthWhereUniqueInput = Prisma.AtLeast<{
   password?: Prisma.StringFilter<"Auth"> | string
   otp?: Prisma.StringNullableFilter<"Auth"> | string | null
   otpExpires?: Prisma.DateTimeNullableFilter<"Auth"> | Date | string | null
+  profilePicture?: Prisma.StringNullableFilter<"Auth"> | string | null
   otpAttemp?: Prisma.IntFilter<"Auth"> | number
   lastLogin?: Prisma.DateTimeFilter<"Auth"> | Date | string
   isVerified?: Prisma.BoolFilter<"Auth"> | boolean
   isSuspended?: Prisma.BoolFilter<"Auth"> | boolean
   role?: Prisma.EnumRoleFilter<"Auth"> | $Enums.Role
+  isSeller?: Prisma.BoolFilter<"Auth"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Auth"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Auth"> | Date | string
   sellerProfile?: Prisma.XOR<Prisma.SellerProfileNullableScalarRelationFilter, Prisma.SellerProfileWhereInput> | null
@@ -360,11 +380,13 @@ export type AuthOrderByWithAggregationInput = {
   password?: Prisma.SortOrder
   otp?: Prisma.SortOrderInput | Prisma.SortOrder
   otpExpires?: Prisma.SortOrderInput | Prisma.SortOrder
+  profilePicture?: Prisma.SortOrderInput | Prisma.SortOrder
   otpAttemp?: Prisma.SortOrder
   lastLogin?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isSuspended?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  isSeller?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.AuthCountOrderByAggregateInput
@@ -387,11 +409,13 @@ export type AuthScalarWhereWithAggregatesInput = {
   password?: Prisma.StringWithAggregatesFilter<"Auth"> | string
   otp?: Prisma.StringNullableWithAggregatesFilter<"Auth"> | string | null
   otpExpires?: Prisma.DateTimeNullableWithAggregatesFilter<"Auth"> | Date | string | null
+  profilePicture?: Prisma.StringNullableWithAggregatesFilter<"Auth"> | string | null
   otpAttemp?: Prisma.IntWithAggregatesFilter<"Auth"> | number
   lastLogin?: Prisma.DateTimeWithAggregatesFilter<"Auth"> | Date | string
   isVerified?: Prisma.BoolWithAggregatesFilter<"Auth"> | boolean
   isSuspended?: Prisma.BoolWithAggregatesFilter<"Auth"> | boolean
   role?: Prisma.EnumRoleWithAggregatesFilter<"Auth"> | $Enums.Role
+  isSeller?: Prisma.BoolWithAggregatesFilter<"Auth"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Auth"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Auth"> | Date | string
 }
@@ -406,11 +430,13 @@ export type AuthCreateInput = {
   password: string
   otp?: string | null
   otpExpires?: Date | string | null
+  profilePicture?: string | null
   otpAttemp?: number
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
   role?: $Enums.Role
+  isSeller?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
@@ -426,11 +452,13 @@ export type AuthUncheckedCreateInput = {
   password: string
   otp?: string | null
   otpExpires?: Date | string | null
+  profilePicture?: string | null
   otpAttemp?: number
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
   role?: $Enums.Role
+  isSeller?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
@@ -446,11 +474,13 @@ export type AuthUpdateInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
@@ -466,11 +496,13 @@ export type AuthUncheckedUpdateInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
@@ -486,11 +518,13 @@ export type AuthCreateManyInput = {
   password: string
   otp?: string | null
   otpExpires?: Date | string | null
+  profilePicture?: string | null
   otpAttemp?: number
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
   role?: $Enums.Role
+  isSeller?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -505,11 +539,13 @@ export type AuthUpdateManyMutationInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -524,11 +560,13 @@ export type AuthUncheckedUpdateManyInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -543,11 +581,13 @@ export type AuthCountOrderByAggregateInput = {
   password?: Prisma.SortOrder
   otp?: Prisma.SortOrder
   otpExpires?: Prisma.SortOrder
+  profilePicture?: Prisma.SortOrder
   otpAttemp?: Prisma.SortOrder
   lastLogin?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isSuspended?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  isSeller?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -566,11 +606,13 @@ export type AuthMaxOrderByAggregateInput = {
   password?: Prisma.SortOrder
   otp?: Prisma.SortOrder
   otpExpires?: Prisma.SortOrder
+  profilePicture?: Prisma.SortOrder
   otpAttemp?: Prisma.SortOrder
   lastLogin?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isSuspended?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  isSeller?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -585,11 +627,13 @@ export type AuthMinOrderByAggregateInput = {
   password?: Prisma.SortOrder
   otp?: Prisma.SortOrder
   otpExpires?: Prisma.SortOrder
+  profilePicture?: Prisma.SortOrder
   otpAttemp?: Prisma.SortOrder
   lastLogin?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isSuspended?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  isSeller?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -659,11 +703,13 @@ export type AuthCreateWithoutSellerProfileInput = {
   password: string
   otp?: string | null
   otpExpires?: Date | string | null
+  profilePicture?: string | null
   otpAttemp?: number
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
   role?: $Enums.Role
+  isSeller?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -678,11 +724,13 @@ export type AuthUncheckedCreateWithoutSellerProfileInput = {
   password: string
   otp?: string | null
   otpExpires?: Date | string | null
+  profilePicture?: string | null
   otpAttemp?: number
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
   role?: $Enums.Role
+  isSeller?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -713,11 +761,13 @@ export type AuthUpdateWithoutSellerProfileInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -732,11 +782,13 @@ export type AuthUncheckedUpdateWithoutSellerProfileInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -753,11 +805,13 @@ export type AuthSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   password?: boolean
   otp?: boolean
   otpExpires?: boolean
+  profilePicture?: boolean
   otpAttemp?: boolean
   lastLogin?: boolean
   isVerified?: boolean
   isSuspended?: boolean
   role?: boolean
+  isSeller?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   sellerProfile?: boolean | Prisma.Auth$sellerProfileArgs<ExtArgs>
@@ -773,11 +827,13 @@ export type AuthSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   password?: boolean
   otp?: boolean
   otpExpires?: boolean
+  profilePicture?: boolean
   otpAttemp?: boolean
   lastLogin?: boolean
   isVerified?: boolean
   isSuspended?: boolean
   role?: boolean
+  isSeller?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["auth"]>
@@ -792,11 +848,13 @@ export type AuthSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   password?: boolean
   otp?: boolean
   otpExpires?: boolean
+  profilePicture?: boolean
   otpAttemp?: boolean
   lastLogin?: boolean
   isVerified?: boolean
   isSuspended?: boolean
   role?: boolean
+  isSeller?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["auth"]>
@@ -811,16 +869,18 @@ export type AuthSelectScalar = {
   password?: boolean
   otp?: boolean
   otpExpires?: boolean
+  profilePicture?: boolean
   otpAttemp?: boolean
   lastLogin?: boolean
   isVerified?: boolean
   isSuspended?: boolean
   role?: boolean
+  isSeller?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AuthOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "nickName" | "email" | "phone" | "password" | "otp" | "otpExpires" | "otpAttemp" | "lastLogin" | "isVerified" | "isSuspended" | "role" | "createdAt" | "updatedAt", ExtArgs["result"]["auth"]>
+export type AuthOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "nickName" | "email" | "phone" | "password" | "otp" | "otpExpires" | "profilePicture" | "otpAttemp" | "lastLogin" | "isVerified" | "isSuspended" | "role" | "isSeller" | "createdAt" | "updatedAt", ExtArgs["result"]["auth"]>
 export type AuthInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sellerProfile?: boolean | Prisma.Auth$sellerProfileArgs<ExtArgs>
 }
@@ -842,11 +902,13 @@ export type $AuthPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     password: string
     otp: string | null
     otpExpires: Date | null
+    profilePicture: string | null
     otpAttemp: number
     lastLogin: Date
     isVerified: boolean
     isSuspended: boolean
     role: $Enums.Role
+    isSeller: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["auth"]>
@@ -1282,11 +1344,13 @@ export interface AuthFieldRefs {
   readonly password: Prisma.FieldRef<"Auth", 'String'>
   readonly otp: Prisma.FieldRef<"Auth", 'String'>
   readonly otpExpires: Prisma.FieldRef<"Auth", 'DateTime'>
+  readonly profilePicture: Prisma.FieldRef<"Auth", 'String'>
   readonly otpAttemp: Prisma.FieldRef<"Auth", 'Int'>
   readonly lastLogin: Prisma.FieldRef<"Auth", 'DateTime'>
   readonly isVerified: Prisma.FieldRef<"Auth", 'Boolean'>
   readonly isSuspended: Prisma.FieldRef<"Auth", 'Boolean'>
   readonly role: Prisma.FieldRef<"Auth", 'Role'>
+  readonly isSeller: Prisma.FieldRef<"Auth", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Auth", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Auth", 'DateTime'>
 }

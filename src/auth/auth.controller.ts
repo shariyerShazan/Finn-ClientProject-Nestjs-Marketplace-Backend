@@ -1,10 +1,32 @@
-import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+import {
+  Body,
+  Controller,
+  Post,
+  HttpCode,
+  HttpStatus,
+  Res,
+  UseGuards,
+  Req,
+  Patch,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
-// Eita banay niben
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { RegisterDto } from './dto/auth.register-dto';
 import { VerifyAuthDto } from './dto/verify-auth.dto';
 import { LoginDto } from './dto/auth.login-dto';
+import { RolesGuard } from './guards/roles.guard';
+import { Roles } from './decorators/roles.decorator';
+import { CreateSellerProfileDto } from './dto/create-seller-profile.dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { UpdateProfileDto } from './dto/UpdateProfileDto';
 
 @ApiTags('Authentication') // Swagger-e grouping-er jonno
 @Controller('auth')
@@ -36,7 +58,33 @@ export class AuthController {
     status: 200,
     description: 'Login successful. Returns JWT token.',
   })
-  async login(@Body() loginDto: LoginDto) {
-    return await this.authService.login(loginDto);
+  async login(@Body() loginDto: LoginDto, @Res() res: any) {
+    return await this.authService.login(loginDto, res);
+  }
+
+  @Post('create-seller-profile')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SELLER')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a seller profile (Only for Sellers)' })
+  async createProfile(@Req() req: any, @Body() dto: CreateSellerProfileDto) {
+    const userId = req.user.id;
+    return await this.authService.createSellerProfile(userId, dto);
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Logout user and clear cookie' })
+  async logout(@Res({ passthrough: true }) res: any) {
+    return await this.authService.logout(res);
+  }
+
+  @Patch('update-profile')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update user or seller profile info' })
+  async updateProfile(@Req() req: any, @Body() updateDto: UpdateProfileDto) {
+    const userId = req.user.id;
+    return await this.authService.updateProfile(userId, updateDto);
   }
 }

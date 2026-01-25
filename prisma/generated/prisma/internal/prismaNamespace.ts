@@ -602,11 +602,13 @@ export const AuthScalarFieldEnum = {
   password: 'password',
   otp: 'otp',
   otpExpires: 'otpExpires',
+  profilePicture: 'profilePicture',
   otpAttemp: 'otpAttemp',
   lastLogin: 'lastLogin',
   isVerified: 'isVerified',
   isSuspended: 'isSuspended',
   role: 'role',
+  isSeller: 'isSeller',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -616,14 +618,15 @@ export type AuthScalarFieldEnum = (typeof AuthScalarFieldEnum)[keyof typeof Auth
 
 export const SellerProfileScalarFieldEnum = {
   id: 'id',
-  isSeller: 'isSeller',
   companyName: 'companyName',
   companyWebSite: 'companyWebSite',
-  adress: 'adress',
+  address: 'address',
   city: 'city',
   state: 'state',
   zip: 'zip',
   country: 'country',
+  status: 'status',
+  adminNote: 'adminNote',
   authId: 'authId'
 } as const
 
@@ -720,6 +723,20 @@ export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'Role[]'
  */
 export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
+    
+
+
+/**
+ * Reference to a field of type 'SellerStatus'
+ */
+export type EnumSellerStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SellerStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'SellerStatus[]'
+ */
+export type ListEnumSellerStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SellerStatus[]'>
     
 
 
