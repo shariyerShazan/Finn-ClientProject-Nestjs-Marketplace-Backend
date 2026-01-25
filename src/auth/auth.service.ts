@@ -42,7 +42,6 @@ export class AuthService {
       const otpExpires = new Date();
       otpExpires.setMinutes(otpExpires.getMinutes() + 5);
       const name = `${firstName} ${lastName}`;
-      await this.otpMailService.sendOtpEmail(email, otp, name);
       await this.prisma.auth.create({
         data: {
           firstName,
@@ -58,6 +57,7 @@ export class AuthService {
           otpExpires,
         },
       });
+      await this.otpMailService.sendOtpEmail(email, otp, name);
       return {
         message:
           'Registration successful! Please enter the OTP sent to your email to verify your account.',
@@ -87,8 +87,23 @@ export class AuthService {
         throw new BadRequestException('User is already verified');
       }
 
-      if (!user.otp || !user.otpExpires || new Date() > user.otpExpires) {
-        throw new BadRequestException('OTP has expired or is invalid');
+      if (!user.otp || !user.otpExpires) {
+        throw new BadRequestException('OTP is invalid');
+      }
+
+      if (new Date() > user.otpExpires) {
+        throw new BadRequestException('OTP expired');
+      }
+
+      if (user.otp !== otp) {
+        if (user.otpAttemp >= 5) {
+          throw new ForbiddenException('Too many attempts');
+        }
+        await this.prisma.auth.update({
+          where: { email },
+          data: { otpAttemp: { increment: 1 } },
+        });
+        throw new BadRequestException('Invalid OTP');
       }
 
       await this.prisma.auth.update({
@@ -135,6 +150,10 @@ export class AuthService {
         email: user.email,
         role: user.role,
       };
+
+      if (!process.env.JWT_SECRET) {
+        throw new Error('JWT_SECRET not defined');
+      }
 
       const token = await this.jwtService.signAsync(payload, {
         secret: process.env.JWT_SECRET || 'super-secret',
