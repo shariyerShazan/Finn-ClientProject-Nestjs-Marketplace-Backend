@@ -52,7 +52,13 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Auth: 'Auth',
-  SellerProfile: 'SellerProfile'
+  SellerProfile: 'SellerProfile',
+  Category: 'Category',
+  SubCategory: 'SubCategory',
+  Ad: 'Ad',
+  AdImage: 'AdImage',
+  Bid: 'Bid',
+  Payment: 'Payment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -106,10 +112,97 @@ export const SellerProfileScalarFieldEnum = {
   country: 'country',
   status: 'status',
   adminNote: 'adminNote',
+  isDeleted: 'isDeleted',
   authId: 'authId'
 } as const
 
 export type SellerProfileScalarFieldEnum = (typeof SellerProfileScalarFieldEnum)[keyof typeof SellerProfileScalarFieldEnum]
+
+
+export const CategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  image: 'image'
+} as const
+
+export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
+
+
+export const SubCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  categoryId: 'categoryId'
+} as const
+
+export type SubCategoryScalarFieldEnum = (typeof SubCategoryScalarFieldEnum)[keyof typeof SubCategoryScalarFieldEnum]
+
+
+export const AdScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  price: 'price',
+  basePrice: 'basePrice',
+  releasePrice: 'releasePrice',
+  propertyFor: 'propertyFor',
+  rentalPeriod: 'rentalPeriod',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  specifications: 'specifications',
+  country: 'country',
+  state: 'state',
+  city: 'city',
+  zipCode: 'zipCode',
+  showAddress: 'showAddress',
+  allowPhone: 'allowPhone',
+  allowEmail: 'allowEmail',
+  status: 'status',
+  viewerIds: 'viewerIds',
+  sellerId: 'sellerId',
+  categoryId: 'categoryId',
+  subCategoryId: 'subCategoryId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdScalarFieldEnum = (typeof AdScalarFieldEnum)[keyof typeof AdScalarFieldEnum]
+
+
+export const AdImageScalarFieldEnum = {
+  id: 'id',
+  url: 'url',
+  isPrimary: 'isPrimary',
+  adId: 'adId'
+} as const
+
+export type AdImageScalarFieldEnum = (typeof AdImageScalarFieldEnum)[keyof typeof AdImageScalarFieldEnum]
+
+
+export const BidScalarFieldEnum = {
+  id: 'id',
+  amount: 'amount',
+  bidderId: 'bidderId',
+  adId: 'adId',
+  createdAt: 'createdAt'
+} as const
+
+export type BidScalarFieldEnum = (typeof BidScalarFieldEnum)[keyof typeof BidScalarFieldEnum]
+
+
+export const PaymentScalarFieldEnum = {
+  id: 'id',
+  stripeId: 'stripeId',
+  amount: 'amount',
+  status: 'status',
+  invoiceId: 'invoiceId',
+  authId: 'authId',
+  createdAt: 'createdAt'
+} as const
+
+export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -118,6 +211,14 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -134,4 +235,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

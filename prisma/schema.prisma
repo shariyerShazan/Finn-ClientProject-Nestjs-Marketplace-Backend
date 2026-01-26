@@ -18,11 +18,10 @@ datasource db {
 }
 
 
-enum Role {
-  USER 
-  ADMIN 
-  SELLER 
-}
+
+
+
+
 
 model Auth {
   id        String   @id @default(uuid()) 
@@ -44,6 +43,10 @@ model Auth {
   isSeller       Boolean @default(false)
   sellerProfile SellerProfile?
 
+  ads            Ad[]  
+  bids           Bid[]   
+  payments       Payment[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -61,8 +64,144 @@ model SellerProfile {
   status         SellerStatus @default(PENDING)
   adminNote      String?
 
+  isDeleted Boolean @default(false)
+
   auth           Auth    @relation(fields: [authId], references: [id], onDelete: Cascade)
   authId         String  @unique
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Complete Industry Standard Schema for Marketplace & Auction
+
+model Category {
+  id            String        @id @default(uuid())
+  name          String        @unique 
+  slug          String        @unique
+  image         String?
+  subCategories SubCategory[]
+  ads           Ad[]
+}
+
+model SubCategory {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  ads         Ad[]
+}
+
+model Ad {
+  id            String      @id @default(uuid())
+  title         String
+  description   String      @db.Text
+  type          AdType      @default(FIXED)
+  price         Float?
+  basePrice     Float?
+  releasePrice  Float?
+  propertyFor   PropertyFor @default(SALE)
+  rentalPeriod  String?
+  startTime     DateTime?
+  endTime       DateTime?
+
+  specifications Json?
+
+  country       String      @default("USA")
+  state         String
+  city          String
+  zipCode       String?
+
+  showAddress   Boolean     @default(true)
+  allowPhone    Boolean     @default(true)
+  allowEmail    Boolean     @default(true)
+
+  status        AdStatus    @default(PENDING)
+  viewerIds     String[]    @default([])
+
+  images        AdImage[]
+  seller        Auth        @relation(fields: [sellerId], references: [id])
+  sellerId      String
+  category      Category    @relation(fields: [categoryId], references: [id])
+  categoryId    String
+  subCategory   SubCategory @relation(fields: [subCategoryId], references: [id])
+  subCategoryId String
+
+  bids          Bid[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model AdImage {
+  id        String  @id @default(uuid())
+  url       String
+  isPrimary Boolean @default(false) 
+  ad        Ad      @relation(fields: [adId], references: [id], onDelete: Cascade)
+  adId      String
+}
+
+model Bid {
+  id        String   @id @default(uuid())
+  amount    Float
+  bidder    Auth     @relation(fields: [bidderId], references: [id])
+  bidderId  String
+  ad        Ad       @relation(fields: [adId], references: [id], onDelete: Cascade)
+  adId      String
+  createdAt DateTime @default(now())
+}
+
+
+
+model Payment {
+  id            String        @id @default(uuid())
+  stripeId      String        @unique
+  amount        Float
+  status        PaymentStatus @default(PENDING)
+  invoiceId     String?       @unique
+  
+  auth          Auth          @relation(fields: [authId], references: [id])
+  authId        String
+  
+  createdAt     DateTime      @default(now())
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+enum Role {
+  USER 
+  ADMIN 
+  SELLER 
 }
 
 enum SellerStatus {
@@ -70,3 +209,37 @@ enum SellerStatus {
   APPROVED
   REJECTED
 }
+
+// Enums
+enum AdType {
+  FIXED
+  AUCTION
+}
+
+enum PropertyFor {
+  SALE
+  RENT
+}
+
+enum Condition {
+  NEW
+  USED
+}
+
+enum AdStatus {
+  PENDING
+  APPROVED
+  SOLD
+  EXPIRED
+  REJECTED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+
+
+

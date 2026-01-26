@@ -8,9 +8,8 @@ import {
   HttpCode,
   HttpStatus,
   Res,
-  UseGuards,
   Req,
-  Patch,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
@@ -22,13 +21,14 @@ import {
 import { RegisterDto } from './dto/auth.register-dto';
 import { VerifyAuthDto } from './dto/verify-auth.dto';
 import { LoginDto } from './dto/auth.login-dto';
-import { RolesGuard } from './guards/roles.guard';
-import { Roles } from './decorators/roles.decorator';
-import { CreateSellerProfileDto } from './dto/create-seller-profile.dto';
+import {
+  ChangePasswordDto,
+  ForgotPasswordDto,
+  ResetPasswordDto,
+} from './dto/password.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { UpdateProfileDto } from './dto/UpdateProfileDto';
 
-@ApiTags('Authentication') // Swagger-e grouping-er jonno
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -46,7 +46,6 @@ export class AuthController {
   @Post('verify')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Verify email using OTP' })
-  @ApiResponse({ status: 200, description: 'Email verified successfully.' })
   async verify(@Body() verifyAuthDto: VerifyAuthDto) {
     return await this.authService.verifyUser(verifyAuthDto);
   }
@@ -54,24 +53,12 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'User login' })
-  @ApiResponse({
-    status: 200,
-    description: 'Login successful. Returns JWT token.',
-  })
   async login(@Body() loginDto: LoginDto, @Res() res: any) {
     return await this.authService.login(loginDto, res);
   }
 
-  @Post('create-seller-profile')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('SELLER')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Create a seller profile (Only for Sellers)' })
-  async createProfile(@Req() req: any, @Body() dto: CreateSellerProfileDto) {
-    const userId = req.user.id;
-    return await this.authService.createSellerProfile(userId, dto);
-  }
-
+  @UseGuards(JwtAuthGuard)
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Logout user and clear cookie' })
@@ -79,12 +66,31 @@ export class AuthController {
     return await this.authService.logout(res);
   }
 
-  @Patch('update-profile')
-  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Update user or seller profile info' })
-  async updateProfile(@Req() req: any, @Body() updateDto: UpdateProfileDto) {
-    const userId = req.user.id;
-    return await this.authService.updateProfile(userId, updateDto);
+  @UseGuards(JwtAuthGuard)
+  @Post('change-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Change password for authenticated user' })
+  async changePassword(
+    @Body() changePasswordDto: ChangePasswordDto,
+    @Req() req: any,
+  ) {
+    const userId = req.user?.id;
+    return await this.authService.changePassword(userId, changePasswordDto);
+  }
+
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Send OTP to email for password reset' })
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    return await this.authService.forgotPassword(forgotPasswordDto.email);
+  }
+
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Reset password using OTP' })
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    const { email, otp, newPassword } = resetPasswordDto;
+    return await this.authService.resetPassword(email, otp, newPassword);
   }
 }

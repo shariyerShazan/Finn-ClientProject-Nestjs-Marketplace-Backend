@@ -321,6 +321,9 @@ export type AuthWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Auth"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Auth"> | Date | string
   sellerProfile?: Prisma.XOR<Prisma.SellerProfileNullableScalarRelationFilter, Prisma.SellerProfileWhereInput> | null
+  ads?: Prisma.AdListRelationFilter
+  bids?: Prisma.BidListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
 }
 
 export type AuthOrderByWithRelationInput = {
@@ -343,6 +346,9 @@ export type AuthOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sellerProfile?: Prisma.SellerProfileOrderByWithRelationInput
+  ads?: Prisma.AdOrderByRelationAggregateInput
+  bids?: Prisma.BidOrderByRelationAggregateInput
+  payments?: Prisma.PaymentOrderByRelationAggregateInput
 }
 
 export type AuthWhereUniqueInput = Prisma.AtLeast<{
@@ -368,6 +374,9 @@ export type AuthWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Auth"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Auth"> | Date | string
   sellerProfile?: Prisma.XOR<Prisma.SellerProfileNullableScalarRelationFilter, Prisma.SellerProfileWhereInput> | null
+  ads?: Prisma.AdListRelationFilter
+  bids?: Prisma.BidListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
 }, "id" | "email" | "phone">
 
 export type AuthOrderByWithAggregationInput = {
@@ -440,6 +449,9 @@ export type AuthCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
+  ads?: Prisma.AdCreateNestedManyWithoutSellerInput
+  bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAuthInput
 }
 
 export type AuthUncheckedCreateInput = {
@@ -462,6 +474,9 @@ export type AuthUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
+  ads?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAuthInput
 }
 
 export type AuthUpdateInput = {
@@ -484,6 +499,9 @@ export type AuthUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
+  ads?: Prisma.AdUpdateManyWithoutSellerNestedInput
+  bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAuthNestedInput
 }
 
 export type AuthUncheckedUpdateInput = {
@@ -506,6 +524,9 @@ export type AuthUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
+  ads?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAuthNestedInput
 }
 
 export type AuthCreateManyInput = {
@@ -693,6 +714,48 @@ export type AuthUpdateOneRequiredWithoutSellerProfileNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AuthUpdateToOneWithWhereWithoutSellerProfileInput, Prisma.AuthUpdateWithoutSellerProfileInput>, Prisma.AuthUncheckedUpdateWithoutSellerProfileInput>
 }
 
+export type AuthCreateNestedOneWithoutAdsInput = {
+  create?: Prisma.XOR<Prisma.AuthCreateWithoutAdsInput, Prisma.AuthUncheckedCreateWithoutAdsInput>
+  connectOrCreate?: Prisma.AuthCreateOrConnectWithoutAdsInput
+  connect?: Prisma.AuthWhereUniqueInput
+}
+
+export type AuthUpdateOneRequiredWithoutAdsNestedInput = {
+  create?: Prisma.XOR<Prisma.AuthCreateWithoutAdsInput, Prisma.AuthUncheckedCreateWithoutAdsInput>
+  connectOrCreate?: Prisma.AuthCreateOrConnectWithoutAdsInput
+  upsert?: Prisma.AuthUpsertWithoutAdsInput
+  connect?: Prisma.AuthWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AuthUpdateToOneWithWhereWithoutAdsInput, Prisma.AuthUpdateWithoutAdsInput>, Prisma.AuthUncheckedUpdateWithoutAdsInput>
+}
+
+export type AuthCreateNestedOneWithoutBidsInput = {
+  create?: Prisma.XOR<Prisma.AuthCreateWithoutBidsInput, Prisma.AuthUncheckedCreateWithoutBidsInput>
+  connectOrCreate?: Prisma.AuthCreateOrConnectWithoutBidsInput
+  connect?: Prisma.AuthWhereUniqueInput
+}
+
+export type AuthUpdateOneRequiredWithoutBidsNestedInput = {
+  create?: Prisma.XOR<Prisma.AuthCreateWithoutBidsInput, Prisma.AuthUncheckedCreateWithoutBidsInput>
+  connectOrCreate?: Prisma.AuthCreateOrConnectWithoutBidsInput
+  upsert?: Prisma.AuthUpsertWithoutBidsInput
+  connect?: Prisma.AuthWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AuthUpdateToOneWithWhereWithoutBidsInput, Prisma.AuthUpdateWithoutBidsInput>, Prisma.AuthUncheckedUpdateWithoutBidsInput>
+}
+
+export type AuthCreateNestedOneWithoutPaymentsInput = {
+  create?: Prisma.XOR<Prisma.AuthCreateWithoutPaymentsInput, Prisma.AuthUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.AuthCreateOrConnectWithoutPaymentsInput
+  connect?: Prisma.AuthWhereUniqueInput
+}
+
+export type AuthUpdateOneRequiredWithoutPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.AuthCreateWithoutPaymentsInput, Prisma.AuthUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.AuthCreateOrConnectWithoutPaymentsInput
+  upsert?: Prisma.AuthUpsertWithoutPaymentsInput
+  connect?: Prisma.AuthWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AuthUpdateToOneWithWhereWithoutPaymentsInput, Prisma.AuthUpdateWithoutPaymentsInput>, Prisma.AuthUncheckedUpdateWithoutPaymentsInput>
+}
+
 export type AuthCreateWithoutSellerProfileInput = {
   id?: string
   firstName: string
@@ -712,6 +775,9 @@ export type AuthCreateWithoutSellerProfileInput = {
   isSeller?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  ads?: Prisma.AdCreateNestedManyWithoutSellerInput
+  bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAuthInput
 }
 
 export type AuthUncheckedCreateWithoutSellerProfileInput = {
@@ -733,6 +799,9 @@ export type AuthUncheckedCreateWithoutSellerProfileInput = {
   isSeller?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  ads?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAuthInput
 }
 
 export type AuthCreateOrConnectWithoutSellerProfileInput = {
@@ -770,6 +839,9 @@ export type AuthUpdateWithoutSellerProfileInput = {
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ads?: Prisma.AdUpdateManyWithoutSellerNestedInput
+  bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAuthNestedInput
 }
 
 export type AuthUncheckedUpdateWithoutSellerProfileInput = {
@@ -791,8 +863,394 @@ export type AuthUncheckedUpdateWithoutSellerProfileInput = {
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ads?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAuthNestedInput
 }
 
+export type AuthCreateWithoutAdsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  nickName: string
+  email: string
+  phone: string
+  password: string
+  otp?: string | null
+  otpExpires?: Date | string | null
+  profilePicture?: string | null
+  otpAttemp?: number
+  lastLogin?: Date | string
+  isVerified?: boolean
+  isSuspended?: boolean
+  role?: $Enums.Role
+  isSeller?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
+  bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAuthInput
+}
+
+export type AuthUncheckedCreateWithoutAdsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  nickName: string
+  email: string
+  phone: string
+  password: string
+  otp?: string | null
+  otpExpires?: Date | string | null
+  profilePicture?: string | null
+  otpAttemp?: number
+  lastLogin?: Date | string
+  isVerified?: boolean
+  isSuspended?: boolean
+  role?: $Enums.Role
+  isSeller?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAuthInput
+}
+
+export type AuthCreateOrConnectWithoutAdsInput = {
+  where: Prisma.AuthWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuthCreateWithoutAdsInput, Prisma.AuthUncheckedCreateWithoutAdsInput>
+}
+
+export type AuthUpsertWithoutAdsInput = {
+  update: Prisma.XOR<Prisma.AuthUpdateWithoutAdsInput, Prisma.AuthUncheckedUpdateWithoutAdsInput>
+  create: Prisma.XOR<Prisma.AuthCreateWithoutAdsInput, Prisma.AuthUncheckedCreateWithoutAdsInput>
+  where?: Prisma.AuthWhereInput
+}
+
+export type AuthUpdateToOneWithWhereWithoutAdsInput = {
+  where?: Prisma.AuthWhereInput
+  data: Prisma.XOR<Prisma.AuthUpdateWithoutAdsInput, Prisma.AuthUncheckedUpdateWithoutAdsInput>
+}
+
+export type AuthUpdateWithoutAdsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  nickName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
+  bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAuthNestedInput
+}
+
+export type AuthUncheckedUpdateWithoutAdsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  nickName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAuthNestedInput
+}
+
+export type AuthCreateWithoutBidsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  nickName: string
+  email: string
+  phone: string
+  password: string
+  otp?: string | null
+  otpExpires?: Date | string | null
+  profilePicture?: string | null
+  otpAttemp?: number
+  lastLogin?: Date | string
+  isVerified?: boolean
+  isSuspended?: boolean
+  role?: $Enums.Role
+  isSeller?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
+  ads?: Prisma.AdCreateNestedManyWithoutSellerInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAuthInput
+}
+
+export type AuthUncheckedCreateWithoutBidsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  nickName: string
+  email: string
+  phone: string
+  password: string
+  otp?: string | null
+  otpExpires?: Date | string | null
+  profilePicture?: string | null
+  otpAttemp?: number
+  lastLogin?: Date | string
+  isVerified?: boolean
+  isSuspended?: boolean
+  role?: $Enums.Role
+  isSeller?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
+  ads?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAuthInput
+}
+
+export type AuthCreateOrConnectWithoutBidsInput = {
+  where: Prisma.AuthWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuthCreateWithoutBidsInput, Prisma.AuthUncheckedCreateWithoutBidsInput>
+}
+
+export type AuthUpsertWithoutBidsInput = {
+  update: Prisma.XOR<Prisma.AuthUpdateWithoutBidsInput, Prisma.AuthUncheckedUpdateWithoutBidsInput>
+  create: Prisma.XOR<Prisma.AuthCreateWithoutBidsInput, Prisma.AuthUncheckedCreateWithoutBidsInput>
+  where?: Prisma.AuthWhereInput
+}
+
+export type AuthUpdateToOneWithWhereWithoutBidsInput = {
+  where?: Prisma.AuthWhereInput
+  data: Prisma.XOR<Prisma.AuthUpdateWithoutBidsInput, Prisma.AuthUncheckedUpdateWithoutBidsInput>
+}
+
+export type AuthUpdateWithoutBidsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  nickName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
+  ads?: Prisma.AdUpdateManyWithoutSellerNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAuthNestedInput
+}
+
+export type AuthUncheckedUpdateWithoutBidsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  nickName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
+  ads?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAuthNestedInput
+}
+
+export type AuthCreateWithoutPaymentsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  nickName: string
+  email: string
+  phone: string
+  password: string
+  otp?: string | null
+  otpExpires?: Date | string | null
+  profilePicture?: string | null
+  otpAttemp?: number
+  lastLogin?: Date | string
+  isVerified?: boolean
+  isSuspended?: boolean
+  role?: $Enums.Role
+  isSeller?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
+  ads?: Prisma.AdCreateNestedManyWithoutSellerInput
+  bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+}
+
+export type AuthUncheckedCreateWithoutPaymentsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  nickName: string
+  email: string
+  phone: string
+  password: string
+  otp?: string | null
+  otpExpires?: Date | string | null
+  profilePicture?: string | null
+  otpAttemp?: number
+  lastLogin?: Date | string
+  isVerified?: boolean
+  isSuspended?: boolean
+  role?: $Enums.Role
+  isSeller?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
+  ads?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+}
+
+export type AuthCreateOrConnectWithoutPaymentsInput = {
+  where: Prisma.AuthWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuthCreateWithoutPaymentsInput, Prisma.AuthUncheckedCreateWithoutPaymentsInput>
+}
+
+export type AuthUpsertWithoutPaymentsInput = {
+  update: Prisma.XOR<Prisma.AuthUpdateWithoutPaymentsInput, Prisma.AuthUncheckedUpdateWithoutPaymentsInput>
+  create: Prisma.XOR<Prisma.AuthCreateWithoutPaymentsInput, Prisma.AuthUncheckedCreateWithoutPaymentsInput>
+  where?: Prisma.AuthWhereInput
+}
+
+export type AuthUpdateToOneWithWhereWithoutPaymentsInput = {
+  where?: Prisma.AuthWhereInput
+  data: Prisma.XOR<Prisma.AuthUpdateWithoutPaymentsInput, Prisma.AuthUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type AuthUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  nickName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
+  ads?: Prisma.AdUpdateManyWithoutSellerNestedInput
+  bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+}
+
+export type AuthUncheckedUpdateWithoutPaymentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  nickName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
+  ads?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+}
+
+
+/**
+ * Count Type AuthCountOutputType
+ */
+
+export type AuthCountOutputType = {
+  ads: number
+  bids: number
+  payments: number
+}
+
+export type AuthCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  ads?: boolean | AuthCountOutputTypeCountAdsArgs
+  bids?: boolean | AuthCountOutputTypeCountBidsArgs
+  payments?: boolean | AuthCountOutputTypeCountPaymentsArgs
+}
+
+/**
+ * AuthCountOutputType without action
+ */
+export type AuthCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuthCountOutputType
+   */
+  select?: Prisma.AuthCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * AuthCountOutputType without action
+ */
+export type AuthCountOutputTypeCountAdsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AdWhereInput
+}
+
+/**
+ * AuthCountOutputType without action
+ */
+export type AuthCountOutputTypeCountBidsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BidWhereInput
+}
+
+/**
+ * AuthCountOutputType without action
+ */
+export type AuthCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentWhereInput
+}
 
 
 export type AuthSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -815,6 +1273,10 @@ export type AuthSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   updatedAt?: boolean
   sellerProfile?: boolean | Prisma.Auth$sellerProfileArgs<ExtArgs>
+  ads?: boolean | Prisma.Auth$adsArgs<ExtArgs>
+  bids?: boolean | Prisma.Auth$bidsArgs<ExtArgs>
+  payments?: boolean | Prisma.Auth$paymentsArgs<ExtArgs>
+  _count?: boolean | Prisma.AuthCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["auth"]>
 
 export type AuthSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -883,6 +1345,10 @@ export type AuthSelectScalar = {
 export type AuthOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "nickName" | "email" | "phone" | "password" | "otp" | "otpExpires" | "profilePicture" | "otpAttemp" | "lastLogin" | "isVerified" | "isSuspended" | "role" | "isSeller" | "createdAt" | "updatedAt", ExtArgs["result"]["auth"]>
 export type AuthInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sellerProfile?: boolean | Prisma.Auth$sellerProfileArgs<ExtArgs>
+  ads?: boolean | Prisma.Auth$adsArgs<ExtArgs>
+  bids?: boolean | Prisma.Auth$bidsArgs<ExtArgs>
+  payments?: boolean | Prisma.Auth$paymentsArgs<ExtArgs>
+  _count?: boolean | Prisma.AuthCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AuthIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 export type AuthIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -891,6 +1357,9 @@ export type $AuthPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "Auth"
   objects: {
     sellerProfile: Prisma.$SellerProfilePayload<ExtArgs> | null
+    ads: Prisma.$AdPayload<ExtArgs>[]
+    bids: Prisma.$BidPayload<ExtArgs>[]
+    payments: Prisma.$PaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1306,6 +1775,9 @@ readonly fields: AuthFieldRefs;
 export interface Prisma__AuthClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   sellerProfile<T extends Prisma.Auth$sellerProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$sellerProfileArgs<ExtArgs>>): Prisma.Prisma__SellerProfileClient<runtime.Types.Result.GetResult<Prisma.$SellerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  ads<T extends Prisma.Auth$adsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$adsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  bids<T extends Prisma.Auth$bidsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$bidsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BidPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  payments<T extends Prisma.Auth$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1757,6 +2229,78 @@ export type Auth$sellerProfileArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   include?: Prisma.SellerProfileInclude<ExtArgs> | null
   where?: Prisma.SellerProfileWhereInput
+}
+
+/**
+ * Auth.ads
+ */
+export type Auth$adsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Ad
+   */
+  select?: Prisma.AdSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Ad
+   */
+  omit?: Prisma.AdOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdInclude<ExtArgs> | null
+  where?: Prisma.AdWhereInput
+  orderBy?: Prisma.AdOrderByWithRelationInput | Prisma.AdOrderByWithRelationInput[]
+  cursor?: Prisma.AdWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AdScalarFieldEnum | Prisma.AdScalarFieldEnum[]
+}
+
+/**
+ * Auth.bids
+ */
+export type Auth$bidsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Bid
+   */
+  select?: Prisma.BidSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Bid
+   */
+  omit?: Prisma.BidOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BidInclude<ExtArgs> | null
+  where?: Prisma.BidWhereInput
+  orderBy?: Prisma.BidOrderByWithRelationInput | Prisma.BidOrderByWithRelationInput[]
+  cursor?: Prisma.BidWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BidScalarFieldEnum | Prisma.BidScalarFieldEnum[]
+}
+
+/**
+ * Auth.payments
+ */
+export type Auth$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payment
+   */
+  select?: Prisma.PaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payment
+   */
+  omit?: Prisma.PaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentInclude<ExtArgs> | null
+  where?: Prisma.PaymentWhereInput
+  orderBy?: Prisma.PaymentOrderByWithRelationInput | Prisma.PaymentOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
 }
 
 /**

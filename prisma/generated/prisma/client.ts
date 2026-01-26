@@ -47,3 +47,33 @@ export type Auth = Prisma.AuthModel
  * 
  */
 export type SellerProfile = Prisma.SellerProfileModel
+/**
+ * Model Category
+ * 
+ */
+export type Category = Prisma.CategoryModel
+/**
+ * Model SubCategory
+ * 
+ */
+export type SubCategory = Prisma.SubCategoryModel
+/**
+ * Model Ad
+ * 
+ */
+export type Ad = Prisma.AdModel
+/**
+ * Model AdImage
+ * 
+ */
+export type AdImage = Prisma.AdImageModel
+/**
+ * Model Bid
+ * 
+ */
+export type Bid = Prisma.BidModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel

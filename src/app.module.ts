@@ -7,6 +7,12 @@ import { ConfigModule } from '@nestjs/config';
 import { MailModule } from './mail/mail.module';
 import { JwtModule } from '@nestjs/jwt';
 import { PrismaModule } from './prisma/prisma.module';
+// import { SellerModule } from './seller/seller.module';
+import { UserModule } from './user/user.module';
+import { JwtStrategy } from './auth/jwt.strategy';
+import { SeedService } from './seed/data.seed';
+import { CategoryModule } from './category/category.module';
+import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   imports: [
@@ -19,8 +25,10 @@ import { PrismaModule } from './prisma/prisma.module';
       secret: process.env.JWT_SECRET || 'super-secret',
       signOptions: { expiresIn: '7d' },
     }),
+    UserModule,
+    CategoryModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, SeedService, JwtStrategy, PrismaService],
 })
 export class AppModule {}

@@ -25,3 +25,47 @@ export const SellerStatus = {
 } as const
 
 export type SellerStatus = (typeof SellerStatus)[keyof typeof SellerStatus]
+
+
+export const AdType = {
+  FIXED: 'FIXED',
+  AUCTION: 'AUCTION'
+} as const
+
+export type AdType = (typeof AdType)[keyof typeof AdType]
+
+
+export const PropertyFor = {
+  SALE: 'SALE',
+  RENT: 'RENT'
+} as const
+
+export type PropertyFor = (typeof PropertyFor)[keyof typeof PropertyFor]
+
+
+export const Condition = {
+  NEW: 'NEW',
+  USED: 'USED'
+} as const
+
+export type Condition = (typeof Condition)[keyof typeof Condition]
+
+
+export const AdStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  SOLD: 'SOLD',
+  EXPIRED: 'EXPIRED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type AdStatus = (typeof AdStatus)[keyof typeof AdStatus]
+
+
+export const PaymentStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]

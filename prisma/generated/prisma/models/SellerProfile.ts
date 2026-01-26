@@ -45,6 +45,7 @@ export type SellerProfileMinAggregateOutputType = {
   country: string | null
   status: $Enums.SellerStatus | null
   adminNote: string | null
+  isDeleted: boolean | null
   authId: string | null
 }
 
@@ -59,6 +60,7 @@ export type SellerProfileMaxAggregateOutputType = {
   country: string | null
   status: $Enums.SellerStatus | null
   adminNote: string | null
+  isDeleted: boolean | null
   authId: string | null
 }
 
@@ -73,6 +75,7 @@ export type SellerProfileCountAggregateOutputType = {
   country: number
   status: number
   adminNote: number
+  isDeleted: number
   authId: number
   _all: number
 }
@@ -97,6 +100,7 @@ export type SellerProfileMinAggregateInputType = {
   country?: true
   status?: true
   adminNote?: true
+  isDeleted?: true
   authId?: true
 }
 
@@ -111,6 +115,7 @@ export type SellerProfileMaxAggregateInputType = {
   country?: true
   status?: true
   adminNote?: true
+  isDeleted?: true
   authId?: true
 }
 
@@ -125,6 +130,7 @@ export type SellerProfileCountAggregateInputType = {
   country?: true
   status?: true
   adminNote?: true
+  isDeleted?: true
   authId?: true
   _all?: true
 }
@@ -226,6 +232,7 @@ export type SellerProfileGroupByOutputType = {
   country: string
   status: $Enums.SellerStatus
   adminNote: string | null
+  isDeleted: boolean
   authId: string
   _count: SellerProfileCountAggregateOutputType | null
   _avg: SellerProfileAvgAggregateOutputType | null
@@ -263,6 +270,7 @@ export type SellerProfileWhereInput = {
   country?: Prisma.StringFilter<"SellerProfile"> | string
   status?: Prisma.EnumSellerStatusFilter<"SellerProfile"> | $Enums.SellerStatus
   adminNote?: Prisma.StringNullableFilter<"SellerProfile"> | string | null
+  isDeleted?: Prisma.BoolFilter<"SellerProfile"> | boolean
   authId?: Prisma.StringFilter<"SellerProfile"> | string
   auth?: Prisma.XOR<Prisma.AuthScalarRelationFilter, Prisma.AuthWhereInput>
 }
@@ -278,6 +286,7 @@ export type SellerProfileOrderByWithRelationInput = {
   country?: Prisma.SortOrder
   status?: Prisma.SortOrder
   adminNote?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   authId?: Prisma.SortOrder
   auth?: Prisma.AuthOrderByWithRelationInput
 }
@@ -297,6 +306,7 @@ export type SellerProfileWhereUniqueInput = Prisma.AtLeast<{
   country?: Prisma.StringFilter<"SellerProfile"> | string
   status?: Prisma.EnumSellerStatusFilter<"SellerProfile"> | $Enums.SellerStatus
   adminNote?: Prisma.StringNullableFilter<"SellerProfile"> | string | null
+  isDeleted?: Prisma.BoolFilter<"SellerProfile"> | boolean
   auth?: Prisma.XOR<Prisma.AuthScalarRelationFilter, Prisma.AuthWhereInput>
 }, "id" | "companyWebSite" | "authId">
 
@@ -311,6 +321,7 @@ export type SellerProfileOrderByWithAggregationInput = {
   country?: Prisma.SortOrder
   status?: Prisma.SortOrder
   adminNote?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   authId?: Prisma.SortOrder
   _count?: Prisma.SellerProfileCountOrderByAggregateInput
   _avg?: Prisma.SellerProfileAvgOrderByAggregateInput
@@ -333,6 +344,7 @@ export type SellerProfileScalarWhereWithAggregatesInput = {
   country?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
   status?: Prisma.EnumSellerStatusWithAggregatesFilter<"SellerProfile"> | $Enums.SellerStatus
   adminNote?: Prisma.StringNullableWithAggregatesFilter<"SellerProfile"> | string | null
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"SellerProfile"> | boolean
   authId?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
 }
 
@@ -347,6 +359,7 @@ export type SellerProfileCreateInput = {
   country: string
   status?: $Enums.SellerStatus
   adminNote?: string | null
+  isDeleted?: boolean
   auth: Prisma.AuthCreateNestedOneWithoutSellerProfileInput
 }
 
@@ -361,6 +374,7 @@ export type SellerProfileUncheckedCreateInput = {
   country: string
   status?: $Enums.SellerStatus
   adminNote?: string | null
+  isDeleted?: boolean
   authId: string
 }
 
@@ -375,6 +389,7 @@ export type SellerProfileUpdateInput = {
   country?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
   adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   auth?: Prisma.AuthUpdateOneRequiredWithoutSellerProfileNestedInput
 }
 
@@ -389,6 +404,7 @@ export type SellerProfileUncheckedUpdateInput = {
   country?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
   adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   authId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -403,6 +419,7 @@ export type SellerProfileCreateManyInput = {
   country: string
   status?: $Enums.SellerStatus
   adminNote?: string | null
+  isDeleted?: boolean
   authId: string
 }
 
@@ -417,6 +434,7 @@ export type SellerProfileUpdateManyMutationInput = {
   country?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
   adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type SellerProfileUncheckedUpdateManyInput = {
@@ -430,6 +448,7 @@ export type SellerProfileUncheckedUpdateManyInput = {
   country?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
   adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   authId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -449,6 +468,7 @@ export type SellerProfileCountOrderByAggregateInput = {
   country?: Prisma.SortOrder
   status?: Prisma.SortOrder
   adminNote?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   authId?: Prisma.SortOrder
 }
 
@@ -467,6 +487,7 @@ export type SellerProfileMaxOrderByAggregateInput = {
   country?: Prisma.SortOrder
   status?: Prisma.SortOrder
   adminNote?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   authId?: Prisma.SortOrder
 }
 
@@ -481,6 +502,7 @@ export type SellerProfileMinOrderByAggregateInput = {
   country?: Prisma.SortOrder
   status?: Prisma.SortOrder
   adminNote?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
   authId?: Prisma.SortOrder
 }
 
@@ -535,6 +557,7 @@ export type SellerProfileCreateWithoutAuthInput = {
   country: string
   status?: $Enums.SellerStatus
   adminNote?: string | null
+  isDeleted?: boolean
 }
 
 export type SellerProfileUncheckedCreateWithoutAuthInput = {
@@ -548,6 +571,7 @@ export type SellerProfileUncheckedCreateWithoutAuthInput = {
   country: string
   status?: $Enums.SellerStatus
   adminNote?: string | null
+  isDeleted?: boolean
 }
 
 export type SellerProfileCreateOrConnectWithoutAuthInput = {
@@ -577,6 +601,7 @@ export type SellerProfileUpdateWithoutAuthInput = {
   country?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
   adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type SellerProfileUncheckedUpdateWithoutAuthInput = {
@@ -590,6 +615,7 @@ export type SellerProfileUncheckedUpdateWithoutAuthInput = {
   country?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
   adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -605,6 +631,7 @@ export type SellerProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   country?: boolean
   status?: boolean
   adminNote?: boolean
+  isDeleted?: boolean
   authId?: boolean
   auth?: boolean | Prisma.AuthDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["sellerProfile"]>
@@ -620,6 +647,7 @@ export type SellerProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   country?: boolean
   status?: boolean
   adminNote?: boolean
+  isDeleted?: boolean
   authId?: boolean
   auth?: boolean | Prisma.AuthDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["sellerProfile"]>
@@ -635,6 +663,7 @@ export type SellerProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   country?: boolean
   status?: boolean
   adminNote?: boolean
+  isDeleted?: boolean
   authId?: boolean
   auth?: boolean | Prisma.AuthDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["sellerProfile"]>
@@ -650,10 +679,11 @@ export type SellerProfileSelectScalar = {
   country?: boolean
   status?: boolean
   adminNote?: boolean
+  isDeleted?: boolean
   authId?: boolean
 }
 
-export type SellerProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "companyWebSite" | "address" | "city" | "state" | "zip" | "country" | "status" | "adminNote" | "authId", ExtArgs["result"]["sellerProfile"]>
+export type SellerProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "companyWebSite" | "address" | "city" | "state" | "zip" | "country" | "status" | "adminNote" | "isDeleted" | "authId", ExtArgs["result"]["sellerProfile"]>
 export type SellerProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   auth?: boolean | Prisma.AuthDefaultArgs<ExtArgs>
 }
@@ -680,6 +710,7 @@ export type $SellerProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     country: string
     status: $Enums.SellerStatus
     adminNote: string | null
+    isDeleted: boolean
     authId: string
   }, ExtArgs["result"]["sellerProfile"]>
   composites: {}
@@ -1115,6 +1146,7 @@ export interface SellerProfileFieldRefs {
   readonly country: Prisma.FieldRef<"SellerProfile", 'String'>
   readonly status: Prisma.FieldRef<"SellerProfile", 'SellerStatus'>
   readonly adminNote: Prisma.FieldRef<"SellerProfile", 'String'>
+  readonly isDeleted: Prisma.FieldRef<"SellerProfile", 'Boolean'>
   readonly authId: Prisma.FieldRef<"SellerProfile", 'String'>
 }
     

@@ -22,8 +22,9 @@ import { VerifyAuthDto } from './dto/verify-auth.dto';
 import { OtpMailService } from 'src/mail/otp-mail.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/auth.login-dto';
-import { CreateSellerProfileDto } from './dto/create-seller-profile.dto';
-import { UpdateProfileDto } from './dto/UpdateProfileDto';
+import { ChangePasswordDto } from './dto/password.dto';
+// import { CreateSellerProfileDto } from './dto/create-seller-profile.dto';
+// import { UpdateProfileDto } from './dto/UpdateProfileDto';
 
 @Injectable()
 export class AuthService {
@@ -228,44 +229,6 @@ export class AuthService {
     }
   }
 
-  async createSellerProfile(userId: string, sellerDto: CreateSellerProfileDto) {
-    try {
-      const user = await this.prisma.auth.findUnique({
-        where: { id: userId },
-        include: { sellerProfile: true },
-      });
-
-      if (!user) throw new NotFoundException('User not found');
-      if (user.role !== 'SELLER')
-        throw new ForbiddenException('Only sellers can create a profile');
-      if (user.sellerProfile)
-        throw new ConflictException('Profile already exists');
-
-      const profile = await this.prisma.sellerProfile.create({
-        data: {
-          authId: user.id,
-          companyName: sellerDto.companyName,
-          city: sellerDto.city,
-          address: sellerDto.address,
-          zip: sellerDto.zip,
-          companyWebSite: sellerDto.companyWebSite,
-          country: sellerDto.country,
-          state: sellerDto.state,
-        },
-      });
-
-      return {
-        success: true,
-        message: 'Seller profile submitted. Waiting for admin approval.',
-        data: profile,
-      };
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-      console.error('Error creating seller profile:', error);
-      throw new InternalServerErrorException('Failed to create seller profile');
-    }
-  }
-
   async logout(res: Response) {
     res.clearCookie('access_token', {
       httpOnly: true,
@@ -279,73 +242,162 @@ export class AuthService {
     };
   }
 
-  async updateProfile(userId: string, updateData: UpdateProfileDto) {
+  async changePassword(userId: string, changePasswordDto: ChangePasswordDto) {
+    const { currentPassword, newPassword } = changePasswordDto;
+
     try {
       const user = await this.prisma.auth.findUnique({
         where: { id: userId },
-        include: { sellerProfile: true },
       });
 
-      if (!user) throw new NotFoundException('User not found');
-
-      const {
-        firstName,
-        lastName,
-        nickName,
-        phone,
-        profilePicture,
-        sellerData,
-      } = updateData;
-
-      const updatedAuth = await this.prisma.auth.update({
-        where: { id: userId },
-        data: {
-          firstName: firstName ?? user.firstName,
-          lastName: lastName ?? user.lastName,
-          nickName: nickName ?? user.nickName,
-          phone: phone ?? user.phone,
-          profilePicture: profilePicture ?? user.profilePicture,
-        },
-      });
-
-      if (user.role === 'SELLER' && sellerData) {
-        if (!user.sellerProfile) {
-          throw new BadRequestException(
-            'Seller profile not found. Please create one first.',
-          );
-        }
-
-        if (!user.isSeller) {
-          throw new ForbiddenException(
-            'Your seller profile is pending approval. You cannot update it until admin approves it.',
-          );
-        }
-
-        await this.prisma.sellerProfile.update({
-          where: { authId: userId },
-          data: {
-            companyName:
-              sellerData.companyName ?? user.sellerProfile.companyName,
-            companyWebSite:
-              sellerData.companyWebSite ?? user.sellerProfile.companyWebSite,
-            address: sellerData.address ?? user.sellerProfile.address,
-            city: sellerData.city ?? user.sellerProfile.city,
-            state: sellerData.state ?? user.sellerProfile.state,
-            zip: sellerData.zip ?? user.sellerProfile.zip,
-            country: sellerData.country ?? user.sellerProfile.country,
-          },
-        });
+      if (!user) {
+        throw new NotFoundException('User not found');
       }
+
+      const isPasswordMatch = await bcrypt.compare(
+        currentPassword,
+        user.password,
+      );
+
+      if (!isPasswordMatch) {
+        throw new UnauthorizedException('Current password is incorrect');
+      }
+
+      const saltOrRounds = 10;
+      const hashedPassword = await bcrypt.hash(newPassword, saltOrRounds);
+
+      await this.prisma.auth.update({
+        where: { id: userId },
+        data: { password: hashedPassword },
+      });
 
       return {
         success: true,
-        message: 'Profile updated successfully',
-        data: updatedAuth,
+        message: 'Password changed successfully',
       };
     } catch (error) {
-      if (error instanceof HttpException) throw error;
-      console.error('Update Profile Error:', error);
-      throw new InternalServerErrorException('Failed to update profile');
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      console.error('Unexpected ChangePassword Error:', error);
+      throw new InternalServerErrorException(
+        'Something went wrong in the server',
+      );
+    }
+  }
+
+  async forgotPassword(email: string) {
+    const normalizedEmail = email.toLowerCase();
+
+    try {
+      const user = await this.prisma.auth.findFirst({
+        where: { email: normalizedEmail },
+      });
+
+      if (!user) {
+        throw new NotFoundException('No user found with this email');
+      }
+
+      if (user.isSuspended) {
+        throw new ForbiddenException(
+          'Your account is suspended. Please contact support.',
+        );
+      }
+
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      const otpExpires = new Date();
+      otpExpires.setMinutes(otpExpires.getMinutes() + 5);
+
+      await this.prisma.auth.update({
+        where: { email: normalizedEmail },
+        data: {
+          otp,
+          otpExpires,
+          otpAttemp: 0,
+        },
+      });
+
+      const name = `${user.firstName} ${user.lastName}`;
+      await this.otpMailService.sendOtpEmail(normalizedEmail, otp, name);
+
+      return {
+        success: true,
+        message: 'OTP has been sent to your email',
+      };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      console.error('Unexpected ForgotPassword Error:', error);
+      throw new InternalServerErrorException(
+        'Something went wrong in the server',
+      );
+    }
+  }
+
+  async resetPassword(email: string, otp: string, newPassword: string) {
+    const normalizedEmail = email.toLowerCase();
+
+    try {
+      const user = await this.prisma.auth.findFirst({
+        where: { email: normalizedEmail },
+      });
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      if (!user.otp || !user.otpExpires || new Date() > user.otpExpires) {
+        throw new BadRequestException('OTP expired or invalid');
+      }
+
+      if (user.otp !== otp) {
+        const updatedUser = await this.prisma.auth.update({
+          where: { email: normalizedEmail },
+          data: { otpAttemp: { increment: 1 } },
+        });
+
+        if (updatedUser.otpAttemp >= 5) {
+          await this.prisma.auth.update({
+            where: { email: normalizedEmail },
+            data: { isSuspended: true },
+          });
+
+          throw new ForbiddenException(
+            'Too many failed attempts. Account suspended.',
+          );
+        }
+
+        throw new BadRequestException(
+          `Invalid OTP. Attempts left: ${5 - updatedUser.otpAttemp}`,
+        );
+      }
+
+      const saltOrRounds = 10;
+      const hashedPassword = await bcrypt.hash(newPassword, saltOrRounds);
+
+      await this.prisma.auth.update({
+        where: { email: normalizedEmail },
+        data: {
+          password: hashedPassword,
+          otp: null,
+          otpExpires: null,
+          otpAttemp: 0,
+        },
+      });
+
+      return {
+        success: true,
+        message: 'Password reset successful',
+      };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      console.error('Unexpected ResetPassword Error:', error);
+      throw new InternalServerErrorException(
+        'Something went wrong in the server',
+      );
     }
   }
 }

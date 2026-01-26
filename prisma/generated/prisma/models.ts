@@ -10,4 +10,10 @@
  */
 export type * from './models/Auth.js'
 export type * from './models/SellerProfile.js'
+export type * from './models/Category.js'
+export type * from './models/SubCategory.js'
+export type * from './models/Ad.js'
+export type * from './models/AdImage.js'
+export type * from './models/Bid.js'
+export type * from './models/Payment.js'
 export type * from './commonInputTypes.js'
