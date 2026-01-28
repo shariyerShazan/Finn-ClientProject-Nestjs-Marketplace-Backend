@@ -43,6 +43,8 @@ model Auth {
   isSeller       Boolean @default(false)
   sellerProfile SellerProfile?
 
+  comments       Comment[]
+
   ads            Ad[]  
   bids           Bid[]   
   payments       Payment[]
@@ -124,6 +126,9 @@ model Ad {
   startTime     DateTime?
   endTime       DateTime?
 
+  latitude    Float?        
+  longitude   Float?  
+
   specifications Json?
 
   country       String      @default("USA")
@@ -135,7 +140,8 @@ model Ad {
   allowPhone    Boolean     @default(true)
   allowEmail    Boolean     @default(true)
 
-  status        AdStatus    @default(PENDING)
+  // status        AdStatus    @default(PENDING)
+  isSold        Boolean     @default(false)
   viewerIds     String[]    @default([])
 
   images        AdImage[]
@@ -147,9 +153,28 @@ model Ad {
   subCategoryId String
 
   bids          Bid[]
+  comments       Comment[]
+  payment       Payment?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 }
+
+
+model Comment {
+  id        String   @id @default(uuid())
+  message   String
+  parentId  String? // for replies
+  createdAt DateTime @default(now())
+
+  userId    String
+  user    Auth      @relation(fields: [userId], references: [id])
+  adId      String
+  ad      Ad        @relation(fields: [adId], references: [id])
+  parent  Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+
+  replies Comment[] @relation("CommentReplies")
+}
+
 
 model AdImage {
   id        String  @id @default(uuid())
@@ -175,11 +200,17 @@ model Payment {
   id            String        @id @default(uuid())
   stripeId      String        @unique
   amount        Float
+
+
+  adId        String    @unique
+  ad   Ad   @relation(fields: [adId], references: [id])
+  authId        String
+  auth          Auth          @relation(fields: [authId], references: [id])
+
+
   status        PaymentStatus @default(PENDING)
   invoiceId     String?       @unique
-  
-  auth          Auth          @relation(fields: [authId], references: [id])
-  authId        String
+  isPaid      Status    @default(PENDING)
   
   createdAt     DateTime      @default(now())
 }
@@ -192,7 +223,11 @@ model Payment {
 
 
 
-
+enum Status {
+  PENDING
+  COMPLETED
+  FAILED
+}
 
 
 
@@ -221,18 +256,14 @@ enum PropertyFor {
   RENT
 }
 
-enum Condition {
-  NEW
-  USED
-}
 
-enum AdStatus {
-  PENDING
-  APPROVED
-  SOLD
-  EXPIRED
-  REJECTED
-}
+// enum AdStatus {
+//   PENDING
+//   APPROVED
+//   SOLD
+//   EXPIRED
+//   REJECTED
+// }
 
 enum PaymentStatus {
   PENDING
