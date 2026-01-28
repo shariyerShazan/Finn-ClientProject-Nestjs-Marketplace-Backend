@@ -56,6 +56,7 @@ export const ModelName = {
   Category: 'Category',
   SubCategory: 'SubCategory',
   Ad: 'Ad',
+  Comment: 'Comment',
   AdImage: 'AdImage',
   Bid: 'Bid',
   Payment: 'Payment'
@@ -151,6 +152,8 @@ export const AdScalarFieldEnum = {
   rentalPeriod: 'rentalPeriod',
   startTime: 'startTime',
   endTime: 'endTime',
+  latitude: 'latitude',
+  longitude: 'longitude',
   specifications: 'specifications',
   country: 'country',
   state: 'state',
@@ -159,7 +162,7 @@ export const AdScalarFieldEnum = {
   showAddress: 'showAddress',
   allowPhone: 'allowPhone',
   allowEmail: 'allowEmail',
-  status: 'status',
+  isSold: 'isSold',
   viewerIds: 'viewerIds',
   sellerId: 'sellerId',
   categoryId: 'categoryId',
@@ -169,6 +172,18 @@ export const AdScalarFieldEnum = {
 } as const
 
 export type AdScalarFieldEnum = (typeof AdScalarFieldEnum)[keyof typeof AdScalarFieldEnum]
+
+
+export const CommentScalarFieldEnum = {
+  id: 'id',
+  message: 'message',
+  parentId: 'parentId',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  adId: 'adId'
+} as const
+
+export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
 
 
 export const AdImageScalarFieldEnum = {
@@ -196,9 +211,11 @@ export const PaymentScalarFieldEnum = {
   id: 'id',
   stripeId: 'stripeId',
   amount: 'amount',
+  adId: 'adId',
+  authId: 'authId',
   status: 'status',
   invoiceId: 'invoiceId',
-  authId: 'authId',
+  isPaid: 'isPaid',
   createdAt: 'createdAt'
 } as const
 

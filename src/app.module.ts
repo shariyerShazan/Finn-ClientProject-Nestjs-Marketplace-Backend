@@ -13,6 +13,9 @@ import { JwtStrategy } from './auth/jwt.strategy';
 import { SeedService } from './seed/data.seed';
 import { CategoryModule } from './category/category.module';
 import { PrismaService } from './prisma/prisma.service';
+// import { AddService } from './add/add.service';
+import { AddModule } from './add/add.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -27,6 +30,8 @@ import { PrismaService } from './prisma/prisma.service';
     }),
     UserModule,
     CategoryModule,
+    AddModule,
+    CloudinaryModule,
   ],
   controllers: [AppController],
   providers: [AppService, SeedService, JwtStrategy, PrismaService],
