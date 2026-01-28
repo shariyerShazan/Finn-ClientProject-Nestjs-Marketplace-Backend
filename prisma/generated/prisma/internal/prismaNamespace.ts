@@ -389,6 +389,7 @@ export const ModelName = {
   Category: 'Category',
   SubCategory: 'SubCategory',
   Ad: 'Ad',
+  Comment: 'Comment',
   AdImage: 'AdImage',
   Bid: 'Bid',
   Payment: 'Payment'
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "auth" | "sellerProfile" | "category" | "subCategory" | "ad" | "adImage" | "bid" | "payment"
+    modelProps: "auth" | "sellerProfile" | "category" | "subCategory" | "ad" | "comment" | "adImage" | "bid" | "payment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -781,6 +782,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Comment: {
+      payload: Prisma.$CommentPayload<ExtArgs>
+      fields: Prisma.CommentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CommentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CommentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommentPayload>
+        }
+        findFirst: {
+          args: Prisma.CommentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CommentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommentPayload>
+        }
+        findMany: {
+          args: Prisma.CommentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommentPayload>[]
+        }
+        create: {
+          args: Prisma.CommentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommentPayload>
+        }
+        createMany: {
+          args: Prisma.CommentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CommentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommentPayload>[]
+        }
+        delete: {
+          args: Prisma.CommentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommentPayload>
+        }
+        update: {
+          args: Prisma.CommentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommentPayload>
+        }
+        deleteMany: {
+          args: Prisma.CommentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CommentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CommentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommentPayload>[]
+        }
+        upsert: {
+          args: Prisma.CommentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CommentPayload>
+        }
+        aggregate: {
+          args: Prisma.CommentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateComment>
+        }
+        groupBy: {
+          args: Prisma.CommentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CommentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CommentCountAggregateOutputType> | number
+        }
+      }
+    }
     AdImage: {
       payload: Prisma.$AdImagePayload<ExtArgs>
       fields: Prisma.AdImageFieldRefs
@@ -1116,6 +1191,8 @@ export const AdScalarFieldEnum = {
   rentalPeriod: 'rentalPeriod',
   startTime: 'startTime',
   endTime: 'endTime',
+  latitude: 'latitude',
+  longitude: 'longitude',
   specifications: 'specifications',
   country: 'country',
   state: 'state',
@@ -1124,7 +1201,7 @@ export const AdScalarFieldEnum = {
   showAddress: 'showAddress',
   allowPhone: 'allowPhone',
   allowEmail: 'allowEmail',
-  status: 'status',
+  isSold: 'isSold',
   viewerIds: 'viewerIds',
   sellerId: 'sellerId',
   categoryId: 'categoryId',
@@ -1134,6 +1211,18 @@ export const AdScalarFieldEnum = {
 } as const
 
 export type AdScalarFieldEnum = (typeof AdScalarFieldEnum)[keyof typeof AdScalarFieldEnum]
+
+
+export const CommentScalarFieldEnum = {
+  id: 'id',
+  message: 'message',
+  parentId: 'parentId',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  adId: 'adId'
+} as const
+
+export type CommentScalarFieldEnum = (typeof CommentScalarFieldEnum)[keyof typeof CommentScalarFieldEnum]
 
 
 export const AdImageScalarFieldEnum = {
@@ -1161,9 +1250,11 @@ export const PaymentScalarFieldEnum = {
   id: 'id',
   stripeId: 'stripeId',
   amount: 'amount',
+  adId: 'adId',
+  authId: 'authId',
   status: 'status',
   invoiceId: 'invoiceId',
-  authId: 'authId',
+  isPaid: 'isPaid',
   createdAt: 'createdAt'
 } as const
 
@@ -1351,20 +1442,6 @@ export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
 
 
 /**
- * Reference to a field of type 'AdStatus'
- */
-export type EnumAdStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdStatus'>
-    
-
-
-/**
- * Reference to a field of type 'AdStatus[]'
- */
-export type ListEnumAdStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdStatus[]'>
-    
-
-
-/**
  * Reference to a field of type 'PaymentStatus'
  */
 export type EnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus'>
@@ -1375,6 +1452,20 @@ export type EnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'PaymentStatus[]'
  */
 export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Status'
+ */
+export type EnumStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Status'>
+    
+
+
+/**
+ * Reference to a field of type 'Status[]'
+ */
+export type ListEnumStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Status[]'>
     
 
 /**
@@ -1477,6 +1568,7 @@ export type GlobalOmitConfig = {
   category?: Prisma.CategoryOmit
   subCategory?: Prisma.SubCategoryOmit
   ad?: Prisma.AdOmit
+  comment?: Prisma.CommentOmit
   adImage?: Prisma.AdImageOmit
   bid?: Prisma.BidOmit
   payment?: Prisma.PaymentOmit
