@@ -31,7 +31,7 @@ export class CreateAdDto {
   @ApiProperty({ example: 50000, required: false })
   @IsNumber()
   @IsOptional()
-  @Type(() => Number) // String ke number korbe
+  @Type(() => Number)
   price?: number;
 
   @ApiProperty({ enum: PropertyFor, example: PropertyFor.SALE })

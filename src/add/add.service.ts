@@ -98,7 +98,7 @@ export class AddService {
   async updateAd(
     adId: string,
     sellerId: string,
-    updateAdDto: any,
+    updateAdDto: UpdateAddDto,
     files?: Express.Multer.File[],
   ) {
     try {
@@ -114,14 +114,17 @@ export class AddService {
       if (existingAd.sellerId !== sellerId)
         throw new ForbiddenException('Not authorized');
 
+      // Error fix korar jonno eivabe likho:
       if (updateAdDto.imagesToDelete) {
         let idsToDelete: string[] = [];
-        if (Array.isArray(updateAdDto.imagesToDelete)) {
-          idsToDelete = updateAdDto.imagesToDelete;
-        } else if (typeof updateAdDto.imagesToDelete === 'string') {
-          idsToDelete = updateAdDto.imagesToDelete
-            .split(',')
-            .map((id) => id.trim());
+
+        // Type casting korlam jate TS error na dey
+        const rawImagesToDelete = updateAdDto.imagesToDelete as any;
+
+        if (Array.isArray(rawImagesToDelete)) {
+          idsToDelete = rawImagesToDelete;
+        } else if (typeof rawImagesToDelete === 'string') {
+          idsToDelete = rawImagesToDelete.split(',').map((id) => id.trim());
         }
 
         if (idsToDelete.length > 0) {
@@ -163,12 +166,13 @@ export class AddService {
             updateData.allowEmail !== undefined
               ? String(updateData.allowEmail) === 'true'
               : undefined,
-          isSold:
-            updateData.isSold !== undefined
-              ? String(updateData.isSold) === 'true'
-              : undefined,
+          //   isSold:
+          //     updateData.isSold !== undefined
+          //       ? String(updateData.isSold) === 'true'
+          //       : undefined,
 
           // JSON parsing for specifications
+
           specifications:
             typeof updateData.specifications === 'string'
               ? JSON.parse(updateData.specifications)
@@ -265,7 +269,6 @@ export class AddService {
     }
   }
 
-  // --- DELETE AD ---
   async deleteAd(adId: string, sellerId: string) {
     try {
       const existingAd = await this.prisma.ad.findUnique({
@@ -335,5 +338,29 @@ export class AddService {
       if (error instanceof HttpException) throw error;
       throw new InternalServerErrorException(error.message);
     }
+  }
+
+  async toggleSoldStatus(adId: string, sellerId: string) {
+    const ad = await this.prisma.ad.findUnique({ where: { id: adId } });
+
+    if (!ad) throw new NotFoundException('Ad not found');
+    if (ad.sellerId !== sellerId)
+      throw new ForbiddenException('Not authorized');
+
+    // Toggle logic: jodi true thake false hobe, false thakle true hobe
+    const updatedAd = await this.prisma.ad.update({
+      where: { id: adId },
+      data: { isSold: !ad.isSold },
+    });
+
+    const statusMessage = updatedAd.isSold
+      ? 'Item marked as sold'
+      : 'Item marked as available';
+
+    return {
+      message: statusMessage,
+      success: true,
+      //   data: updatedAd,
+    };
   }
 }

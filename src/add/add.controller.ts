@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -137,5 +139,15 @@ export class AddController {
   async deleteAd(@Param('adId') adId: string, @Req() req: any) {
     const sellerId = req.user?.id;
     return await this.addService.deleteAd(adId, sellerId);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  //   @Roles('SELLER')
+  @Patch(':adId/toggle-sold')
+  @ApiOperation({ summary: 'Toggle Ad sold status (true/false)' })
+  async toggleSold(@Param('adId') adId: string, @Req() req: any) {
+    const sellerId = req.user?.id;
+    return await this.addService.toggleSoldStatus(adId, sellerId);
   }
 }
