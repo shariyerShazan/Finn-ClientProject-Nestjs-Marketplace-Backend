@@ -12,9 +12,10 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateSellerProfileDto } from 'src/auth/dto/create-seller-profile.dto';
-import { UpdateProfileDto } from 'src/auth/dto/UpdateProfileDto';
+import { CreateSellerProfileDto } from 'src/user/dto/create-seller-profile.dto';
+// import { UpdateProfileDto } from 'src/auth/dto/UpdateProfileDto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UpdateProfileDto } from './dto/UpdateProfileDto';
 
 @Injectable()
 export class UserService {

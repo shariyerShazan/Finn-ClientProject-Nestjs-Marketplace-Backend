@@ -4,11 +4,12 @@
 import { Body, Controller, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth/decorators/roles.decorator';
-import { CreateSellerProfileDto } from 'src/auth/dto/create-seller-profile.dto';
+import { CreateSellerProfileDto } from 'src/user/dto/create-seller-profile.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { UserService } from './user.service';
-import { UpdateProfileDto } from 'src/auth/dto/UpdateProfileDto';
+import { UpdateProfileDto } from './dto/UpdateProfileDto';
+// import { UpdateProfileDto } from 'src/auth/dto/UpdateProfileDto';
 
 @ApiTags('user and seler')
 @Controller('user')
