@@ -83,6 +83,7 @@ export class ChatController {
         'message.send',
         result.message,
       );
+      return result;
     }
   }
 
@@ -129,5 +130,21 @@ export class ChatController {
   @ApiOperation({ summary: 'Delete chat history forever' })
   async delete(@Req() req: any, @Param('conversationId') cid: string) {
     return await this.chatService.deleteConversation(cid, req.user.id);
+  }
+
+  @Get('online-users')
+  @ApiOperation({ summary: 'Get all online user IDs' })
+  getOnlineUsers() {
+    const onlineUsers = Array.from(
+      ChatGateway.activeUsers.keys() as IterableIterator<string>,
+    );
+    if (onlineUsers.length === 0) {
+      return 'No user active';
+    }
+    return {
+      success: true,
+      count: onlineUsers.length,
+      users: onlineUsers,
+    };
   }
 }
