@@ -325,6 +325,8 @@ export type AuthWhereInput = {
   ads?: Prisma.AdListRelationFilter
   bids?: Prisma.BidListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
+  sentMessages?: Prisma.MessageListRelationFilter
+  conversations?: Prisma.ParticipantListRelationFilter
 }
 
 export type AuthOrderByWithRelationInput = {
@@ -351,6 +353,8 @@ export type AuthOrderByWithRelationInput = {
   ads?: Prisma.AdOrderByRelationAggregateInput
   bids?: Prisma.BidOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
+  sentMessages?: Prisma.MessageOrderByRelationAggregateInput
+  conversations?: Prisma.ParticipantOrderByRelationAggregateInput
 }
 
 export type AuthWhereUniqueInput = Prisma.AtLeast<{
@@ -380,6 +384,8 @@ export type AuthWhereUniqueInput = Prisma.AtLeast<{
   ads?: Prisma.AdListRelationFilter
   bids?: Prisma.BidListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
+  sentMessages?: Prisma.MessageListRelationFilter
+  conversations?: Prisma.ParticipantListRelationFilter
 }, "id" | "email" | "phone">
 
 export type AuthOrderByWithAggregationInput = {
@@ -456,6 +462,8 @@ export type AuthCreateInput = {
   ads?: Prisma.AdCreateNestedManyWithoutSellerInput
   bids?: Prisma.BidCreateNestedManyWithoutBidderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutAuthInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
 }
 
 export type AuthUncheckedCreateInput = {
@@ -482,6 +490,8 @@ export type AuthUncheckedCreateInput = {
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAuthInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type AuthUpdateInput = {
@@ -508,6 +518,8 @@ export type AuthUpdateInput = {
   ads?: Prisma.AdUpdateManyWithoutSellerNestedInput
   bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutAuthNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
 }
 
 export type AuthUncheckedUpdateInput = {
@@ -534,6 +546,8 @@ export type AuthUncheckedUpdateInput = {
   ads?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutAuthNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type AuthCreateManyInput = {
@@ -777,6 +791,34 @@ export type AuthUpdateOneRequiredWithoutPaymentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AuthUpdateToOneWithWhereWithoutPaymentsInput, Prisma.AuthUpdateWithoutPaymentsInput>, Prisma.AuthUncheckedUpdateWithoutPaymentsInput>
 }
 
+export type AuthCreateNestedOneWithoutConversationsInput = {
+  create?: Prisma.XOR<Prisma.AuthCreateWithoutConversationsInput, Prisma.AuthUncheckedCreateWithoutConversationsInput>
+  connectOrCreate?: Prisma.AuthCreateOrConnectWithoutConversationsInput
+  connect?: Prisma.AuthWhereUniqueInput
+}
+
+export type AuthUpdateOneRequiredWithoutConversationsNestedInput = {
+  create?: Prisma.XOR<Prisma.AuthCreateWithoutConversationsInput, Prisma.AuthUncheckedCreateWithoutConversationsInput>
+  connectOrCreate?: Prisma.AuthCreateOrConnectWithoutConversationsInput
+  upsert?: Prisma.AuthUpsertWithoutConversationsInput
+  connect?: Prisma.AuthWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AuthUpdateToOneWithWhereWithoutConversationsInput, Prisma.AuthUpdateWithoutConversationsInput>, Prisma.AuthUncheckedUpdateWithoutConversationsInput>
+}
+
+export type AuthCreateNestedOneWithoutSentMessagesInput = {
+  create?: Prisma.XOR<Prisma.AuthCreateWithoutSentMessagesInput, Prisma.AuthUncheckedCreateWithoutSentMessagesInput>
+  connectOrCreate?: Prisma.AuthCreateOrConnectWithoutSentMessagesInput
+  connect?: Prisma.AuthWhereUniqueInput
+}
+
+export type AuthUpdateOneRequiredWithoutSentMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.AuthCreateWithoutSentMessagesInput, Prisma.AuthUncheckedCreateWithoutSentMessagesInput>
+  connectOrCreate?: Prisma.AuthCreateOrConnectWithoutSentMessagesInput
+  upsert?: Prisma.AuthUpsertWithoutSentMessagesInput
+  connect?: Prisma.AuthWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AuthUpdateToOneWithWhereWithoutSentMessagesInput, Prisma.AuthUpdateWithoutSentMessagesInput>, Prisma.AuthUncheckedUpdateWithoutSentMessagesInput>
+}
+
 export type AuthCreateWithoutSellerProfileInput = {
   id?: string
   firstName: string
@@ -800,6 +842,8 @@ export type AuthCreateWithoutSellerProfileInput = {
   ads?: Prisma.AdCreateNestedManyWithoutSellerInput
   bids?: Prisma.BidCreateNestedManyWithoutBidderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutAuthInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
 }
 
 export type AuthUncheckedCreateWithoutSellerProfileInput = {
@@ -825,6 +869,8 @@ export type AuthUncheckedCreateWithoutSellerProfileInput = {
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAuthInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type AuthCreateOrConnectWithoutSellerProfileInput = {
@@ -866,6 +912,8 @@ export type AuthUpdateWithoutSellerProfileInput = {
   ads?: Prisma.AdUpdateManyWithoutSellerNestedInput
   bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutAuthNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
 }
 
 export type AuthUncheckedUpdateWithoutSellerProfileInput = {
@@ -891,6 +939,8 @@ export type AuthUncheckedUpdateWithoutSellerProfileInput = {
   ads?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutAuthNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type AuthCreateWithoutAdsInput = {
@@ -916,6 +966,8 @@ export type AuthCreateWithoutAdsInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   bids?: Prisma.BidCreateNestedManyWithoutBidderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutAuthInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
 }
 
 export type AuthUncheckedCreateWithoutAdsInput = {
@@ -941,6 +993,8 @@ export type AuthUncheckedCreateWithoutAdsInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAuthInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type AuthCreateOrConnectWithoutAdsInput = {
@@ -982,6 +1036,8 @@ export type AuthUpdateWithoutAdsInput = {
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutAuthNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
 }
 
 export type AuthUncheckedUpdateWithoutAdsInput = {
@@ -1007,6 +1063,8 @@ export type AuthUncheckedUpdateWithoutAdsInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutAuthNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type AuthCreateWithoutCommentsInput = {
@@ -1032,6 +1090,8 @@ export type AuthCreateWithoutCommentsInput = {
   ads?: Prisma.AdCreateNestedManyWithoutSellerInput
   bids?: Prisma.BidCreateNestedManyWithoutBidderInput
   payments?: Prisma.PaymentCreateNestedManyWithoutAuthInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
 }
 
 export type AuthUncheckedCreateWithoutCommentsInput = {
@@ -1057,6 +1117,8 @@ export type AuthUncheckedCreateWithoutCommentsInput = {
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAuthInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type AuthCreateOrConnectWithoutCommentsInput = {
@@ -1098,6 +1160,8 @@ export type AuthUpdateWithoutCommentsInput = {
   ads?: Prisma.AdUpdateManyWithoutSellerNestedInput
   bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutAuthNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
 }
 
 export type AuthUncheckedUpdateWithoutCommentsInput = {
@@ -1123,6 +1187,8 @@ export type AuthUncheckedUpdateWithoutCommentsInput = {
   ads?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutAuthNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type AuthCreateWithoutBidsInput = {
@@ -1148,6 +1214,8 @@ export type AuthCreateWithoutBidsInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   ads?: Prisma.AdCreateNestedManyWithoutSellerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutAuthInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
 }
 
 export type AuthUncheckedCreateWithoutBidsInput = {
@@ -1173,6 +1241,8 @@ export type AuthUncheckedCreateWithoutBidsInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAuthInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type AuthCreateOrConnectWithoutBidsInput = {
@@ -1214,6 +1284,8 @@ export type AuthUpdateWithoutBidsInput = {
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   ads?: Prisma.AdUpdateManyWithoutSellerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutAuthNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
 }
 
 export type AuthUncheckedUpdateWithoutBidsInput = {
@@ -1239,6 +1311,8 @@ export type AuthUncheckedUpdateWithoutBidsInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutAuthNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type AuthCreateWithoutPaymentsInput = {
@@ -1264,6 +1338,8 @@ export type AuthCreateWithoutPaymentsInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   ads?: Prisma.AdCreateNestedManyWithoutSellerInput
   bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
 }
 
 export type AuthUncheckedCreateWithoutPaymentsInput = {
@@ -1289,6 +1365,8 @@ export type AuthUncheckedCreateWithoutPaymentsInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type AuthCreateOrConnectWithoutPaymentsInput = {
@@ -1330,6 +1408,8 @@ export type AuthUpdateWithoutPaymentsInput = {
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   ads?: Prisma.AdUpdateManyWithoutSellerNestedInput
   bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
 }
 
 export type AuthUncheckedUpdateWithoutPaymentsInput = {
@@ -1355,6 +1435,256 @@ export type AuthUncheckedUpdateWithoutPaymentsInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   ads?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type AuthCreateWithoutConversationsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  nickName: string
+  email: string
+  phone: string
+  password: string
+  otp?: string | null
+  otpExpires?: Date | string | null
+  profilePicture?: string | null
+  otpAttemp?: number
+  lastLogin?: Date | string
+  isVerified?: boolean
+  isSuspended?: boolean
+  role?: $Enums.Role
+  isSeller?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  ads?: Prisma.AdCreateNestedManyWithoutSellerInput
+  bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAuthInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+}
+
+export type AuthUncheckedCreateWithoutConversationsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  nickName: string
+  email: string
+  phone: string
+  password: string
+  otp?: string | null
+  otpExpires?: Date | string | null
+  profilePicture?: string | null
+  otpAttemp?: number
+  lastLogin?: Date | string
+  isVerified?: boolean
+  isSuspended?: boolean
+  role?: $Enums.Role
+  isSeller?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  ads?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAuthInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+}
+
+export type AuthCreateOrConnectWithoutConversationsInput = {
+  where: Prisma.AuthWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuthCreateWithoutConversationsInput, Prisma.AuthUncheckedCreateWithoutConversationsInput>
+}
+
+export type AuthUpsertWithoutConversationsInput = {
+  update: Prisma.XOR<Prisma.AuthUpdateWithoutConversationsInput, Prisma.AuthUncheckedUpdateWithoutConversationsInput>
+  create: Prisma.XOR<Prisma.AuthCreateWithoutConversationsInput, Prisma.AuthUncheckedCreateWithoutConversationsInput>
+  where?: Prisma.AuthWhereInput
+}
+
+export type AuthUpdateToOneWithWhereWithoutConversationsInput = {
+  where?: Prisma.AuthWhereInput
+  data: Prisma.XOR<Prisma.AuthUpdateWithoutConversationsInput, Prisma.AuthUncheckedUpdateWithoutConversationsInput>
+}
+
+export type AuthUpdateWithoutConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  nickName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  ads?: Prisma.AdUpdateManyWithoutSellerNestedInput
+  bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAuthNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+}
+
+export type AuthUncheckedUpdateWithoutConversationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  nickName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  ads?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAuthNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+}
+
+export type AuthCreateWithoutSentMessagesInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  nickName: string
+  email: string
+  phone: string
+  password: string
+  otp?: string | null
+  otpExpires?: Date | string | null
+  profilePicture?: string | null
+  otpAttemp?: number
+  lastLogin?: Date | string
+  isVerified?: boolean
+  isSuspended?: boolean
+  role?: $Enums.Role
+  isSeller?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  ads?: Prisma.AdCreateNestedManyWithoutSellerInput
+  bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAuthInput
+  conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
+}
+
+export type AuthUncheckedCreateWithoutSentMessagesInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  nickName: string
+  email: string
+  phone: string
+  password: string
+  otp?: string | null
+  otpExpires?: Date | string | null
+  profilePicture?: string | null
+  otpAttemp?: number
+  lastLogin?: Date | string
+  isVerified?: boolean
+  isSuspended?: boolean
+  role?: $Enums.Role
+  isSeller?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  ads?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAuthInput
+  conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type AuthCreateOrConnectWithoutSentMessagesInput = {
+  where: Prisma.AuthWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuthCreateWithoutSentMessagesInput, Prisma.AuthUncheckedCreateWithoutSentMessagesInput>
+}
+
+export type AuthUpsertWithoutSentMessagesInput = {
+  update: Prisma.XOR<Prisma.AuthUpdateWithoutSentMessagesInput, Prisma.AuthUncheckedUpdateWithoutSentMessagesInput>
+  create: Prisma.XOR<Prisma.AuthCreateWithoutSentMessagesInput, Prisma.AuthUncheckedCreateWithoutSentMessagesInput>
+  where?: Prisma.AuthWhereInput
+}
+
+export type AuthUpdateToOneWithWhereWithoutSentMessagesInput = {
+  where?: Prisma.AuthWhereInput
+  data: Prisma.XOR<Prisma.AuthUpdateWithoutSentMessagesInput, Prisma.AuthUncheckedUpdateWithoutSentMessagesInput>
+}
+
+export type AuthUpdateWithoutSentMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  nickName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  ads?: Prisma.AdUpdateManyWithoutSellerNestedInput
+  bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAuthNestedInput
+  conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
+}
+
+export type AuthUncheckedUpdateWithoutSentMessagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  nickName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  ads?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAuthNestedInput
+  conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1367,6 +1697,8 @@ export type AuthCountOutputType = {
   ads: number
   bids: number
   payments: number
+  sentMessages: number
+  conversations: number
 }
 
 export type AuthCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1374,6 +1706,8 @@ export type AuthCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   ads?: boolean | AuthCountOutputTypeCountAdsArgs
   bids?: boolean | AuthCountOutputTypeCountBidsArgs
   payments?: boolean | AuthCountOutputTypeCountPaymentsArgs
+  sentMessages?: boolean | AuthCountOutputTypeCountSentMessagesArgs
+  conversations?: boolean | AuthCountOutputTypeCountConversationsArgs
 }
 
 /**
@@ -1414,6 +1748,20 @@ export type AuthCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.PaymentWhereInput
 }
 
+/**
+ * AuthCountOutputType without action
+ */
+export type AuthCountOutputTypeCountSentMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MessageWhereInput
+}
+
+/**
+ * AuthCountOutputType without action
+ */
+export type AuthCountOutputTypeCountConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ParticipantWhereInput
+}
+
 
 export type AuthSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1439,6 +1787,8 @@ export type AuthSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   ads?: boolean | Prisma.Auth$adsArgs<ExtArgs>
   bids?: boolean | Prisma.Auth$bidsArgs<ExtArgs>
   payments?: boolean | Prisma.Auth$paymentsArgs<ExtArgs>
+  sentMessages?: boolean | Prisma.Auth$sentMessagesArgs<ExtArgs>
+  conversations?: boolean | Prisma.Auth$conversationsArgs<ExtArgs>
   _count?: boolean | Prisma.AuthCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["auth"]>
 
@@ -1512,6 +1862,8 @@ export type AuthInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   ads?: boolean | Prisma.Auth$adsArgs<ExtArgs>
   bids?: boolean | Prisma.Auth$bidsArgs<ExtArgs>
   payments?: boolean | Prisma.Auth$paymentsArgs<ExtArgs>
+  sentMessages?: boolean | Prisma.Auth$sentMessagesArgs<ExtArgs>
+  conversations?: boolean | Prisma.Auth$conversationsArgs<ExtArgs>
   _count?: boolean | Prisma.AuthCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AuthIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1525,6 +1877,8 @@ export type $AuthPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     ads: Prisma.$AdPayload<ExtArgs>[]
     bids: Prisma.$BidPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
+    sentMessages: Prisma.$MessagePayload<ExtArgs>[]
+    conversations: Prisma.$ParticipantPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1944,6 +2298,8 @@ export interface Prisma__AuthClient<T, Null = never, ExtArgs extends runtime.Typ
   ads<T extends Prisma.Auth$adsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$adsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bids<T extends Prisma.Auth$bidsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$bidsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BidPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Auth$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sentMessages<T extends Prisma.Auth$sentMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$sentMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  conversations<T extends Prisma.Auth$conversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2491,6 +2847,54 @@ export type Auth$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
+}
+
+/**
+ * Auth.sentMessages
+ */
+export type Auth$sentMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Message
+   */
+  select?: Prisma.MessageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Message
+   */
+  omit?: Prisma.MessageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MessageInclude<ExtArgs> | null
+  where?: Prisma.MessageWhereInput
+  orderBy?: Prisma.MessageOrderByWithRelationInput | Prisma.MessageOrderByWithRelationInput[]
+  cursor?: Prisma.MessageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MessageScalarFieldEnum | Prisma.MessageScalarFieldEnum[]
+}
+
+/**
+ * Auth.conversations
+ */
+export type Auth$conversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Participant
+   */
+  select?: Prisma.ParticipantSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Participant
+   */
+  omit?: Prisma.ParticipantOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ParticipantInclude<ExtArgs> | null
+  where?: Prisma.ParticipantWhereInput
+  orderBy?: Prisma.ParticipantOrderByWithRelationInput | Prisma.ParticipantOrderByWithRelationInput[]
+  cursor?: Prisma.ParticipantWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ParticipantScalarFieldEnum | Prisma.ParticipantScalarFieldEnum[]
 }
 
 /**

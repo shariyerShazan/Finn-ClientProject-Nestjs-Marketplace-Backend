@@ -35,7 +35,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 
-@ApiTags('Ads Management')
+@ApiTags('Seller Ads Management')
 @Controller('ads')
 export class AddController {
   constructor(private readonly addService: AddService) {}

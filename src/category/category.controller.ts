@@ -4,6 +4,7 @@ import {
   ApiOperation,
   ApiParam,
   ApiBearerAuth,
+  ApiConsumes,
 } from '@nestjs/swagger';
 import { CategoryService } from './category.service';
 import {
@@ -26,7 +27,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 
-@ApiTags('Categories & Sub-Categories')
+@ApiTags('Admin Categories & Sub-Categories')
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
@@ -47,6 +48,7 @@ export class CategoryController {
     return await this.categoryService.getSingleCategory(categoryId);
   }
 
+  @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
@@ -56,6 +58,7 @@ export class CategoryController {
     return await this.categoryService.createCategory(dto);
   }
 
+  @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
@@ -85,6 +88,7 @@ export class CategoryController {
     return await this.categoryService.deleteCategory(categoryId);
   }
 
+  @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
@@ -94,6 +98,7 @@ export class CategoryController {
     return await this.categoryService.createSubCategory(dto);
   }
 
+  @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')

@@ -16,6 +16,8 @@ import { PrismaService } from './prisma/prisma.service';
 // import { AddService } from './add/add.service';
 import { AddModule } from './add/add.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { ChatModule } from './chat/chat.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -32,6 +34,8 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     CategoryModule,
     AddModule,
     CloudinaryModule,
+    ChatModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService, SeedService, JwtStrategy, PrismaService],

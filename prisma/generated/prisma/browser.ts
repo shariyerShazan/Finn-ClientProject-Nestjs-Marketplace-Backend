@@ -62,3 +62,18 @@ export type Bid = Prisma.BidModel
  * 
  */
 export type Payment = Prisma.PaymentModel
+/**
+ * Model Conversation
+ * 
+ */
+export type Conversation = Prisma.ConversationModel
+/**
+ * Model Participant
+ * 
+ */
+export type Participant = Prisma.ParticipantModel
+/**
+ * Model Message
+ * 
+ */
+export type Message = Prisma.MessageModel

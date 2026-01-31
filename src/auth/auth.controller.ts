@@ -17,6 +17,7 @@ import {
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
+  ApiConsumes,
 } from '@nestjs/swagger';
 import { RegisterDto } from './dto/auth.register-dto';
 import { VerifyAuthDto } from './dto/verify-auth.dto';
@@ -33,6 +34,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiConsumes('multipart/form-data')
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({
@@ -43,6 +45,7 @@ export class AuthController {
     return await this.authService.register(registerDto);
   }
 
+  @ApiConsumes('multipart/form-data')
   @Post('verify')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Verify email using OTP' })
@@ -50,6 +53,7 @@ export class AuthController {
     return await this.authService.verifyUser(verifyAuthDto);
   }
 
+  @ApiConsumes('multipart/form-data')
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'User login' })
@@ -66,6 +70,7 @@ export class AuthController {
     return await this.authService.logout(res);
   }
 
+  @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post('change-password')
@@ -79,6 +84,7 @@ export class AuthController {
     return await this.authService.changePassword(userId, changePasswordDto);
   }
 
+  @ApiConsumes('multipart/form-data')
   @Post('forgot-password')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Send OTP to email for password reset' })
@@ -86,6 +92,7 @@ export class AuthController {
     return await this.authService.forgotPassword(forgotPasswordDto.email);
   }
 
+  @ApiConsumes('multipart/form-data')
   @Post('reset-password')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Reset password using OTP' })

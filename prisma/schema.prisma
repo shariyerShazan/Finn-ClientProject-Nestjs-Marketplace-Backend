@@ -49,6 +49,11 @@ model Auth {
   bids           Bid[]   
   payments       Payment[]
 
+
+  sentMessages    Message[]      @relation("SentMessages")
+  conversations   Participant[]
+
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -273,4 +278,62 @@ enum PaymentStatus {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// chat section .. 
+model Conversation {
+  id           String        @id @default(uuid())
+  isBlocked    Boolean       @default(false)
+  blockedById  String?      
+  
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  
+  messages     Message[]
+  participants Participant[]
+}
+
+model Participant {
+  id             String       @id @default(uuid())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String
+  user           Auth         @relation(fields: [userId], references: [id])
+  userId         String
+
+  @@unique([conversationId, userId])
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  text           String?      @db.Text
+  fileUrl        String?      
+  fileType       String?      
+  
+  sender         Auth         @relation("SentMessages", fields: [senderId], references: [id])
+  senderId       String
+  
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String
+  
+  isRead         Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+}
 

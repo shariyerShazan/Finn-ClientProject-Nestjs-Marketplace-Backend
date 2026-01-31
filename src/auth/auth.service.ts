@@ -19,7 +19,7 @@ import {
 } from '@nestjs/common';
 import { RegisterDto } from './dto/auth.register-dto';
 import { VerifyAuthDto } from './dto/verify-auth.dto';
-import { OtpMailService } from 'src/mail/otp-mail.service';
+import { AllMailService } from 'src/mail/all-mail.service';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/auth.login-dto';
 import { ChangePasswordDto } from './dto/password.dto';
@@ -30,7 +30,7 @@ import { ChangePasswordDto } from './dto/password.dto';
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly otpMailService: OtpMailService,
+    private readonly allMailService: AllMailService,
     private readonly jwtService: JwtService,
     // private readonly cookie: cookieParser,
   ) {}
@@ -66,7 +66,7 @@ export class AuthService {
           otpExpires,
         },
       });
-      await this.otpMailService.sendOtpEmail(email, otp, name);
+      await this.allMailService.sendOtpEmail(email, otp, name);
       return {
         message:
           'Registration successful! Please enter the OTP sent to your email to verify your account.',
@@ -318,7 +318,7 @@ export class AuthService {
       });
 
       const name = `${user.firstName} ${user.lastName}`;
-      await this.otpMailService.sendOtpEmail(normalizedEmail, otp, name);
+      await this.allMailService.sendOtpEmail(normalizedEmail, otp, name);
 
       return {
         success: true,
