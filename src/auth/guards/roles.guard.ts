@@ -21,10 +21,6 @@ export class RolesGuard implements CanActivate {
       [context.getHandler(), context.getClass()],
     );
 
-    if (!requiredRoles) {
-      return true;
-    }
-
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
@@ -32,6 +28,25 @@ export class RolesGuard implements CanActivate {
       throw new UnauthorizedException(
         'Authentication required to access this resource',
       );
+    }
+
+    // 1. Check if user is suspended
+    if (user.isSuspended) {
+      throw new ForbiddenException(
+        'Your account has been suspended. Please contact support.',
+      );
+    }
+
+    // 2. Check if user is verified
+    if (!user.isVerified) {
+      throw new ForbiddenException(
+        'Account not verified. Please verify your email/phone first.',
+      );
+    }
+
+    // 3. Role validation logic
+    if (!requiredRoles) {
+      return true;
     }
 
     if (!user.role) {

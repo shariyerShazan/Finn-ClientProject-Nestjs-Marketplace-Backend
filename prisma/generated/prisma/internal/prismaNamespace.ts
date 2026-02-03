@@ -393,6 +393,7 @@ export const ModelName = {
   AdImage: 'AdImage',
   Bid: 'Bid',
   Payment: 'Payment',
+  SellerBank: 'SellerBank',
   Conversation: 'Conversation',
   Participant: 'Participant',
   Message: 'Message'
@@ -411,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "auth" | "sellerProfile" | "category" | "subCategory" | "ad" | "comment" | "adImage" | "bid" | "payment" | "conversation" | "participant" | "message"
+    modelProps: "auth" | "sellerProfile" | "category" | "subCategory" | "ad" | "comment" | "adImage" | "bid" | "payment" | "sellerBank" | "conversation" | "participant" | "message"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1081,6 +1082,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SellerBank: {
+      payload: Prisma.$SellerBankPayload<ExtArgs>
+      fields: Prisma.SellerBankFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SellerBankFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerBankPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SellerBankFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerBankPayload>
+        }
+        findFirst: {
+          args: Prisma.SellerBankFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerBankPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SellerBankFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerBankPayload>
+        }
+        findMany: {
+          args: Prisma.SellerBankFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerBankPayload>[]
+        }
+        create: {
+          args: Prisma.SellerBankCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerBankPayload>
+        }
+        createMany: {
+          args: Prisma.SellerBankCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SellerBankCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerBankPayload>[]
+        }
+        delete: {
+          args: Prisma.SellerBankDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerBankPayload>
+        }
+        update: {
+          args: Prisma.SellerBankUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerBankPayload>
+        }
+        deleteMany: {
+          args: Prisma.SellerBankDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SellerBankUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SellerBankUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerBankPayload>[]
+        }
+        upsert: {
+          args: Prisma.SellerBankUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SellerBankPayload>
+        }
+        aggregate: {
+          args: Prisma.SellerBankAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSellerBank>
+        }
+        groupBy: {
+          args: Prisma.SellerBankGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SellerBankGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SellerBankCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SellerBankCountAggregateOutputType> | number
+        }
+      }
+    }
     Conversation: {
       payload: Prisma.$ConversationPayload<ExtArgs>
       fields: Prisma.ConversationFieldRefs
@@ -1486,6 +1561,19 @@ export const PaymentScalarFieldEnum = {
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
 
 
+export const SellerBankScalarFieldEnum = {
+  id: 'id',
+  accountHolder: 'accountHolder',
+  bankName: 'bankName',
+  accountNumber: 'accountNumber',
+  routingNumber: 'routingNumber',
+  sellerProfileId: 'sellerProfileId',
+  createdAt: 'createdAt'
+} as const
+
+export type SellerBankScalarFieldEnum = (typeof SellerBankScalarFieldEnum)[keyof typeof SellerBankScalarFieldEnum]
+
+
 export const ConversationScalarFieldEnum = {
   id: 'id',
   isBlocked: 'isBlocked',
@@ -1831,6 +1919,7 @@ export type GlobalOmitConfig = {
   adImage?: Prisma.AdImageOmit
   bid?: Prisma.BidOmit
   payment?: Prisma.PaymentOmit
+  sellerBank?: Prisma.SellerBankOmit
   conversation?: Prisma.ConversationOmit
   participant?: Prisma.ParticipantOmit
   message?: Prisma.MessageOmit

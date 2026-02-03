@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/require-await */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   BadRequestException,
   ConflictException,
@@ -46,7 +41,7 @@ export class UserService {
           state: sellerDto.state,
         },
       });
-
+      //
       return {
         success: true,
         message: 'Seller profile submitted. Waiting for admin approval.',

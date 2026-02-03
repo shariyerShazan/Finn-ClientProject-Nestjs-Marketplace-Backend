@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -34,6 +32,8 @@ import { CreateAdDto, UpdateAddDto } from './dto/CreateAdDto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { SellerGuard } from 'src/auth/guards/seller.guard';
+import { SellerBankGuard } from 'src/auth/guards/seller-bank.guard';
 
 @ApiTags('Seller Ads Management')
 @Controller('ads')
@@ -96,7 +96,7 @@ export class AddController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard, SellerBankGuard)
   @Roles('SELLER')
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -113,7 +113,7 @@ export class AddController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard, SellerBankGuard)
   @Roles('SELLER')
   @Patch(':adId')
   @HttpCode(HttpStatus.OK)
@@ -131,7 +131,7 @@ export class AddController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard, SellerBankGuard)
   @Roles('SELLER')
   @Delete(':adId')
   @HttpCode(HttpStatus.OK)
@@ -142,8 +142,8 @@ export class AddController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  //   @Roles('SELLER')
+  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard, SellerBankGuard)
+  @Roles('SELLER')
   @Patch(':adId/toggle-sold')
   @ApiOperation({ summary: 'Toggle Ad sold status (true/false)' })
   async toggleSold(@Param('adId') adId: string, @Req() req: any) {

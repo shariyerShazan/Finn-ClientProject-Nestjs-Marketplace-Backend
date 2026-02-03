@@ -71,6 +71,8 @@ model SellerProfile {
   status         SellerStatus @default(PENDING)
   adminNote      String?
 
+   sellerBank      SellerBank?
+
   isDeleted Boolean @default(false)
 
   auth           Auth    @relation(fields: [authId], references: [id], onDelete: Cascade)
@@ -222,8 +224,18 @@ model Payment {
 
 
 
+model SellerBank {
+  id            String   @id @default(uuid())
+  accountHolder String
+  bankName      String?
+  accountNumber String
+  routingNumber String?
+  
+  sellerProfile   SellerProfile @relation(fields: [sellerProfileId], references: [id], onDelete: Cascade)
+  sellerProfileId String        @unique 
 
-
+  createdAt     DateTime @default(now())
+}
 
 
 
