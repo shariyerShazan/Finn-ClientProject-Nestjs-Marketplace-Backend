@@ -18,6 +18,9 @@ import { AddModule } from './add/add.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { ChatModule } from './chat/chat.module';
 import { AdminModule } from './admin/admin.module';
+import { CommentModule } from './comment/comment.module';
+import { PaymentModule } from './payment/payment.module';
+import { SellerBankModule } from './seller-bank/seller-bank.module';
 
 @Module({
   imports: [
@@ -36,6 +39,9 @@ import { AdminModule } from './admin/admin.module';
     CloudinaryModule,
     ChatModule,
     AdminModule,
+    CommentModule,
+    PaymentModule,
+    SellerBankModule,
   ],
   controllers: [AppController],
   providers: [AppService, SeedService, JwtStrategy, PrismaService],

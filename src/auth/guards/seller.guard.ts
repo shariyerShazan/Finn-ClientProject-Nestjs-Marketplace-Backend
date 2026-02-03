@@ -32,7 +32,7 @@ export class SellerGuard implements CanActivate {
 
     if (user.isSeller !== true) {
       throw new ForbiddenException(
-        'Access denied. This resource is only for sellers.',
+        'Access denied. This resource is only for Active sellers.',
       );
     }
 

@@ -10,6 +10,6 @@ import { ChatGateway } from './chat.gateway';
   imports: [CloudinaryModule],
   providers: [ChatService, CloudinaryService, PrismaService, ChatGateway],
   controllers: [ChatController],
-  exports: [ChatService],
+  exports: [ChatService, ChatGateway],
 })
 export class ChatModule {}

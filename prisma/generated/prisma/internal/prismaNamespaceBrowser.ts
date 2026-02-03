@@ -60,6 +60,7 @@ export const ModelName = {
   AdImage: 'AdImage',
   Bid: 'Bid',
   Payment: 'Payment',
+  SellerBank: 'SellerBank',
   Conversation: 'Conversation',
   Participant: 'Participant',
   Message: 'Message'
@@ -223,6 +224,19 @@ export const PaymentScalarFieldEnum = {
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const SellerBankScalarFieldEnum = {
+  id: 'id',
+  accountHolder: 'accountHolder',
+  bankName: 'bankName',
+  accountNumber: 'accountNumber',
+  routingNumber: 'routingNumber',
+  sellerProfileId: 'sellerProfileId',
+  createdAt: 'createdAt'
+} as const
+
+export type SellerBankScalarFieldEnum = (typeof SellerBankScalarFieldEnum)[keyof typeof SellerBankScalarFieldEnum]
 
 
 export const ConversationScalarFieldEnum = {

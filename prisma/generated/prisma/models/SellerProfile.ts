@@ -272,6 +272,7 @@ export type SellerProfileWhereInput = {
   adminNote?: Prisma.StringNullableFilter<"SellerProfile"> | string | null
   isDeleted?: Prisma.BoolFilter<"SellerProfile"> | boolean
   authId?: Prisma.StringFilter<"SellerProfile"> | string
+  sellerBank?: Prisma.XOR<Prisma.SellerBankNullableScalarRelationFilter, Prisma.SellerBankWhereInput> | null
   auth?: Prisma.XOR<Prisma.AuthScalarRelationFilter, Prisma.AuthWhereInput>
 }
 
@@ -288,6 +289,7 @@ export type SellerProfileOrderByWithRelationInput = {
   adminNote?: Prisma.SortOrderInput | Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   authId?: Prisma.SortOrder
+  sellerBank?: Prisma.SellerBankOrderByWithRelationInput
   auth?: Prisma.AuthOrderByWithRelationInput
 }
 
@@ -307,6 +309,7 @@ export type SellerProfileWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumSellerStatusFilter<"SellerProfile"> | $Enums.SellerStatus
   adminNote?: Prisma.StringNullableFilter<"SellerProfile"> | string | null
   isDeleted?: Prisma.BoolFilter<"SellerProfile"> | boolean
+  sellerBank?: Prisma.XOR<Prisma.SellerBankNullableScalarRelationFilter, Prisma.SellerBankWhereInput> | null
   auth?: Prisma.XOR<Prisma.AuthScalarRelationFilter, Prisma.AuthWhereInput>
 }, "id" | "companyWebSite" | "authId">
 
@@ -360,6 +363,7 @@ export type SellerProfileCreateInput = {
   status?: $Enums.SellerStatus
   adminNote?: string | null
   isDeleted?: boolean
+  sellerBank?: Prisma.SellerBankCreateNestedOneWithoutSellerProfileInput
   auth: Prisma.AuthCreateNestedOneWithoutSellerProfileInput
 }
 
@@ -376,6 +380,7 @@ export type SellerProfileUncheckedCreateInput = {
   adminNote?: string | null
   isDeleted?: boolean
   authId: string
+  sellerBank?: Prisma.SellerBankUncheckedCreateNestedOneWithoutSellerProfileInput
 }
 
 export type SellerProfileUpdateInput = {
@@ -390,6 +395,7 @@ export type SellerProfileUpdateInput = {
   status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
   adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sellerBank?: Prisma.SellerBankUpdateOneWithoutSellerProfileNestedInput
   auth?: Prisma.AuthUpdateOneRequiredWithoutSellerProfileNestedInput
 }
 
@@ -406,6 +412,7 @@ export type SellerProfileUncheckedUpdateInput = {
   adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   authId?: Prisma.StringFieldUpdateOperationsInput | string
+  sellerBank?: Prisma.SellerBankUncheckedUpdateOneWithoutSellerProfileNestedInput
 }
 
 export type SellerProfileCreateManyInput = {
@@ -510,6 +517,11 @@ export type SellerProfileSumOrderByAggregateInput = {
   zip?: Prisma.SortOrder
 }
 
+export type SellerProfileScalarRelationFilter = {
+  is?: Prisma.SellerProfileWhereInput
+  isNot?: Prisma.SellerProfileWhereInput
+}
+
 export type SellerProfileCreateNestedOneWithoutAuthInput = {
   create?: Prisma.XOR<Prisma.SellerProfileCreateWithoutAuthInput, Prisma.SellerProfileUncheckedCreateWithoutAuthInput>
   connectOrCreate?: Prisma.SellerProfileCreateOrConnectWithoutAuthInput
@@ -546,6 +558,20 @@ export type EnumSellerStatusFieldUpdateOperationsInput = {
   set?: $Enums.SellerStatus
 }
 
+export type SellerProfileCreateNestedOneWithoutSellerBankInput = {
+  create?: Prisma.XOR<Prisma.SellerProfileCreateWithoutSellerBankInput, Prisma.SellerProfileUncheckedCreateWithoutSellerBankInput>
+  connectOrCreate?: Prisma.SellerProfileCreateOrConnectWithoutSellerBankInput
+  connect?: Prisma.SellerProfileWhereUniqueInput
+}
+
+export type SellerProfileUpdateOneRequiredWithoutSellerBankNestedInput = {
+  create?: Prisma.XOR<Prisma.SellerProfileCreateWithoutSellerBankInput, Prisma.SellerProfileUncheckedCreateWithoutSellerBankInput>
+  connectOrCreate?: Prisma.SellerProfileCreateOrConnectWithoutSellerBankInput
+  upsert?: Prisma.SellerProfileUpsertWithoutSellerBankInput
+  connect?: Prisma.SellerProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SellerProfileUpdateToOneWithWhereWithoutSellerBankInput, Prisma.SellerProfileUpdateWithoutSellerBankInput>, Prisma.SellerProfileUncheckedUpdateWithoutSellerBankInput>
+}
+
 export type SellerProfileCreateWithoutAuthInput = {
   id?: string
   companyName: string
@@ -558,6 +584,7 @@ export type SellerProfileCreateWithoutAuthInput = {
   status?: $Enums.SellerStatus
   adminNote?: string | null
   isDeleted?: boolean
+  sellerBank?: Prisma.SellerBankCreateNestedOneWithoutSellerProfileInput
 }
 
 export type SellerProfileUncheckedCreateWithoutAuthInput = {
@@ -572,6 +599,7 @@ export type SellerProfileUncheckedCreateWithoutAuthInput = {
   status?: $Enums.SellerStatus
   adminNote?: string | null
   isDeleted?: boolean
+  sellerBank?: Prisma.SellerBankUncheckedCreateNestedOneWithoutSellerProfileInput
 }
 
 export type SellerProfileCreateOrConnectWithoutAuthInput = {
@@ -602,6 +630,7 @@ export type SellerProfileUpdateWithoutAuthInput = {
   status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
   adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sellerBank?: Prisma.SellerBankUpdateOneWithoutSellerProfileNestedInput
 }
 
 export type SellerProfileUncheckedUpdateWithoutAuthInput = {
@@ -616,6 +645,83 @@ export type SellerProfileUncheckedUpdateWithoutAuthInput = {
   status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
   adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sellerBank?: Prisma.SellerBankUncheckedUpdateOneWithoutSellerProfileNestedInput
+}
+
+export type SellerProfileCreateWithoutSellerBankInput = {
+  id?: string
+  companyName: string
+  companyWebSite: string
+  address: string
+  city: string
+  state: string
+  zip: number
+  country: string
+  status?: $Enums.SellerStatus
+  adminNote?: string | null
+  isDeleted?: boolean
+  auth: Prisma.AuthCreateNestedOneWithoutSellerProfileInput
+}
+
+export type SellerProfileUncheckedCreateWithoutSellerBankInput = {
+  id?: string
+  companyName: string
+  companyWebSite: string
+  address: string
+  city: string
+  state: string
+  zip: number
+  country: string
+  status?: $Enums.SellerStatus
+  adminNote?: string | null
+  isDeleted?: boolean
+  authId: string
+}
+
+export type SellerProfileCreateOrConnectWithoutSellerBankInput = {
+  where: Prisma.SellerProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.SellerProfileCreateWithoutSellerBankInput, Prisma.SellerProfileUncheckedCreateWithoutSellerBankInput>
+}
+
+export type SellerProfileUpsertWithoutSellerBankInput = {
+  update: Prisma.XOR<Prisma.SellerProfileUpdateWithoutSellerBankInput, Prisma.SellerProfileUncheckedUpdateWithoutSellerBankInput>
+  create: Prisma.XOR<Prisma.SellerProfileCreateWithoutSellerBankInput, Prisma.SellerProfileUncheckedCreateWithoutSellerBankInput>
+  where?: Prisma.SellerProfileWhereInput
+}
+
+export type SellerProfileUpdateToOneWithWhereWithoutSellerBankInput = {
+  where?: Prisma.SellerProfileWhereInput
+  data: Prisma.XOR<Prisma.SellerProfileUpdateWithoutSellerBankInput, Prisma.SellerProfileUncheckedUpdateWithoutSellerBankInput>
+}
+
+export type SellerProfileUpdateWithoutSellerBankInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  companyWebSite?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  zip?: Prisma.IntFieldUpdateOperationsInput | number
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
+  adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  auth?: Prisma.AuthUpdateOneRequiredWithoutSellerProfileNestedInput
+}
+
+export type SellerProfileUncheckedUpdateWithoutSellerBankInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  companyWebSite?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  zip?: Prisma.IntFieldUpdateOperationsInput | number
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumSellerStatusFieldUpdateOperationsInput | $Enums.SellerStatus
+  adminNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  authId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -633,6 +739,7 @@ export type SellerProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   adminNote?: boolean
   isDeleted?: boolean
   authId?: boolean
+  sellerBank?: boolean | Prisma.SellerProfile$sellerBankArgs<ExtArgs>
   auth?: boolean | Prisma.AuthDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["sellerProfile"]>
 
@@ -685,6 +792,7 @@ export type SellerProfileSelectScalar = {
 
 export type SellerProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "companyWebSite" | "address" | "city" | "state" | "zip" | "country" | "status" | "adminNote" | "isDeleted" | "authId", ExtArgs["result"]["sellerProfile"]>
 export type SellerProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  sellerBank?: boolean | Prisma.SellerProfile$sellerBankArgs<ExtArgs>
   auth?: boolean | Prisma.AuthDefaultArgs<ExtArgs>
 }
 export type SellerProfileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -697,6 +805,7 @@ export type SellerProfileIncludeUpdateManyAndReturn<ExtArgs extends runtime.Type
 export type $SellerProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SellerProfile"
   objects: {
+    sellerBank: Prisma.$SellerBankPayload<ExtArgs> | null
     auth: Prisma.$AuthPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1106,6 +1215,7 @@ readonly fields: SellerProfileFieldRefs;
  */
 export interface Prisma__SellerProfileClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  sellerBank<T extends Prisma.SellerProfile$sellerBankArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SellerProfile$sellerBankArgs<ExtArgs>>): Prisma.Prisma__SellerBankClient<runtime.Types.Result.GetResult<Prisma.$SellerBankPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   auth<T extends Prisma.AuthDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AuthDefaultArgs<ExtArgs>>): Prisma.Prisma__AuthClient<runtime.Types.Result.GetResult<Prisma.$AuthPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1541,6 +1651,25 @@ export type SellerProfileDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many SellerProfiles to delete.
    */
   limit?: number
+}
+
+/**
+ * SellerProfile.sellerBank
+ */
+export type SellerProfile$sellerBankArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SellerBank
+   */
+  select?: Prisma.SellerBankSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SellerBank
+   */
+  omit?: Prisma.SellerBankOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SellerBankInclude<ExtArgs> | null
+  where?: Prisma.SellerBankWhereInput
 }
 
 /**
