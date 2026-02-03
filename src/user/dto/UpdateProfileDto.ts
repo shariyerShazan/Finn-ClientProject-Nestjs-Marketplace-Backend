@@ -1,5 +1,5 @@
 import { ApiProperty, PartialType, OmitType } from '@nestjs/swagger';
-import { RegisterDto } from './auth.register-dto';
+// import { RegisterDto } from './auth.register-dto';
 import {
   IsOptional,
   IsString,
@@ -7,7 +7,9 @@ import {
   IsObject,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { RegisterDto } from 'src/auth/dto/auth.register-dto';
 import { UpdateSellerProfileDto } from './UpdateSellerProfileDto';
+// import { UpdateSellerProfileDto } from './UpdateSellerProfileDto';
 
 export class UpdateProfileDto extends PartialType(
   OmitType(RegisterDto, ['email', 'role'] as const),

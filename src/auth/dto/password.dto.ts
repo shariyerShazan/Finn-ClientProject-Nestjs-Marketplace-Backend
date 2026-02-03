@@ -16,7 +16,7 @@ export class ChangePasswordDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MinLength(6)
+  @MinLength(8)
   newPassword: string;
 }
 
@@ -54,6 +54,6 @@ export class ResetPasswordDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MinLength(6)
+  @MinLength(8)
   newPassword: string;
 }
