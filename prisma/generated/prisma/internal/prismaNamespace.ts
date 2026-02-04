@@ -1400,6 +1400,7 @@ export const SubCategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
   slug: 'slug',
+  specFields: 'specFields',
   categoryId: 'categoryId'
 } as const
 
@@ -1648,6 +1649,20 @@ export type ListEnumSellerStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
 
 
 /**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
  * Reference to a field of type 'AdType'
  */
 export type EnumAdTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdType'>
@@ -1686,20 +1701,6 @@ export type EnumPropertyForFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
  * Reference to a field of type 'PropertyFor[]'
  */
 export type ListEnumPropertyForFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PropertyFor[]'>
-    
-
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 

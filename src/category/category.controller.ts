@@ -13,6 +13,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   UseGuards,
@@ -126,5 +127,22 @@ export class CategoryController {
   })
   async removeSub(@Param('subCategoryId') subCategoryId: string) {
     return await this.categoryService.deleteSubCategory(subCategoryId);
+  }
+
+  @Get('sub-categories')
+  @ApiOperation({
+    summary: 'Get all sub-categories with parent category details',
+  })
+  async getAllSubCategories() {
+    return await this.categoryService.getAllSubCategories();
+  }
+
+  @Get('sub-categories/:id')
+  @ApiOperation({
+    summary: 'Get details of a single sub-category including specFields',
+  })
+  @ApiParam({ name: 'id', description: 'UUID of the sub-category' })
+  async getSingleSubCategory(@Param('id', new ParseUUIDPipe()) id: string) {
+    return await this.categoryService.getSingleSubCategory(id);
   }
 }

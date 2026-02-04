@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -51,8 +52,53 @@ export class AddService {
       buyer: ad.isSold && buyer ? { nickName: buyer.nickName } : null,
     };
   }
+  private async validateSpecifications(
+    subCategoryId: string,
+    specifications: any,
+    isUpdate = false,
+  ) {
+    const subCategory = await this.prisma.subCategory.findUnique({
+      where: { id: subCategoryId },
+    });
 
-  // --- CREATE AD ---
+    if (!subCategory) throw new NotFoundException('Sub-category not found');
+
+    const adminSpecs = (subCategory.specFields as any[]) || [];
+    const sellerSpecs =
+      typeof specifications === 'string'
+        ? JSON.parse(specifications)
+        : specifications || {};
+
+    const validatedData = {};
+
+    for (const field of adminSpecs) {
+      const value = sellerSpecs[field.key];
+      if (field.required) {
+        if (
+          !isUpdate &&
+          (value === undefined || value === null || value === '')
+        ) {
+          throw new BadRequestException(`Field "${field.label}" is required.`);
+        }
+        if (
+          isUpdate &&
+          sellerSpecs.hasOwnProperty(field.key) &&
+          (value === null || value === '')
+        ) {
+          throw new BadRequestException(
+            `Field "${field.label}" cannot be empty.`,
+          );
+        }
+      }
+
+      if (value !== undefined) {
+        validatedData[field.key] = value;
+      }
+    }
+
+    return validatedData;
+  }
+
   async createAd(
     sellerId: string,
     createAdDto: CreateAdDto,
@@ -62,10 +108,13 @@ export class AddService {
       if (!files || files.length === 0)
         throw new BadRequestException('At least one image is required');
 
-      const imageUrls = await this.cloudinary.uploadImages(files);
+      const specifications = await this.validateSpecifications(
+        createAdDto.subCategoryId,
+        createAdDto.specifications,
+      );
 
-      const { categoryId, subCategoryId, specifications, ...rest } =
-        createAdDto;
+      const imageUrls = await this.cloudinary.uploadImages(files);
+      const { categoryId, subCategoryId, ...rest } = createAdDto;
 
       const newAd = await this.prisma.ad.create({
         data: {
@@ -76,16 +125,13 @@ export class AddService {
           showAddress: String(rest.showAddress) === 'true',
           allowPhone: String(rest.allowPhone) === 'true',
           allowEmail: String(rest.allowEmail) === 'true',
-          specifications:
-            typeof specifications === 'string'
-              ? JSON.parse(specifications)
-              : specifications,
+          specifications,
           categoryId,
           subCategoryId,
           sellerId,
           images: {
             create: imageUrls.map((url, index) => ({
-              url: url,
+              url,
               isPrimary: index === 0,
             })),
           },
@@ -94,11 +140,9 @@ export class AddService {
       });
 
       return { message: 'Ad posted successfully.', success: true, data: newAd };
-    } catch (error: any) {
+    } catch (error) {
       if (error instanceof HttpException) throw error;
-      throw new InternalServerErrorException(
-        error.message || 'Prisma/Database Error',
-      );
+      throw new InternalServerErrorException(error.message || 'Create failed');
     }
   }
 
@@ -112,28 +156,35 @@ export class AddService {
       const existingAd = await this.prisma.ad.findUnique({
         where: { id: adId },
       });
-
       if (!existingAd) throw new NotFoundException('Ad not found');
       if (existingAd.sellerId !== sellerId)
         throw new ForbiddenException('Not authorized');
 
-      // 1. Delete requested images
       if (updateAdDto.imagesToDelete) {
         const idsToDelete = Array.isArray(updateAdDto.imagesToDelete)
           ? updateAdDto.imagesToDelete
           : (updateAdDto.imagesToDelete as string).split(',');
-
         await this.prisma.adImage.deleteMany({
           where: { id: { in: idsToDelete }, adId },
         });
       }
 
-      // 2. Upload new images
+      let finalSpecs: any = undefined;
+      if (updateAdDto.specifications) {
+        finalSpecs = await this.validateSpecifications(
+          updateAdDto.subCategoryId || existingAd.subCategoryId,
+          updateAdDto.specifications,
+          true,
+        );
+      }
+
+      if (!files || files?.length === 0) {
+        throw new BadRequestException('At least one image is required');
+      }
       let newImageUrls: string[] = [];
-      if (files && files?.length > 0)
+      if (files?.length > 0)
         newImageUrls = await this.cloudinary.uploadImages(files);
 
-      // 3. Prepare data
       const { imagesToDelete, specifications, ...rest } = updateAdDto;
 
       const updatedAd = await this.prisma.ad.update({
@@ -155,10 +206,7 @@ export class AddService {
             rest.allowEmail !== undefined
               ? String(rest.allowEmail) === 'true'
               : undefined,
-          specifications:
-            typeof specifications === 'string'
-              ? JSON.parse(specifications)
-              : specifications,
+          specifications: finalSpecs,
           images:
             newImageUrls.length > 0
               ? {
@@ -177,7 +225,7 @@ export class AddService {
         success: true,
         data: updatedAd,
       };
-    } catch (error: any) {
+    } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new InternalServerErrorException(error.message || 'Update failed');
     }

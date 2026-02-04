@@ -42,6 +42,7 @@ export type SubCategoryCountAggregateOutputType = {
   id: number
   name: number
   slug: number
+  specFields: number
   categoryId: number
   _all: number
 }
@@ -65,6 +66,7 @@ export type SubCategoryCountAggregateInputType = {
   id?: true
   name?: true
   slug?: true
+  specFields?: true
   categoryId?: true
   _all?: true
 }
@@ -145,6 +147,7 @@ export type SubCategoryGroupByOutputType = {
   id: string
   name: string
   slug: string
+  specFields: runtime.JsonValue | null
   categoryId: string
   _count: SubCategoryCountAggregateOutputType | null
   _min: SubCategoryMinAggregateOutputType | null
@@ -173,6 +176,7 @@ export type SubCategoryWhereInput = {
   id?: Prisma.StringFilter<"SubCategory"> | string
   name?: Prisma.StringFilter<"SubCategory"> | string
   slug?: Prisma.StringFilter<"SubCategory"> | string
+  specFields?: Prisma.JsonNullableFilter<"SubCategory">
   categoryId?: Prisma.StringFilter<"SubCategory"> | string
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   ads?: Prisma.AdListRelationFilter
@@ -182,6 +186,7 @@ export type SubCategoryOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  specFields?: Prisma.SortOrderInput | Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   category?: Prisma.CategoryOrderByWithRelationInput
   ads?: Prisma.AdOrderByRelationAggregateInput
@@ -194,6 +199,7 @@ export type SubCategoryWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.SubCategoryWhereInput[]
   NOT?: Prisma.SubCategoryWhereInput | Prisma.SubCategoryWhereInput[]
   name?: Prisma.StringFilter<"SubCategory"> | string
+  specFields?: Prisma.JsonNullableFilter<"SubCategory">
   categoryId?: Prisma.StringFilter<"SubCategory"> | string
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   ads?: Prisma.AdListRelationFilter
@@ -203,6 +209,7 @@ export type SubCategoryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  specFields?: Prisma.SortOrderInput | Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   _count?: Prisma.SubCategoryCountOrderByAggregateInput
   _max?: Prisma.SubCategoryMaxOrderByAggregateInput
@@ -216,6 +223,7 @@ export type SubCategoryScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"SubCategory"> | string
   name?: Prisma.StringWithAggregatesFilter<"SubCategory"> | string
   slug?: Prisma.StringWithAggregatesFilter<"SubCategory"> | string
+  specFields?: Prisma.JsonNullableWithAggregatesFilter<"SubCategory">
   categoryId?: Prisma.StringWithAggregatesFilter<"SubCategory"> | string
 }
 
@@ -223,6 +231,7 @@ export type SubCategoryCreateInput = {
   id?: string
   name: string
   slug: string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   category: Prisma.CategoryCreateNestedOneWithoutSubCategoriesInput
   ads?: Prisma.AdCreateNestedManyWithoutSubCategoryInput
 }
@@ -231,6 +240,7 @@ export type SubCategoryUncheckedCreateInput = {
   id?: string
   name: string
   slug: string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutSubCategoryInput
 }
@@ -239,6 +249,7 @@ export type SubCategoryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   category?: Prisma.CategoryUpdateOneRequiredWithoutSubCategoriesNestedInput
   ads?: Prisma.AdUpdateManyWithoutSubCategoryNestedInput
 }
@@ -247,6 +258,7 @@ export type SubCategoryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   ads?: Prisma.AdUncheckedUpdateManyWithoutSubCategoryNestedInput
 }
@@ -255,6 +267,7 @@ export type SubCategoryCreateManyInput = {
   id?: string
   name: string
   slug: string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
 }
 
@@ -262,12 +275,14 @@ export type SubCategoryUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type SubCategoryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -285,6 +300,7 @@ export type SubCategoryCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
+  specFields?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
 }
 
@@ -367,6 +383,7 @@ export type SubCategoryCreateWithoutCategoryInput = {
   id?: string
   name: string
   slug: string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   ads?: Prisma.AdCreateNestedManyWithoutSubCategoryInput
 }
 
@@ -374,6 +391,7 @@ export type SubCategoryUncheckedCreateWithoutCategoryInput = {
   id?: string
   name: string
   slug: string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   ads?: Prisma.AdUncheckedCreateNestedManyWithoutSubCategoryInput
 }
 
@@ -410,6 +428,7 @@ export type SubCategoryScalarWhereInput = {
   id?: Prisma.StringFilter<"SubCategory"> | string
   name?: Prisma.StringFilter<"SubCategory"> | string
   slug?: Prisma.StringFilter<"SubCategory"> | string
+  specFields?: Prisma.JsonNullableFilter<"SubCategory">
   categoryId?: Prisma.StringFilter<"SubCategory"> | string
 }
 
@@ -417,6 +436,7 @@ export type SubCategoryCreateWithoutAdsInput = {
   id?: string
   name: string
   slug: string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   category: Prisma.CategoryCreateNestedOneWithoutSubCategoriesInput
 }
 
@@ -424,6 +444,7 @@ export type SubCategoryUncheckedCreateWithoutAdsInput = {
   id?: string
   name: string
   slug: string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId: string
 }
 
@@ -447,6 +468,7 @@ export type SubCategoryUpdateWithoutAdsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   category?: Prisma.CategoryUpdateOneRequiredWithoutSubCategoriesNestedInput
 }
 
@@ -454,6 +476,7 @@ export type SubCategoryUncheckedUpdateWithoutAdsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -461,12 +484,14 @@ export type SubCategoryCreateManyCategoryInput = {
   id?: string
   name: string
   slug: string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type SubCategoryUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   ads?: Prisma.AdUpdateManyWithoutSubCategoryNestedInput
 }
 
@@ -474,6 +499,7 @@ export type SubCategoryUncheckedUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   ads?: Prisma.AdUncheckedUpdateManyWithoutSubCategoryNestedInput
 }
 
@@ -481,6 +507,7 @@ export type SubCategoryUncheckedUpdateManyWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
+  specFields?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 
@@ -518,6 +545,7 @@ export type SubCategorySelect<ExtArgs extends runtime.Types.Extensions.InternalA
   id?: boolean
   name?: boolean
   slug?: boolean
+  specFields?: boolean
   categoryId?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   ads?: boolean | Prisma.SubCategory$adsArgs<ExtArgs>
@@ -528,6 +556,7 @@ export type SubCategorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   name?: boolean
   slug?: boolean
+  specFields?: boolean
   categoryId?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subCategory"]>
@@ -536,6 +565,7 @@ export type SubCategorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   name?: boolean
   slug?: boolean
+  specFields?: boolean
   categoryId?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subCategory"]>
@@ -544,10 +574,11 @@ export type SubCategorySelectScalar = {
   id?: boolean
   name?: boolean
   slug?: boolean
+  specFields?: boolean
   categoryId?: boolean
 }
 
-export type SubCategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "categoryId", ExtArgs["result"]["subCategory"]>
+export type SubCategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "specFields" | "categoryId", ExtArgs["result"]["subCategory"]>
 export type SubCategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   ads?: boolean | Prisma.SubCategory$adsArgs<ExtArgs>
@@ -570,6 +601,7 @@ export type $SubCategoryPayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: string
     name: string
     slug: string
+    specFields: runtime.JsonValue | null
     categoryId: string
   }, ExtArgs["result"]["subCategory"]>
   composites: {}
@@ -999,6 +1031,7 @@ export interface SubCategoryFieldRefs {
   readonly id: Prisma.FieldRef<"SubCategory", 'String'>
   readonly name: Prisma.FieldRef<"SubCategory", 'String'>
   readonly slug: Prisma.FieldRef<"SubCategory", 'String'>
+  readonly specFields: Prisma.FieldRef<"SubCategory", 'Json'>
   readonly categoryId: Prisma.FieldRef<"SubCategory", 'String'>
 }
     

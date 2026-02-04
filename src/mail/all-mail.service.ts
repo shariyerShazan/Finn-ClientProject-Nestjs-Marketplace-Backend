@@ -49,6 +49,51 @@ export class AllMailService {
     return await this.mailService.send(email, subject, html);
   }
 
+  async sendForgotOtp(email: string, otp: string, name: string) {
+    const subject = '🔐 Reset Your ByBench Password';
+    const brandColor = '#EA2754';
+
+    const html = `
+      <div style="background-color: #f4f4f7; padding: 40px 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; line-height: 1.6;">
+        <div style="max-width: 550px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 1px solid #e1e1e1;">
+          
+          <div style="background-color: ${brandColor}; padding: 35px; text-align: center;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 800; letter-spacing: -1.5px; text-transform: uppercase;">ByBench</h1>
+            <div style="height: 3px; width: 40px; background-color: #ffffff; margin: 10px auto; border-radius: 2px; opacity: 0.5;"></div>
+          </div>
+
+          <div style="padding: 45px 35px;">
+            <p style="font-size: 18px; font-weight: 600; color: #111; margin-bottom: 15px;">Hey ${name},</p>
+            <p style="color: #555; font-size: 15px; margin-bottom: 30px;">
+              Forgot your password? No worries, it happens! Use the security code below to reset your password and get back to your account:
+            </p>
+            
+            <div style="background-color: #fff5f6; border: 2px solid ${brandColor}; border-radius: 12px; padding: 30px; text-align: center; margin-bottom: 30px;">
+              <span style="display: block; font-size: 11px; text-transform: uppercase; color: ${brandColor}; margin-bottom: 10px; font-weight: 800; letter-spacing: 2px;">Password Reset Code</span>
+              <span style="font-size: 42px; font-weight: 900; color: #111; letter-spacing: 10px; font-family: 'Courier New', Courier, monospace;">${otp}</span>
+            </div>
+
+            <p style="margin: 0; font-size: 13px; color: #888; text-align: center;">
+              This code is valid for <span style="color: ${brandColor}; font-weight: 600;">5 minutes</span>. <br>
+              <strong style="color: #111;">Security Note:</strong> If you didn't request a password reset, please ignore this email or contact support if you're concerned about your account.
+            </p>
+          </div>
+
+          <div style="background-color: #111; padding: 25px; text-align: center;">
+            <p style="margin: 0; font-size: 12px; color: #888;">
+              Questions? Contact us at <a href="mailto:support@bybench.com" style="color: ${brandColor}; text-decoration: none;">support@bybench.com</a>
+            </p>
+            <p style="margin: 10px 0 0 0; font-size: 11px; color: #555;">
+              © 2026 ByBench Inc. Dhaka, Bangladesh.
+            </p>
+          </div>
+        </div>
+      </div>
+    `;
+
+    return await this.mailService.send(email, subject, html);
+  }
+
   async sendSellerCredentials(email: string, pass: string, name: string) {
     const subject = '🚀 Welcome to ByBench - Your Seller Account is Ready!';
     const brandColor = '#EA2754';

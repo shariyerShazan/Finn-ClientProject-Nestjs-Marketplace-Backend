@@ -117,7 +117,10 @@ model SubCategory {
   id          String   @id @default(uuid())
   name        String
   slug        String   @unique
-  category    Category @relation(fields: [categoryId], references: [id])
+
+  specFields  Json?
+
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId  String
   ads         Ad[]
 }
@@ -180,7 +183,7 @@ model Comment {
   createdAt DateTime @default(now())
 
   userId    String
-  user    Auth      @relation(fields: [userId], references: [id])
+  user    Auth      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   adId      String
   ad      Ad        @relation(fields: [adId], references: [id])

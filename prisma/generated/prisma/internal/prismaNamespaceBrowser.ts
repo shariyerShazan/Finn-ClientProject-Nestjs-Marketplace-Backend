@@ -139,6 +139,7 @@ export const SubCategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
   slug: 'slug',
+  specFields: 'specFields',
   categoryId: 'categoryId'
 } as const
 

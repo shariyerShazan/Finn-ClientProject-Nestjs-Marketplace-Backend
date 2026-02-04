@@ -1,5 +1,14 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+  ValidateNested,
+} from 'class-validator';
+import { SpecFieldDto } from './specifi.dto';
+import { Type } from 'class-transformer';
 
 // --- Category DTOs ---
 export class CreateCategoryDto {
@@ -23,6 +32,7 @@ export class CreateCategoryDto {
 export class UpdateCategoryDto extends PartialType(CreateCategoryDto) {}
 
 // --- Sub-Category DTOs ---
+
 export class CreateSubCategoryDto {
   @ApiProperty({ example: 'Cars' })
   @IsString()
@@ -38,6 +48,16 @@ export class CreateSubCategoryDto {
   @IsString()
   @IsNotEmpty()
   categoryId: string;
+
+  @ApiProperty({
+    type: [SpecFieldDto],
+    description: 'List of dynamic specification fields',
+  })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SpecFieldDto)
+  specFields?: SpecFieldDto[];
 }
 
 export class UpdateSubCategoryDto extends PartialType(CreateSubCategoryDto) {}

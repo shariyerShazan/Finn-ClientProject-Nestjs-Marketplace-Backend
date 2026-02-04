@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import {
@@ -6,6 +7,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
   HttpException,
+  BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
@@ -15,6 +17,7 @@ import {
 } from './dto/admin-seller.dto';
 import { AllMailService } from 'src/mail/all-mail.service';
 import Stripe from 'stripe';
+import { SellerStatus } from 'prisma/generated/prisma/enums';
 
 @Injectable()
 export class AdminService {
@@ -349,5 +352,53 @@ export class AdminService {
 
     if (!payment) throw new NotFoundException('Payment record not found');
     return { success: true, data: payment };
+  }
+
+  async toggleSellerApproval(userId: string) {
+    try {
+      const user = await this.prisma.auth.findUnique({
+        where: { id: userId },
+        include: { sellerProfile: true },
+      });
+
+      if (!user) throw new NotFoundException('User not found');
+      if (!user.sellerProfile) {
+        throw new BadRequestException(
+          'This user has no seller profile to approve',
+        );
+      }
+
+      const isCurrentlyApproved = user.sellerProfile.status === 'APPROVED';
+      const newStatus: SellerStatus = isCurrentlyApproved
+        ? 'REJECTED'
+        : 'APPROVED';
+      const newIsSeller = !isCurrentlyApproved;
+
+      await this.prisma.$transaction([
+        this.prisma.auth.update({
+          where: { id: userId },
+          data: { isSeller: newIsSeller },
+        }),
+        this.prisma.sellerProfile.update({
+          where: { authId: userId },
+          data: { status: newStatus },
+        }),
+      ]);
+
+      return {
+        success: true,
+        message: `Seller profile has been ${newStatus.toLowerCase()} successfully`,
+        data: {
+          isSeller: newIsSeller,
+          status: newStatus,
+        },
+      };
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      console.error('Approval Toggle Error:', error);
+      throw new InternalServerErrorException(
+        'Failed to process seller approval',
+      );
+    }
   }
 }

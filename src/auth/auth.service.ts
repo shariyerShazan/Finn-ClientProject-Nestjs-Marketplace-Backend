@@ -172,15 +172,6 @@ export class AuthService {
         data: { lastLogin: new Date() },
       });
 
-      // if (!user.sellerProfile) {
-      //   throw new NotFoundException('Create a seller profile first!');
-      // }
-      // if (user.role === 'SELLER' && !user.isSeller) {
-      //   throw new ForbiddenException(
-      //     'Your seller account is pending admin approval. You will be able to login once approved.',
-      //   );
-      // }
-
       const isPasswordMatch = await bcrypt.compare(password, user.password);
       if (!isPasswordMatch) {
         throw new UnauthorizedException('Invalid email or password');
@@ -318,7 +309,7 @@ export class AuthService {
       });
 
       const name = `${user.firstName} ${user.lastName}`;
-      await this.allMailService.sendOtpEmail(normalizedEmail, otp, name);
+      await this.allMailService.sendForgotOtp(normalizedEmail, otp, name);
 
       return {
         success: true,

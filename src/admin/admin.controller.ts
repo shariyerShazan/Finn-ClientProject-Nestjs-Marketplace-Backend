@@ -165,4 +165,12 @@ export class AdminController {
   async getSinglePayment(@Param('paymentId', new ParseUUIDPipe()) id: string) {
     return await this.adminService.getSinglePayment(id);
   }
+  @Patch('toggle-approval/:userId')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @ApiOperation({ summary: 'Approve or Reject a seller profile' })
+  @ApiParam({ name: 'userId', description: 'UUID of the user/seller' })
+  async toggleApproval(@Param('userId', new ParseUUIDPipe()) id: string) {
+    return await this.adminService.toggleSellerApproval(id);
+  }
 }
