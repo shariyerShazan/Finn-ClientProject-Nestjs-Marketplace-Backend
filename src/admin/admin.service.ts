@@ -401,4 +401,65 @@ export class AdminService {
       );
     }
   }
+
+  async getAllRequestedSellers(query: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) {
+    try {
+      const { page = 1, limit = 10, search } = query;
+      const skip = (Number(page) - 1) * Number(limit);
+
+      const where: any = {
+        isSeller: false,
+        sellerProfile: {
+          isNot: null,
+          status: 'PENDING',
+        },
+        ...(search && {
+          OR: [
+            { email: { contains: search, mode: 'insensitive' } },
+            { nickName: { contains: search, mode: 'insensitive' } },
+            {
+              sellerProfile: {
+                companyName: { contains: search, mode: 'insensitive' },
+              },
+            },
+          ],
+        }),
+      };
+
+      const [total, requests] = await Promise.all([
+        this.prisma.auth.count({ where }),
+        this.prisma.auth.findMany({
+          where,
+          skip,
+          take: Number(limit),
+          include: {
+            sellerProfile: true,
+          },
+          orderBy: { createdAt: 'desc' },
+        }),
+      ]);
+
+      return {
+        success: true,
+        meta: {
+          total,
+          page: Number(page),
+          limit: Number(limit),
+          totalPages: Math.ceil(total / Number(limit)),
+        },
+        data: requests,
+      };
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+
+      console.error('GetAllRequestedSellers Error:', error);
+      throw new InternalServerErrorException(
+        'Failed to fetch requested sellers list. Please try again later.',
+      );
+    }
+  }
 }

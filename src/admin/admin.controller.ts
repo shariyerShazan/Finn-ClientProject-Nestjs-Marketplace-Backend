@@ -26,6 +26,7 @@ import {
   ApiConsumes,
   ApiParam,
   ApiQuery,
+  ApiResponse,
 } from '@nestjs/swagger';
 import {
   AdminCreateSellerDto,
@@ -165,6 +166,26 @@ export class AdminController {
   async getSinglePayment(@Param('paymentId', new ParseUUIDPipe()) id: string) {
     return await this.adminService.getSinglePayment(id);
   }
+
+  @Get('requested-sellers')
+  @ApiOperation({ summary: 'Get all pending seller approval requests' })
+  @ApiResponse({ status: 200, description: 'List of pending sellers' })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description: 'Search by email, name or company',
+  })
+  async getRequestedSellers(
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+    @Query('search') search?: string,
+  ) {
+    return this.adminService.getAllRequestedSellers({ page, limit, search });
+  }
+
   @Patch('toggle-approval/:userId')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
