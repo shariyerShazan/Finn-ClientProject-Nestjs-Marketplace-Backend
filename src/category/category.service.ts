@@ -279,7 +279,6 @@ async getAllSubCategories(page: number = 1, limit: number = 10) {
       include: {
         category: { select: { id: true, name: true, slug: true } },
       },
-      orderBy: { createdAt: 'desc' },
     }),
     this.prisma.subCategory.count(),
   ]);
