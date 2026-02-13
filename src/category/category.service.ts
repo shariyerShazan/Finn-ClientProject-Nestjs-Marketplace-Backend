@@ -205,9 +205,9 @@ async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
     });
     if (!subCategory) throw new NotFoundException('Sub-category not found');
 
-    let finalSpecFields = undefined;
+    // FIX: Declare with 'any' type to prevent TS2322 error
+    let finalSpecFields: any = undefined;
 
-    // Handle both String (FormData) and Object (JSON) incoming data
     if (dto.specFields) {
       if (typeof dto.specFields === 'string') {
         try {
@@ -220,13 +220,14 @@ async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
       }
     }
 
+    // Single update call
     return await this.prisma.subCategory.update({
       where: { id },
       data: {
         name: dto.name ?? undefined,
         slug: dto.slug ?? undefined,
         categoryId: dto.categoryId ?? undefined,
-        // The Fix for TS2322: cast to any to satisfy Prisma's internal Json types
+        // Using Type Casting to bypass Prisma strict Json check
         specFields: finalSpecFields !== undefined ? (finalSpecFields as any) : undefined,
       },
     });
