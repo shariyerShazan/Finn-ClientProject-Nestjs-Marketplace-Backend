@@ -205,9 +205,16 @@ async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
     });
     if (!subCategory) throw new NotFoundException('Sub-category not found');
 
-    // FIX: Declare with 'any' type to prevent TS2322 error
-    let finalSpecFields: any = undefined;
+    // Check slug uniqueness if being updated
+    if (dto.slug && dto.slug !== subCategory.slug) {
+      const slugExists = await this.prisma.subCategory.findFirst({
+        where: { slug: dto.slug },
+      });
+      if (slugExists) throw new ConflictException('Sub-category slug already exists');
+    }
 
+    // Parse specFields if string, validate if provided
+    let finalSpecFields: any = undefined;
     if (dto.specFields) {
       if (typeof dto.specFields === 'string') {
         try {
@@ -218,18 +225,29 @@ async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
       } else {
         finalSpecFields = dto.specFields;
       }
+
+      // Validate select fields have options
+      if (Array.isArray(finalSpecFields)) {
+        for (const field of finalSpecFields) {
+          if (field.type === 'select' && (!field.options || field.options.length === 0)) {
+            throw new BadRequestException(
+              `Field "${field.label}" is a select type but has no options.`,
+            );
+          }
+        }
+      }
     }
 
-    // Single update call
+    // Build updateData dynamically: only include fields that are explicitly provided
+    const updateData: any = {};
+    if (dto.name !== undefined) updateData.name = dto.name;
+    if (dto.slug !== undefined) updateData.slug = dto.slug;
+    if (dto.categoryId !== undefined) updateData.categoryId = dto.categoryId;
+    if (finalSpecFields !== undefined) updateData.specFields = finalSpecFields;
+
     return await this.prisma.subCategory.update({
       where: { id },
-      data: {
-        name: dto.name ?? undefined,
-        slug: dto.slug ?? undefined,
-        categoryId: dto.categoryId ?? undefined,
-        // Using Type Casting to bypass Prisma strict Json check
-        specFields: finalSpecFields !== undefined ? (finalSpecFields as any) : undefined,
-      },
+      data: updateData,
     });
   } catch (error) {
     if (error instanceof HttpException) throw error;
