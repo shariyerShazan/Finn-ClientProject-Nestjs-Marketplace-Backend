@@ -39,11 +39,17 @@ export class CategoryController {
   // 1. STATIC SUB-CATEGORY ROUTES FIRST (To avoid 404/Conflict)
   // ==========================================================
 
-  @Get('sub-categories')
-  @ApiOperation({ summary: 'Get all sub-categories with parent category details' })
-  async getAllSubCategories() {
-    return await this.categoryService.getAllSubCategories();
-  }
+@Get('sub-categories')
+@ApiOperation({ summary: 'Get all sub-categories with pagination' })
+async getAllSubCategories(
+  @Query('page') page?: string, 
+  @Query('limit') limit?: string
+) {
+  return await this.categoryService.getAllSubCategories(
+    page ? parseInt(page) : 1, 
+    limit ? parseInt(limit) : 10
+  );
+}
 
   @Get('sub-categories/:id')
   @ApiOperation({ summary: 'Get details of a single sub-category including specFields' })
