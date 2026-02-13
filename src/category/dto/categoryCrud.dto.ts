@@ -5,9 +5,9 @@ import {
   IsOptional,
   IsString,
   Matches,
- // ValidateNested,
+  ValidateNested,
 } from 'class-validator';
-import { SpecFieldDto } from './specifi.dto';
+import { SpecFieldDto } from './specifi.dto'; // আপনার স্পেসিফিকেশন DTO
 import { Type } from 'class-transformer';
 
 // --- Category DTOs ---
@@ -32,7 +32,6 @@ export class CreateCategoryDto {
 export class UpdateCategoryDto extends PartialType(CreateCategoryDto) {}
 
 // --- Sub-Category DTOs ---
-
 export class CreateSubCategoryDto {
   @ApiProperty({ example: 'Cars' })
   @IsString()
@@ -42,6 +41,7 @@ export class CreateSubCategoryDto {
   @ApiProperty({ example: 'vehicles-cars' })
   @IsString()
   @IsNotEmpty()
+  @Matches(/^[a-z0-9-]+$/, { message: 'Slug must be lowercase and hyphenated' })
   slug: string;
 
   @ApiProperty({ example: 'category-uuid-here' })
@@ -52,12 +52,13 @@ export class CreateSubCategoryDto {
   @ApiProperty({
     type: [SpecFieldDto],
     description: 'List of dynamic specification fields',
+    required: false,
   })
   @IsOptional()
   @IsArray()
-  //@ValidateNested({ each: true })
-  @Type(() => SpecFieldDto)
-  specFields?: any;
+  @ValidateNested({ each: true }) // প্রতিটি অবজেক্টকে ভ্যালিডেট করবে
+  @Type(() => SpecFieldDto)      // অবজেক্টগুলোকে SpecFieldDto ক্লাসে রূপান্তর করবে
+  specFields?: SpecFieldDto[];   // 'any' এর বদলে টাইপ সেট করা ভালো
 }
 
 export class UpdateSubCategoryDto extends PartialType(CreateSubCategoryDto) {}
