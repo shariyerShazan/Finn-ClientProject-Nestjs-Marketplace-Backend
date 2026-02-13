@@ -35,28 +35,39 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
+  // ==========================================================
+  // 1. STATIC SUB-CATEGORY ROUTES FIRST (To avoid 404/Conflict)
+  // ==========================================================
+
+  @Get('sub-categories')
+  @ApiOperation({ summary: 'Get all sub-categories with parent category details' })
+  async getAllSubCategories() {
+    return await this.categoryService.getAllSubCategories();
+  }
+
+  @Get('sub-categories/:id')
+  @ApiOperation({ summary: 'Get details of a single sub-category including specFields' })
+  @ApiParam({ name: 'id', description: 'UUID of the sub-category' })
+  async getSingleSubCategory(@Param('id', new ParseUUIDPipe()) id: string) {
+    return await this.categoryService.getSingleSubCategory(id);
+  }
+
+  // ==========================================================
+  // 2. GENERAL CATEGORY ROUTES
+  // ==========================================================
+
   @Get()
   @ApiOperation({ summary: 'Get all categories with their sub-categories' })
   async findAll() {
     return await this.categoryService.getAllCategories();
   }
 
+  // MOVED DOWN: This dynamic param :categoryId would "swallow" sub-categories if it stayed on top
   @Get(':categoryId')
   @ApiOperation({ summary: 'Get a single category by ID' })
-  @ApiParam({
-    name: 'categoryId',
-    description: 'The unique ID of the category',
-  })
+  @ApiParam({ name: 'categoryId', description: 'The unique ID of the category' })
   async findOne(@Param('categoryId') categoryId: string) {
     return await this.categoryService.getSingleCategory(categoryId);
-  }
-  
-  @Get('sub-categories')
-  @ApiOperation({
-    summary: 'Get all sub-categories with parent category details',
-  })
-  async getAllSubCategories() {
-    return await this.categoryService.getAllSubCategories();
   }
 
   @ApiConsumes('multipart/form-data')
@@ -77,16 +88,13 @@ export class CategoryController {
   @Patch(':categoryId')
   @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: 'Update an existing category' })
-  @ApiParam({
-    name: 'categoryId',
-    description: 'The ID of the category to update',
-  })
+  @ApiParam({ name: 'categoryId', description: 'The ID of the category to update' })
   async updateCat(
- @Param('categoryId') categoryId: string,
-  @Body() dto: UpdateCategoryDto,
-  @UploadedFile() file: Express.Multer.File,
+    @Param('categoryId') categoryId: string,
+    @Body() dto: UpdateCategoryDto,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-return await this.categoryService.updateCategory(categoryId, dto, file);
+    return await this.categoryService.updateCategory(categoryId, dto, file);
   }
 
   @ApiBearerAuth()
@@ -94,20 +102,21 @@ return await this.categoryService.updateCategory(categoryId, dto, file);
   @Roles('ADMIN')
   @Delete(':categoryId')
   @ApiOperation({ summary: 'Delete a category' })
-  @ApiParam({
-    name: 'categoryId',
-    description: 'The ID of the category to delete',
-  })
+  @ApiParam({ name: 'categoryId', description: 'The ID of the category to delete' })
   async removeCat(@Param('categoryId') categoryId: string) {
     return await this.categoryService.deleteCategory(categoryId);
   }
+
+  // ==========================================================
+  // 3. SUB-CATEGORY MUTATIONS
+  // ==========================================================
 
   @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Post('sub')
-  @ApiOperation({ summary: 'Create a new sub-category under a category' })
+  @ApiOperation({ summary: 'Create a new sub-category' })
   async createSub(@Body() dto: CreateSubCategoryDto) {
     return await this.categoryService.createSubCategory(dto);
   }
@@ -118,10 +127,7 @@ return await this.categoryService.updateCategory(categoryId, dto, file);
   @Roles('ADMIN')
   @Patch('sub/:subCategoryId')
   @ApiOperation({ summary: 'Update a sub-category' })
-  @ApiParam({
-    name: 'subCategoryId',
-    description: 'The ID of the sub-category to update',
-  })
+  @ApiParam({ name: 'subCategoryId', description: 'The ID of the sub-category' })
   async updateSub(
     @Param('subCategoryId') subCategoryId: string,
     @Body() dto: UpdateSubCategoryDto,
@@ -134,21 +140,8 @@ return await this.categoryService.updateCategory(categoryId, dto, file);
   @Roles('ADMIN')
   @Delete('sub/:subCategoryId')
   @ApiOperation({ summary: 'Delete a sub-category' })
-  @ApiParam({
-    name: 'subCategoryId',
-    description: 'The ID of the sub-category to delete',
-  })
+  @ApiParam({ name: 'subCategoryId', description: 'The ID of the sub-category' })
   async removeSub(@Param('subCategoryId') subCategoryId: string) {
     return await this.categoryService.deleteSubCategory(subCategoryId);
-  }
-
-
-  @Get('sub-categories/:id')
-  @ApiOperation({
-    summary: 'Get details of a single sub-category including specFields',
-  })
-  @ApiParam({ name: 'id', description: 'UUID of the sub-category' })
-  async getSingleSubCategory(@Param('id', new ParseUUIDPipe()) id: string) {
-    return await this.categoryService.getSingleSubCategory(id);
   }
 }
