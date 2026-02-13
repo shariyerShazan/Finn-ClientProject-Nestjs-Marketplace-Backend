@@ -205,22 +205,29 @@ async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
     });
     if (!subCategory) throw new NotFoundException('Sub-category not found');
 
-    let parsedSpecFields = dto.specFields;
+    let finalSpecFields = undefined;
 
-    if (typeof dto.specFields === 'string') {
-      parsedSpecFields = JSON.parse(dto.specFields);
+    // Handle both String (FormData) and Object (JSON) incoming data
+    if (dto.specFields) {
+      if (typeof dto.specFields === 'string') {
+        try {
+          finalSpecFields = JSON.parse(dto.specFields);
+        } catch (e) {
+          throw new BadRequestException('specFields is not valid JSON');
+        }
+      } else {
+        finalSpecFields = dto.specFields;
+      }
     }
 
     return await this.prisma.subCategory.update({
       where: { id },
       data: {
-        name: dto.name ?? subCategory.name,
-        slug: dto.slug ?? subCategory.slug,
-        categoryId: dto.categoryId ?? subCategory.categoryId,
-        specFields:
-          parsedSpecFields !== undefined
-            ? parsedSpecFields
-            : subCategory.specFields,
+        name: dto.name ?? undefined,
+        slug: dto.slug ?? undefined,
+        categoryId: dto.categoryId ?? undefined,
+        // The Fix for TS2322: cast to any to satisfy Prisma's internal Json types
+        specFields: finalSpecFields !== undefined ? (finalSpecFields as any) : undefined,
       },
     });
   } catch (error) {
