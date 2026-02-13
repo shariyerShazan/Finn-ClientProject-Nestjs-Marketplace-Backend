@@ -92,52 +92,45 @@ export class CategoryService {
   }
 
 async updateCategory(
-    id: string,
-    dto: UpdateCategoryDto,
-    file?: Express.Multer.File,
-  ) {
-    try {
-      const category = await this.prisma.category.findUnique({
-        where: { id },
-      });
+  id: string,
+  dto: UpdateCategoryDto,
+  file?: Express.Multer.File,
+) {
+  try {
+    const category = await this.prisma.category.findUnique({ where: { id } });
+    if (!category) throw new NotFoundException('Category not found');
 
-      if (!category) {
-        throw new NotFoundException('Category not found');
-      }
-
-      if (dto.slug && dto.slug !== category.slug) {
-        const slugExists = await this.prisma.category.findFirst({
-          where: { slug: dto.slug },
-        });
-
-        if (slugExists) {
-          throw new ConflictException('Category slug already exists');
-        }
-      }
-
-      let imageUrl = dto.image;
-
-      // Jodi notun file ashe, upload koro
-      if (file) {
-        const uploadResult = await this.cloudinary.uploadImages([file]);
-        imageUrl = uploadResult[0];
-      }
-
-      return await this.prisma.category.update({
-        where: { id },
-        data: {
-          ...dto,
-          image: imageUrl,
-        },
-      });
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-      console.error('UpdateCategory Error:', error);
-      throw new InternalServerErrorException(
-        'Something went wrong while updating category',
-      );
+    // 1. Handle Slug Logic
+    if (dto.slug && dto.slug !== category.slug) {
+      const slugExists = await this.prisma.category.findFirst({ where: { slug: dto.slug } });
+      if (slugExists) throw new ConflictException('Category slug already exists');
     }
+
+    // 2. Handle Image Logic correctly
+    let imageUrl = category.image; // Keep old image by default
+    if (file) {
+      const uploadResult = await this.cloudinary.uploadImages([file]);
+      imageUrl = uploadResult[0];
+    } else if (dto.image) {
+      imageUrl = dto.image; // If a URL was passed manually
+    }
+
+    // 3. Clean the DTO to prevent accidental overwrites
+    // Remove the image from DTO so it doesn't conflict with our imageUrl variable
+    const { image, ...updateData } = dto;
+
+    return await this.prisma.category.update({
+      where: { id },
+      data: {
+        ...updateData,
+        image: imageUrl,
+      },
+    });
+  } catch (error) {
+    if (error instanceof HttpException) throw error;
+    throw new InternalServerErrorException('Update failed');
   }
+}
 
   async deleteCategory(id: string) {
     try {
