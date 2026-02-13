@@ -5,7 +5,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 
 @Module({
-  providers: [CategoryService, PrismaService, CloudinaryModule],
+  imports: [CloudinaryModule],
+  providers: [CategoryService, PrismaService],
   controllers: [CategoryController],
 })
 export class CategoryModule {}
