@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsString,
   Matches,
-  ValidateNested,
+ // ValidateNested,
 } from 'class-validator';
 import { SpecFieldDto } from './specifi.dto';
 import { Type } from 'class-transformer';
@@ -55,9 +55,9 @@ export class CreateSubCategoryDto {
   })
   @IsOptional()
   @IsArray()
-  @ValidateNested({ each: true })
+  //@ValidateNested({ each: true })
   @Type(() => SpecFieldDto)
-  specFields?: SpecFieldDto[];
+  specFields?: any;
 }
 
 export class UpdateSubCategoryDto extends PartialType(CreateSubCategoryDto) {}
