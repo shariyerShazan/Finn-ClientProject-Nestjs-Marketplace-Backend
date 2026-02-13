@@ -197,57 +197,47 @@ async updateCategory(
     }
   }
 
-async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
+
+  async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
   try {
+    // 1. Check if Sub-category exists
     const subCategory = await this.prisma.subCategory.findUnique({
       where: { id },
     });
     if (!subCategory) throw new NotFoundException('Sub-category not found');
 
-    // 1. Handle FormData String Parsing
-    let finalSpecFields = dto.specFields;
+    // 2. Handle FormData String Parsing (Very Important)
+    let parsedSpecFields = dto.specFields;
     if (typeof dto.specFields === 'string') {
       try {
-        finalSpecFields = JSON.parse(dto.specFields);
+        parsedSpecFields = JSON.parse(dto.specFields);
       } catch (e) {
         throw new BadRequestException('specFields is not valid JSON');
       }
     }
 
-    // 2. Validate Parent Category
+    // 3. Validate Parent Category (If provided)
     if (dto.categoryId) {
-      const parent = await this.prisma.category.findUnique({ where: { id: dto.categoryId } });
+      const parent = await this.prisma.category.findUnique({ 
+        where: { id: dto.categoryId } 
+      });
       if (!parent) throw new BadRequestException('Invalid Parent Category');
     }
 
-    // 3. Update Prisma
-    return await this.prisma.subCategory.update({
-      where: { id },
-      data: {
-        name: dto.name,
-        slug: dto.slug,
-        categoryId: dto.categoryId,
-        specFields: finalSpecFields !== undefined ? finalSpecFields : undefined,
-      },
-    });
-  } catch (error) {
-    if (error instanceof HttpException) throw error;
-    throw new InternalServerErrorException('Update failed');
-  }
-}
-
-    // 6. Update Database
+    // 4. Update Database (Single Return)
     return await this.prisma.subCategory.update({
       where: { id },
       data: {
         name: dto.name ?? undefined,
         slug: dto.slug ?? undefined,
         categoryId: dto.categoryId ?? undefined,
+        // SpecFields update logic
         specFields: parsedSpecFields !== undefined 
           ? JSON.parse(JSON.stringify(parsedSpecFields)) 
           : undefined,
       },
     });
+
   } catch (error) {
     if (error instanceof HttpException) throw error;
     console.error('UpdateSubCategory Error:', error);
@@ -278,19 +268,32 @@ async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
     }
   }
 
-  async getAllSubCategories() {
-    try {
-      return await this.prisma.subCategory.findMany({
-        include: {
-          category: { select: { id: true, name: true, slug: true } },
-        },
-      });
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-      console.error('GetAllSubCategories Error:', error);
-      throw new InternalServerErrorException('Failed to fetch sub-categories');
-    }
-  }
+// Service file-er ei method-ta replace korun:
+async getAllSubCategories(page: number = 1, limit: number = 10) {
+  const skip = (page - 1) * limit;
+
+  const [data, total] = await Promise.all([
+    this.prisma.subCategory.findMany({
+      skip,
+      take: limit,
+      include: {
+        category: { select: { id: true, name: true, slug: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    }),
+    this.prisma.subCategory.count(),
+  ]);
+
+  return {
+    data,
+    meta: {
+      total,
+      page,
+      limit,
+      totalPage: Math.ceil(total / limit),
+    },
+  };
+}
 
   async getSingleSubCategory(id: string) {
     try {
