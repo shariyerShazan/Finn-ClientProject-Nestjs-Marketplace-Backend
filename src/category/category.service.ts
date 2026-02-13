@@ -199,57 +199,42 @@ async updateCategory(
 
 async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
   try {
-    // 1. Verify existence
     const subCategory = await this.prisma.subCategory.findUnique({
       where: { id },
     });
     if (!subCategory) throw new NotFoundException('Sub-category not found');
 
-    // 2. Validate Parent Category (if being changed)
-    if (dto.categoryId) {
-      const category = await this.prisma.category.findUnique({
-        where: { id: dto.categoryId },
-      });
-      if (!category) {
-        throw new BadRequestException('The provided parent Category ID is invalid');
-      }
-    }
-
-    // 3. Slug Conflict Check
-    if (dto.slug && dto.slug !== subCategory.slug) {
-      const slugExists = await this.prisma.subCategory.findFirst({
-        where: { slug: dto.slug },
-      });
-      if (slugExists) {
-        throw new ConflictException('This sub-category slug is already in use');
-      }
-    }
-
-    // 4. Handle specFields Parsing
-    // FormData sends arrays/objects as strings. We must parse them back to JSON.
-    let parsedSpecFields = dto.specFields;
-    
+    // 1. Handle FormData String Parsing
+    let finalSpecFields = dto.specFields;
     if (typeof dto.specFields === 'string') {
       try {
-        parsedSpecFields = JSON.parse(dto.specFields);
-      } catch (error) {
-        throw new BadRequestException('specFields must be a valid JSON string or array');
+        finalSpecFields = JSON.parse(dto.specFields);
+      } catch (e) {
+        throw new BadRequestException('specFields is not valid JSON');
       }
     }
 
-    // 5. Logical Validation for Select Fields
-    if (parsedSpecFields && Array.isArray(parsedSpecFields)) {
-      for (const field of parsedSpecFields) {
-        if (
-          field.type === 'select' &&
-          (!field.options || field.options.length === 0)
-        ) {
-          throw new BadRequestException(
-            `Field "${field.label}" requires options for select type.`,
-          );
-        }
-      }
+    // 2. Validate Parent Category
+    if (dto.categoryId) {
+      const parent = await this.prisma.category.findUnique({ where: { id: dto.categoryId } });
+      if (!parent) throw new BadRequestException('Invalid Parent Category');
     }
+
+    // 3. Update Prisma
+    return await this.prisma.subCategory.update({
+      where: { id },
+      data: {
+        name: dto.name,
+        slug: dto.slug,
+        categoryId: dto.categoryId,
+        specFields: finalSpecFields !== undefined ? finalSpecFields : undefined,
+      },
+    });
+  } catch (error) {
+    if (error instanceof HttpException) throw error;
+    throw new InternalServerErrorException('Update failed');
+  }
+}
 
     // 6. Update Database
     return await this.prisma.subCategory.update({
