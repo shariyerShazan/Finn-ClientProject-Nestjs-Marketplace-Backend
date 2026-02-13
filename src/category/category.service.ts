@@ -197,63 +197,80 @@ async updateCategory(
     }
   }
 
-  async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
-    try {
-      const subCategory = await this.prisma.subCategory.findUnique({
-        where: { id },
+async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
+  try {
+    // 1. Verify existence
+    const subCategory = await this.prisma.subCategory.findUnique({
+      where: { id },
+    });
+    if (!subCategory) throw new NotFoundException('Sub-category not found');
+
+    // 2. Validate Parent Category (if being changed)
+    if (dto.categoryId) {
+      const category = await this.prisma.category.findUnique({
+        where: { id: dto.categoryId },
       });
-      if (!subCategory) throw new NotFoundException('Sub-category not found');
+      if (!category) {
+        throw new BadRequestException('The provided parent Category ID is invalid');
+      }
+    }
 
-      if (dto.categoryId) {
-        const category = await this.prisma.category.findUnique({
-          where: { id: dto.categoryId },
-        });
-        if (!category)
+    // 3. Slug Conflict Check
+    if (dto.slug && dto.slug !== subCategory.slug) {
+      const slugExists = await this.prisma.subCategory.findFirst({
+        where: { slug: dto.slug },
+      });
+      if (slugExists) {
+        throw new ConflictException('This sub-category slug is already in use');
+      }
+    }
+
+    // 4. Handle specFields Parsing
+    // FormData sends arrays/objects as strings. We must parse them back to JSON.
+    let parsedSpecFields = dto.specFields;
+    
+    if (typeof dto.specFields === 'string') {
+      try {
+        parsedSpecFields = JSON.parse(dto.specFields);
+      } catch (error) {
+        throw new BadRequestException('specFields must be a valid JSON string or array');
+      }
+    }
+
+    // 5. Logical Validation for Select Fields
+    if (parsedSpecFields && Array.isArray(parsedSpecFields)) {
+      for (const field of parsedSpecFields) {
+        if (
+          field.type === 'select' &&
+          (!field.options || field.options.length === 0)
+        ) {
           throw new BadRequestException(
-            'The provided parent Category ID is invalid',
+            `Field "${field.label}" requires options for select type.`,
           );
-      }
-
-      if (dto.slug && dto.slug !== subCategory.slug) {
-        const slugExists = await this.prisma.subCategory.findFirst({
-          where: { slug: dto.slug },
-        });
-        if (slugExists)
-          throw new ConflictException(
-            'This sub-category slug is already in use',
-          );
-      }
-
-      if (dto.specFields && Array.isArray(dto.specFields)) {
-        for (const field of dto.specFields) {
-          if (
-            field.type === 'select' &&
-            (!field.options || field.options.length === 0)
-          ) {
-            throw new BadRequestException(
-              `Field "${field.label}" requires options for select type.`,
-            );
-          }
         }
       }
-
-      return await this.prisma.subCategory.update({
-        where: { id },
-        data: {
-          name: dto.name,
-          slug: dto.slug,
-          categoryId: dto.categoryId,
-          specFields: dto.specFields
-            ? JSON.parse(JSON.stringify(dto.specFields))
-            : undefined,
-        },
-      });
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-      console.error('UpdateSubCategory Error:', error);
-      throw new InternalServerErrorException('Failed to update sub-category');
     }
+
+    // 6. Update Database
+    return await this.prisma.subCategory.update({
+      where: { id },
+      data: {
+        name: dto.name ?? undefined,
+        slug: dto.slug ?? undefined,
+        categoryId: dto.categoryId ?? undefined,
+        specFields: parsedSpecFields !== undefined 
+          ? JSON.parse(JSON.stringify(parsedSpecFields)) 
+          : undefined,
+      },
+    });
+  } catch (error) {
+    if (error instanceof HttpException) throw error;
+    console.error('UpdateSubCategory Error:', error);
+    throw new InternalServerErrorException('Failed to update sub-category');
   }
+}
+
+  
   async deleteSubCategory(id: string) {
     try {
       const subCategory = await this.prisma.subCategory.findUnique({
