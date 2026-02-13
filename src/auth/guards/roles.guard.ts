@@ -30,18 +30,22 @@ export class RolesGuard implements CanActivate {
       );
     }
 
-    // 1. Check if user is suspended
-    if (user.isSuspended) {
-      throw new ForbiddenException(
-        'Your account has been suspended. Please contact support.',
-      );
-    }
+    const isAdmin = user.role === 'ADMIN';
 
-    // 2. Check if user is verified
-    if (!user.isVerified) {
-      throw new ForbiddenException(
-        'Account not verified. Please verify your email/phone first.',
-      );
+    if (!isAdmin) {
+      // 1. Suspended check
+      if (user.isSuspended) {
+        throw new ForbiddenException(
+          'Your account has been suspended. Please contact support.',
+        );
+      }
+
+      // 2. Verified check
+      if (!user.isVerified) {
+        throw new ForbiddenException(
+          'Account not verified. Please verify your email/phone first.',
+        );
+      }
     }
 
     // 3. Role validation logic
