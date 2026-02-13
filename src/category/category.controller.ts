@@ -17,6 +17,7 @@ import {
   Patch,
   Post,
   UseGuards,
+  UseInterceptors, UploadedFile
 } from '@nestjs/common';
 import {
   CreateCategoryDto,
@@ -27,6 +28,7 @@ import {
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Admin Categories & Sub-Categories')
 @Controller('categories')
@@ -54,9 +56,10 @@ export class CategoryController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Post()
+  @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: 'Create a new category' })
-  async createCat(@Body() dto: CreateCategoryDto) {
-    return await this.categoryService.createCategory(dto);
+  async createCat(@Body() dto: CreateCategoryDto, @UploadedFile() file: Express.Multer.File,) {
+    return await this.categoryService.createCategory(dto, file);
   }
 
   @ApiConsumes('multipart/form-data')
@@ -64,16 +67,18 @@ export class CategoryController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Patch(':categoryId')
+  @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: 'Update an existing category' })
   @ApiParam({
     name: 'categoryId',
     description: 'The ID of the category to update',
   })
   async updateCat(
-    @Param('categoryId') categoryId: string,
-    @Body() dto: UpdateCategoryDto,
+ @Param('categoryId') categoryId: string,
+  @Body() dto: UpdateCategoryDto,
+  @UploadedFile() file: Express.Multer.File,
   ) {
-    return await this.categoryService.updateCategory(categoryId, dto);
+return await this.categoryService.updateCategory(categoryId, dto, file);
   }
 
   @ApiBearerAuth()
