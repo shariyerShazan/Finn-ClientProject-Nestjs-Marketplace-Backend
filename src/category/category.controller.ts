@@ -18,7 +18,8 @@ import {
   Query,
   Post,
   UseGuards,
-  UseInterceptors, UploadedFile
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import {
   CreateCategoryDto,
@@ -40,20 +41,22 @@ export class CategoryController {
   // 1. STATIC SUB-CATEGORY ROUTES FIRST (To avoid 404/Conflict)
   // ==========================================================
 
-@Get('sub-categories')
-@ApiOperation({ summary: 'Get all sub-categories with pagination' })
-async getAllSubCategories(
-  @Query('page') page?: string, 
-  @Query('limit') limit?: string
-) {
-  return await this.categoryService.getAllSubCategories(
-    page ? parseInt(page) : 1, 
-    limit ? parseInt(limit) : 10
-  );
-}
+  @Get('sub-categories')
+  @ApiOperation({ summary: 'Get all sub-categories with pagination' })
+  async getAllSubCategories(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    return await this.categoryService.getAllSubCategories(
+      page ? parseInt(page) : 1,
+      limit ? parseInt(limit) : 10,
+    );
+  }
 
   @Get('sub-categories/:id')
-  @ApiOperation({ summary: 'Get details of a single sub-category including specFields' })
+  @ApiOperation({
+    summary: 'Get details of a single sub-category including specFields',
+  })
   @ApiParam({ name: 'id', description: 'UUID of the sub-category' })
   async getSingleSubCategory(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.categoryService.getSingleSubCategory(id);
@@ -69,10 +72,12 @@ async getAllSubCategories(
     return await this.categoryService.getAllCategories();
   }
 
-  // MOVED DOWN: This dynamic param :categoryId would "swallow" sub-categories if it stayed on top
   @Get(':categoryId')
   @ApiOperation({ summary: 'Get a single category by ID' })
-  @ApiParam({ name: 'categoryId', description: 'The unique ID of the category' })
+  @ApiParam({
+    name: 'categoryId',
+    description: 'The unique ID of the category',
+  })
   async findOne(@Param('categoryId') categoryId: string) {
     return await this.categoryService.getSingleCategory(categoryId);
   }
@@ -84,7 +89,10 @@ async getAllSubCategories(
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: 'Create a new category' })
-  async createCat(@Body() dto: CreateCategoryDto, @UploadedFile() file: Express.Multer.File,) {
+  async createCat(
+    @Body() dto: CreateCategoryDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
     return await this.categoryService.createCategory(dto, file);
   }
 
@@ -95,7 +103,10 @@ async getAllSubCategories(
   @Patch(':categoryId')
   @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: 'Update an existing category' })
-  @ApiParam({ name: 'categoryId', description: 'The ID of the category to update' })
+  @ApiParam({
+    name: 'categoryId',
+    description: 'The ID of the category to update',
+  })
   async updateCat(
     @Param('categoryId') categoryId: string,
     @Body() dto: UpdateCategoryDto,
@@ -109,36 +120,42 @@ async getAllSubCategories(
   @Roles('ADMIN')
   @Delete(':categoryId')
   @ApiOperation({ summary: 'Delete a category' })
-  @ApiParam({ name: 'categoryId', description: 'The ID of the category to delete' })
+  @ApiParam({
+    name: 'categoryId',
+    description: 'The ID of the category to delete',
+  })
   async removeCat(@Param('categoryId') categoryId: string) {
     return await this.categoryService.deleteCategory(categoryId);
   }
 
   // ==========================================================
-  // 3. SUB-CATEGORY MUTATIONS
+  // 3. SUB-CATEGORY MUTATIONS (JSON Based - FIX APPLIED HERE)
   // ==========================================================
 
-  @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Post('sub')
   @ApiOperation({ summary: 'Create a new sub-category' })
   async createSub(@Body() dto: CreateSubCategoryDto) {
+    // Note: Removed @ApiConsumes because we are sending pure JSON, not files.
     return await this.categoryService.createSubCategory(dto);
   }
 
-  @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Patch('sub/:subCategoryId')
   @ApiOperation({ summary: 'Update a sub-category' })
-  @ApiParam({ name: 'subCategoryId', description: 'The ID of the sub-category' })
+  @ApiParam({
+    name: 'subCategoryId',
+    description: 'The ID of the sub-category',
+  })
   async updateSub(
     @Param('subCategoryId') subCategoryId: string,
     @Body() dto: UpdateSubCategoryDto,
   ) {
+    // Note: Removed @ApiConsumes to ensure JSON data is parsed correctly by NestJS.
     return await this.categoryService.updateSubCategory(subCategoryId, dto);
   }
 
@@ -147,7 +164,10 @@ async getAllSubCategories(
   @Roles('ADMIN')
   @Delete('sub/:subCategoryId')
   @ApiOperation({ summary: 'Delete a sub-category' })
-  @ApiParam({ name: 'subCategoryId', description: 'The ID of the sub-category' })
+  @ApiParam({
+    name: 'subCategoryId',
+    description: 'The ID of the sub-category',
+  })
   async removeSub(@Param('subCategoryId') subCategoryId: string) {
     return await this.categoryService.deleteSubCategory(subCategoryId);
   }
