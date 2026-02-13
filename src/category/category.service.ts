@@ -16,10 +16,11 @@ import {
   UpdateSubCategoryDto,
 } from 'src/category/dto/categoryCrud.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class CategoryService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService ,  private readonly cloudinary: CloudinaryService,) {}
 
   async getAllCategories() {
     try {
@@ -56,7 +57,8 @@ export class CategoryService {
     }
   }
 
-  async createCategory(dto: CreateCategoryDto) {
+
+  async createCategory(dto: CreateCategoryDto, file?: Express.Multer.File) {
     try {
       const existingCategory = await this.prisma.category.findFirst({
         where: { slug: dto.slug },
@@ -66,8 +68,19 @@ export class CategoryService {
         throw new ConflictException('Category slug already exists');
       }
 
+      let imageUrl = dto.image; // Jodi link thake
+
+      // Jodi file ashe, tobe upload koro
+      if (file) {
+        const uploadResult = await this.cloudinary.uploadImages([file]);
+        imageUrl = uploadResult[0];
+      }
+
       return await this.prisma.category.create({
-        data: dto,
+        data: {
+          ...dto,
+          image: imageUrl,
+        },
       });
     } catch (error) {
       if (error instanceof HttpException) throw error;
@@ -78,7 +91,11 @@ export class CategoryService {
     }
   }
 
-  async updateCategory(id: string, dto: UpdateCategoryDto) {
+async updateCategory(
+    id: string,
+    dto: UpdateCategoryDto,
+    file?: Express.Multer.File,
+  ) {
     try {
       const category = await this.prisma.category.findUnique({
         where: { id },
@@ -98,9 +115,20 @@ export class CategoryService {
         }
       }
 
+      let imageUrl = dto.image;
+
+      // Jodi notun file ashe, upload koro
+      if (file) {
+        const uploadResult = await this.cloudinary.uploadImages([file]);
+        imageUrl = uploadResult[0];
+      }
+
       return await this.prisma.category.update({
         where: { id },
-        data: dto,
+        data: {
+          ...dto,
+          image: imageUrl,
+        },
       });
     } catch (error) {
       if (error instanceof HttpException) throw error;
