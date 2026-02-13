@@ -50,6 +50,14 @@ export class CategoryController {
   async findOne(@Param('categoryId') categoryId: string) {
     return await this.categoryService.getSingleCategory(categoryId);
   }
+  
+  @Get('sub-categories')
+  @ApiOperation({
+    summary: 'Get all sub-categories with parent category details',
+  })
+  async getAllSubCategories() {
+    return await this.categoryService.getAllSubCategories();
+  }
 
   @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
@@ -134,13 +142,6 @@ return await this.categoryService.updateCategory(categoryId, dto, file);
     return await this.categoryService.deleteSubCategory(subCategoryId);
   }
 
-  @Get('sub-categories')
-  @ApiOperation({
-    summary: 'Get all sub-categories with parent category details',
-  })
-  async getAllSubCategories() {
-    return await this.categoryService.getAllSubCategories();
-  }
 
   @Get('sub-categories/:id')
   @ApiOperation({
