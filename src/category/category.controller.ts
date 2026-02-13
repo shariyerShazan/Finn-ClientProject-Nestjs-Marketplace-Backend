@@ -15,6 +15,7 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
+  Query,
   Post,
   UseGuards,
   UseInterceptors, UploadedFile
