@@ -198,53 +198,37 @@ async updateCategory(
   }
 
 
-  async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
+async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
   try {
-    // 1. Check if Sub-category exists
     const subCategory = await this.prisma.subCategory.findUnique({
       where: { id },
     });
     if (!subCategory) throw new NotFoundException('Sub-category not found');
 
-    // 2. Handle FormData String Parsing (Very Important)
     let parsedSpecFields = dto.specFields;
+
     if (typeof dto.specFields === 'string') {
-      try {
-        parsedSpecFields = JSON.parse(dto.specFields);
-      } catch (e) {
-        throw new BadRequestException('specFields is not valid JSON');
-      }
+      parsedSpecFields = JSON.parse(dto.specFields);
     }
 
-    // 3. Validate Parent Category (If provided)
-    if (dto.categoryId) {
-      const parent = await this.prisma.category.findUnique({ 
-        where: { id: dto.categoryId } 
-      });
-      if (!parent) throw new BadRequestException('Invalid Parent Category');
-    }
-
-    // 4. Update Database (Single Return)
     return await this.prisma.subCategory.update({
       where: { id },
       data: {
-        name: dto.name ?? undefined,
-        slug: dto.slug ?? undefined,
-        categoryId: dto.categoryId ?? undefined,
-        // SpecFields update logic
-        specFields: parsedSpecFields !== undefined 
-          ? JSON.parse(JSON.stringify(parsedSpecFields)) 
-          : undefined,
+        name: dto.name ?? subCategory.name,
+        slug: dto.slug ?? subCategory.slug,
+        categoryId: dto.categoryId ?? subCategory.categoryId,
+        specFields:
+          parsedSpecFields !== undefined
+            ? parsedSpecFields
+            : subCategory.specFields,
       },
     });
-
   } catch (error) {
     if (error instanceof HttpException) throw error;
     console.error('UpdateSubCategory Error:', error);
     throw new InternalServerErrorException('Failed to update sub-category');
   }
 }
-
   
   async deleteSubCategory(id: string) {
     try {
