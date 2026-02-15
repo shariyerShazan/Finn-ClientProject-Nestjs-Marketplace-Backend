@@ -8,8 +8,10 @@ import * as express from 'express';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
+  // 1. Webhook er rawBody dorkar tai bodyParser false thakbe
   const app = await NestFactory.create(AppModule, { bodyParser: false });
 
+  // 2. Stripe Webhook Parser
   app.use(
     express.json({
       verify: (req: any, res, buf) => {
@@ -19,33 +21,51 @@ async function bootstrap() {
       },
     }),
   );
-  const config = new DocumentBuilder()
-    .setTitle('ByBench Marketplace API')
-    .setDescription('The ByBench API description')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+  // 3. IMPORTANT: Regular Request Parsers (FormData/JSON handle korar jonno)
+  app.use(express.json({ limit: '50mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
+  // 4. Cookie Parser
+  app.use(cookieParser());
+
+  // 5. Global Validation Pipe (Fixes Frontend 400 Errors)
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,
       transform: true,
+      stopAtFirstError: true,
+      whitelist: true,
+      // Frontend theke extra field ashar risk thake, tai eita false kora safe
+      forbidNonWhitelisted: false,
+      transformOptions: { enableImplicitConversion: true },
     }),
   );
+
+  // 6. CORS Configuration (Credentials enable kora must for cookies)
   app.enableCors({
     origin: [
       'http://localhost:3000',
       'http://localhost:5173',
       'http://localhost:5174',
-      'https://finn-frontend-flame.vercel.app',
       'http://localhost:5175',
+      'https://finn-frontend-flame.vercel.app',
     ],
     credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type,Accept,Authorization',
   });
-  app.use(cookieParser());
+
+  // 7. Swagger Configuration
+  const config = new DocumentBuilder()
+    .setTitle('ByBench Marketplace API')
+    .setDescription('The ByBench API description')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .addCookieAuth('accessToken')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
 
   const port = process.env.PORT ?? 3000;
   await app.listen(port, '0.0.0.0');

@@ -415,7 +415,7 @@ export class AdminService {
         isSeller: false,
         sellerProfile: {
           isNot: null,
-          status: 'PENDING',
+          // status: 'PENDING',
         },
         ...(search && {
           OR: [

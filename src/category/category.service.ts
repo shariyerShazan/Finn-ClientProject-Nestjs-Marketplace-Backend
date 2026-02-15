@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 
@@ -20,7 +22,10 @@ import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class CategoryService {
-  constructor(private readonly prisma: PrismaService ,  private readonly cloudinary: CloudinaryService,) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly cloudinary: CloudinaryService,
+  ) {}
 
   async getAllCategories() {
     try {
@@ -57,7 +62,6 @@ export class CategoryService {
     }
   }
 
-
   async createCategory(dto: CreateCategoryDto, file?: Express.Multer.File) {
     try {
       const existingCategory = await this.prisma.category.findFirst({
@@ -91,46 +95,49 @@ export class CategoryService {
     }
   }
 
-async updateCategory(
-  id: string,
-  dto: UpdateCategoryDto,
-  file?: Express.Multer.File,
-) {
-  try {
-    const category = await this.prisma.category.findUnique({ where: { id } });
-    if (!category) throw new NotFoundException('Category not found');
+  async updateCategory(
+    id: string,
+    dto: UpdateCategoryDto,
+    file?: Express.Multer.File,
+  ) {
+    try {
+      const category = await this.prisma.category.findUnique({ where: { id } });
+      if (!category) throw new NotFoundException('Category not found');
 
-    // 1. Handle Slug Logic
-    if (dto.slug && dto.slug !== category.slug) {
-      const slugExists = await this.prisma.category.findFirst({ where: { slug: dto.slug } });
-      if (slugExists) throw new ConflictException('Category slug already exists');
+      // 1. Handle Slug Logic
+      if (dto.slug && dto.slug !== category.slug) {
+        const slugExists = await this.prisma.category.findFirst({
+          where: { slug: dto.slug },
+        });
+        if (slugExists)
+          throw new ConflictException('Category slug already exists');
+      }
+
+      // 2. Handle Image Logic correctly
+      let imageUrl = category.image; // Keep old image by default
+      if (file) {
+        const uploadResult = await this.cloudinary.uploadImages([file]);
+        imageUrl = uploadResult[0];
+      } else if (dto.image) {
+        imageUrl = dto.image; // If a URL was passed manually
+      }
+
+      // 3. Clean the DTO to prevent accidental overwrites
+      // Remove the image from DTO so it doesn't conflict with our imageUrl variable
+      const { image, ...updateData } = dto;
+
+      return await this.prisma.category.update({
+        where: { id },
+        data: {
+          ...updateData,
+          image: imageUrl,
+        },
+      });
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new InternalServerErrorException('Update failed');
     }
-
-    // 2. Handle Image Logic correctly
-    let imageUrl = category.image; // Keep old image by default
-    if (file) {
-      const uploadResult = await this.cloudinary.uploadImages([file]);
-      imageUrl = uploadResult[0];
-    } else if (dto.image) {
-      imageUrl = dto.image; // If a URL was passed manually
-    }
-
-    // 3. Clean the DTO to prevent accidental overwrites
-    // Remove the image from DTO so it doesn't conflict with our imageUrl variable
-    const { image, ...updateData } = dto;
-
-    return await this.prisma.category.update({
-      where: { id },
-      data: {
-        ...updateData,
-        image: imageUrl,
-      },
-    });
-  } catch (error) {
-    if (error instanceof HttpException) throw error;
-    throw new InternalServerErrorException('Update failed');
   }
-}
 
   async deleteCategory(id: string) {
     try {
@@ -197,65 +204,69 @@ async updateCategory(
     }
   }
 
-
-async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
-  try {
-    const subCategory = await this.prisma.subCategory.findUnique({
-      where: { id },
-    });
-    if (!subCategory) throw new NotFoundException('Sub-category not found');
-
-    // Check slug uniqueness if being updated
-    if (dto.slug && dto.slug !== subCategory.slug) {
-      const slugExists = await this.prisma.subCategory.findFirst({
-        where: { slug: dto.slug },
+  async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
+    try {
+      const subCategory = await this.prisma.subCategory.findUnique({
+        where: { id },
       });
-      if (slugExists) throw new ConflictException('Sub-category slug already exists');
-    }
+      if (!subCategory) throw new NotFoundException('Sub-category not found');
 
-    // Parse specFields if string, validate if provided
-    let finalSpecFields: any = undefined;
-    if (dto.specFields) {
-      if (typeof dto.specFields === 'string') {
-        try {
-          finalSpecFields = JSON.parse(dto.specFields);
-        } catch (e) {
-          throw new BadRequestException('specFields is not valid JSON');
-        }
-      } else {
-        finalSpecFields = dto.specFields;
+      // Check slug uniqueness if being updated
+      if (dto.slug && dto.slug !== subCategory.slug) {
+        const slugExists = await this.prisma.subCategory.findFirst({
+          where: { slug: dto.slug },
+        });
+        if (slugExists)
+          throw new ConflictException('Sub-category slug already exists');
       }
 
-      // Validate select fields have options
-      if (Array.isArray(finalSpecFields)) {
-        for (const field of finalSpecFields) {
-          if (field.type === 'select' && (!field.options || field.options.length === 0)) {
-            throw new BadRequestException(
-              `Field "${field.label}" is a select type but has no options.`,
-            );
+      // Parse specFields if string, validate if provided
+      let finalSpecFields: any = undefined;
+      if (dto.specFields) {
+        if (typeof dto.specFields === 'string') {
+          try {
+            finalSpecFields = JSON.parse(dto.specFields);
+          } catch (e) {
+            throw new BadRequestException('specFields is not valid JSON');
+          }
+        } else {
+          finalSpecFields = dto.specFields;
+        }
+
+        // Validate select fields have options
+        if (Array.isArray(finalSpecFields)) {
+          for (const field of finalSpecFields) {
+            if (
+              field.type === 'select' &&
+              (!field.options || field.options.length === 0)
+            ) {
+              throw new BadRequestException(
+                `Field "${field.label}" is a select type but has no options.`,
+              );
+            }
           }
         }
       }
+
+      // Build updateData dynamically: only include fields that are explicitly provided
+      const updateData: any = {};
+      if (dto.name !== undefined) updateData.name = dto.name;
+      if (dto.slug !== undefined) updateData.slug = dto.slug;
+      if (dto.categoryId !== undefined) updateData.categoryId = dto.categoryId;
+      if (finalSpecFields !== undefined)
+        updateData.specFields = finalSpecFields;
+
+      return await this.prisma.subCategory.update({
+        where: { id },
+        data: updateData,
+      });
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      console.error('UpdateSubCategory Error:', error);
+      throw new InternalServerErrorException('Failed to update sub-category');
     }
-
-    // Build updateData dynamically: only include fields that are explicitly provided
-    const updateData: any = {};
-    if (dto.name !== undefined) updateData.name = dto.name;
-    if (dto.slug !== undefined) updateData.slug = dto.slug;
-    if (dto.categoryId !== undefined) updateData.categoryId = dto.categoryId;
-    if (finalSpecFields !== undefined) updateData.specFields = finalSpecFields;
-
-    return await this.prisma.subCategory.update({
-      where: { id },
-      data: updateData,
-    });
-  } catch (error) {
-    if (error instanceof HttpException) throw error;
-    console.error('UpdateSubCategory Error:', error);
-    throw new InternalServerErrorException('Failed to update sub-category');
   }
-}
-  
+
   async deleteSubCategory(id: string) {
     try {
       const subCategory = await this.prisma.subCategory.findUnique({
@@ -278,31 +289,31 @@ async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
     }
   }
 
-// Service file-er ei method-ta replace korun:
-async getAllSubCategories(page: number = 1, limit: number = 10) {
-  const skip = (page - 1) * limit;
+  // Service file-er ei method-ta replace korun:
+  async getAllSubCategories(page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
 
-  const [data, total] = await Promise.all([
-    this.prisma.subCategory.findMany({
-      skip,
-      take: limit,
-      include: {
-        category: { select: { id: true, name: true, slug: true } },
+    const [data, total] = await Promise.all([
+      this.prisma.subCategory.findMany({
+        skip,
+        take: limit,
+        include: {
+          category: { select: { id: true, name: true, slug: true } },
+        },
+      }),
+      this.prisma.subCategory.count(),
+    ]);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPage: Math.ceil(total / limit),
       },
-    }),
-    this.prisma.subCategory.count(),
-  ]);
-
-  return {
-    data,
-    meta: {
-      total,
-      page,
-      limit,
-      totalPage: Math.ceil(total / limit),
-    },
-  };
-}
+    };
+  }
 
   async getSingleSubCategory(id: string) {
     try {

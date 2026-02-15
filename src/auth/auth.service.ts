@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/require-await */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { PrismaService } from './../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 // import * as cookieParser from 'cookie-parser';
@@ -177,10 +174,14 @@ export class AuthService {
         throw new UnauthorizedException('Invalid email or password');
       }
 
+      // AuthService.ts
       const payload = {
         sub: user.id,
         email: user.email,
         role: user.role,
+        isVerified: user.isVerified, // Eita add koren
+        isSuspended: user.isSuspended, // Eitao add kora bhalo
+        isSeller: user.isSeller,
       };
 
       if (!process.env.JWT_SECRET) {

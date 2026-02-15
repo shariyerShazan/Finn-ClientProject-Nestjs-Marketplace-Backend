@@ -109,6 +109,8 @@ export class AddController {
     @UploadedFiles() files: Express.Multer.File[],
     @Req() req: any,
   ) {
+    console.log(createAdDto);
+    console.log(files);
     const sellerId = req.user?.id;
     return await this.addService.createAd(sellerId, createAdDto, files);
   }

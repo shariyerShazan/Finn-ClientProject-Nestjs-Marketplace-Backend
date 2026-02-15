@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
@@ -20,6 +19,7 @@ import {
   ApiQuery,
   ApiParam,
   ApiTags,
+  ApiBody,
 } from '@nestjs/swagger';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { CreateSellerProfileDto } from 'src/user/dto/create-seller-profile.dto';
@@ -39,14 +39,17 @@ export class UserController {
   @Post('create-seller-profile')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('SELLER')
-  @ApiConsumes('multipart/form-data')
-  @ApiOperation({ summary: 'Create a seller profile (Only for Sellers)' })
+  // @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: CreateSellerProfileDto })
+  // @ApiOperation({ summary: 'Create a seller profile (Only for Sellers)' })
   async createProfile(@Req() req: any, @Body() dto: CreateSellerProfileDto) {
+    // console.log(req.user.id, dto);
     return await this.userService.createSellerProfile(req.user.id, dto);
   }
 
   @Patch('update-profile')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SELLER')
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Update user or seller profile info' })
   async updateProfile(@Req() req: any, @Body() updateDto: UpdateProfileDto) {

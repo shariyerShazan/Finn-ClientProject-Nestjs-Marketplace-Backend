@@ -18,7 +18,7 @@ export class UserService {
   private stripe: Stripe;
   constructor(private readonly prisma: PrismaService) {
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: '2025-01-27' as any,
+      apiVersion: '2024-12-18.acacia' as any,
     });
   }
 
@@ -38,12 +38,17 @@ export class UserService {
 
       const stripeAccount = await this.stripe.accounts.create({
         type: 'express',
-        country: sellerDto.country,
+        country: sellerDto.country, // BD hole card_payments bad jabe
         email: user.email,
-        capabilities: {
-          card_payments: { requested: true },
-          transfers: { requested: true },
-        },
+        capabilities:
+          sellerDto.country === 'BD'
+            ? {
+                transfers: { requested: true }, // BD-r jonno shudhu transfers ba cross-border logic thake
+              }
+            : {
+                card_payments: { requested: true },
+                transfers: { requested: true },
+              },
         metadata: { userId: user.id },
       });
 
@@ -61,6 +66,7 @@ export class UserService {
         },
       });
     } catch (error) {
+      console.log(error);
       if (error instanceof HttpException) throw error;
       throw new InternalServerErrorException('Failed to create seller profile');
     }
@@ -116,6 +122,7 @@ export class UserService {
 
       return { success: true, data: updatedAuth };
     } catch (error) {
+      // console.log(error)
       if (error instanceof HttpException) throw error;
       throw new InternalServerErrorException('Update failed');
     }
@@ -160,6 +167,12 @@ export class UserService {
         take: Number(limit),
         include: {
           category: { select: { name: true } },
+          // Image gulo include kora holo jate frontend-e gallery dekha jay
+          images: {
+            select: {
+              url: true,
+            },
+          },
           _count: { select: { bids: true } },
         },
         orderBy: { createdAt: 'desc' },
