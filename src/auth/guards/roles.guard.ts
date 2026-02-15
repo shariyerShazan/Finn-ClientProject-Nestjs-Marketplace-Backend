@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
@@ -10,60 +9,71 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
+import { PrismaService } from 'src/prisma/prisma.service';
+// import { PrismaService } from '../prisma/prisma.service'; // Apnar PrismaService er path din
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  // Constructor-e PrismaService inject koren
+  constructor(
+    private reflector: Reflector,
+    private prisma: PrismaService,
+  ) {}
 
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const requiredRoles = this.reflector.getAllAndOverride<string[]>(
       ROLES_KEY,
       [context.getHandler(), context.getClass()],
     );
 
     const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    console.log(request.user.id);
+    const tokenUser = request.user; // Eita ashole JWT theke asha payload
+
+    if (!tokenUser || !tokenUser.id) {
+      throw new UnauthorizedException('Authentication required');
+    }
+
+    // --- DATABASE THEKE FRESH USER DATA FIND KORA ---
+    const user = await this.prisma.auth.findUnique({
+      where: { id: tokenUser.id }, // payload-e 'sub' e thake user id
+    });
 
     if (!user) {
-      throw new UnauthorizedException(
-        'Authentication required to access this resource',
-      );
+      throw new UnauthorizedException('User no longer exists');
     }
 
     const isAdmin = user.role === 'ADMIN';
 
     if (!isAdmin) {
-      // 1. Suspended check
+      // 1. Suspended check (Database theke real value)
       if (user.isSuspended) {
         throw new ForbiddenException(
           'Your account has been suspended. Please contact support.',
         );
       }
 
-      // 2. Verified check
+      // 2. Verified check (Database theke real value)
       if (!user.isVerified) {
         throw new ForbiddenException(
-          'Account not verified. Please verify your email/phone first.',
+          'Account not verified. Please verify your email first.',
         );
       }
     }
 
-    // 3. Role validation logic
+    // 3. Role validation
     if (!requiredRoles) {
       return true;
     }
 
-    if (!user.role) {
-      throw new ForbiddenException('User role is not defined');
-    }
-
     const hasRole = requiredRoles.includes(user.role);
-
     if (!hasRole) {
-      throw new ForbiddenException(
-        'You do not have the necessary permissions to access this route',
-      );
+      throw new ForbiddenException('You do not have the necessary permissions');
     }
+
+    // Chotto Tip: Database theke pawa fresh user object-ta request-e abar set kore dewa bhalo
+    // jate controller-e @GetCurrentUser() korle updated data pawa jay.
+    request.user = user;
 
     return true;
   }

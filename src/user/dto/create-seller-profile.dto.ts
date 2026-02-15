@@ -1,4 +1,11 @@
-import { IsString, IsNotEmpty, IsUrl, IsInt, MinLength } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsUrl,
+  IsInt,
+  MinLength,
+  Length,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateSellerProfileDto {
@@ -33,8 +40,11 @@ export class CreateSellerProfileDto {
   @IsNotEmpty()
   zip: number;
 
-  @ApiProperty({ example: 'Bangladesh' })
+  @ApiProperty({ example: 'US' }) // Example change kore BD den
   @IsString()
   @IsNotEmpty()
+  @Length(2, 2, {
+    message: 'Country must be a 2-letter ISO code (e.g., BD, US)',
+  })
   country: string;
 }

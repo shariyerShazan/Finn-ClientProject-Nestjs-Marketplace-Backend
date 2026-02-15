@@ -45,7 +45,7 @@ export class AuthController {
     return await this.authService.register(registerDto);
   }
 
-  @ApiConsumes('multipart/form-data')
+  // @ApiConsumes('multipart/form-data')
   @Post('verify')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Verify email using OTP' })
@@ -53,7 +53,7 @@ export class AuthController {
     return await this.authService.verifyUser(verifyAuthDto);
   }
 
-  @ApiConsumes('multipart/form-data')
+  // @ApiConsumes('multipart/form-data')
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'User login' })

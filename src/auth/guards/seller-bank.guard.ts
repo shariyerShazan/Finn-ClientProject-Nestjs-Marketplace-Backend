@@ -16,30 +16,55 @@ export class SellerBankGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 
+    // Passport/JWT usually attaches user to request. Check for both id or id.
+    const userId = request.user?.id || request.user?.id;
+
+    if (!userId) {
+      throw new UnauthorizedException('Please login first');
+    }
+
+    // Ekbarei database theke sellerProfile shoho data niye asha
     const user = await this.prisma.auth.findUnique({
-      where: { id: request.user.id },
+      where: { id: userId },
       include: { sellerProfile: true },
     });
 
-    if (!user) throw new UnauthorizedException('Please login first');
+    if (!user) {
+      throw new UnauthorizedException('User not found.');
+    }
 
-    if (user.isVerified !== true) {
+    // 1. Verification Check
+    if (!user.isVerified) {
       throw new ForbiddenException('Your account is not verified yet.');
     }
 
-    if (user.isSuspended === true) {
+    // 2. Suspension Check
+    if (user.isSuspended) {
       throw new ForbiddenException('Your account is suspended.');
     }
 
-    if (user.isSeller !== true) {
+    // 3. Seller Role Check
+    // (Jodi user.role === 'SELLER' thake, oitao check korte paren)
+    if (user.role !== 'SELLER') {
       throw new ForbiddenException('Only sellers can access this resource.');
     }
 
-    if (!user || !user.sellerProfile || !user.sellerProfile.isStripeVerified) {
+    // 4. Stripe Verification Check
+    // Seller profile thakte hobe ebong stripe verified thakte hobe
+    if (!user.sellerProfile) {
       throw new ForbiddenException(
-        'Please complete your Stripe onboarding to access this feature.',
+        'Seller profile not found. Please setup your profile.',
       );
     }
+
+    if (!user.sellerProfile.isStripeVerified) {
+      throw new ForbiddenException(
+        'Please complete your Stripe onboarding to access bank features.',
+      );
+    }
+
+    // Updated user object request-e rekhe dewa jate controller-e direct use kora jay
+    request.user = user;
 
     return true;
   }

@@ -1,7 +1,7 @@
 # Shazan - Marketplace & Auction Platform
 
-# **LiveLink: https://shazan-ad-marketplace-project.onrender.com**
-# **Swagger: https://shazan-ad-marketplace-project.onrender.com/docs**
+**LiveLink: https://shazan-ad-marketplace-project.onrender.com**
+**Swagger: https://shazan-ad-marketplace-project.onrender.com/docs**
 
 A full-featured marketplace and auction platform backend built with NestJS and PostgreSQL. Shazan enables users to buy, sell, and auction products with secure payments, real-time messaging, and a comprehensive seller management system.
 
