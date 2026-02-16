@@ -191,49 +191,122 @@ export class UserService {
     userId: string,
     query: { page?: number; limit?: number },
   ) {
-    const { page = 1, limit = 10 } = query;
-    const skip = (Number(page) - 1) * Number(limit);
-    const where = { ad: { sellerId: userId } };
+    const page = Number(query.page) || 1;
+    const limit = Number(query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const where = { ad: { sellerId: userId }, status: 'COMPLETED' as any };
 
     const [total, earnings] = await Promise.all([
       this.prisma.payment.count({ where }),
       this.prisma.payment.findMany({
         where,
         skip,
-        take: Number(limit),
-        include: {
-          ad: { select: { title: true } },
-          buyer: { select: { firstName: true, email: true } },
+        take: limit,
+        select: {
+          id: true,
+          stripeId: true,
+          totalAmount: true,
+          adminFee: true,
+          sellerAmount: true,
+          status: true,
+          createdAt: true,
+          ad: {
+            select: {
+              id: true,
+              title: true,
+              price: true,
+              category: { select: { name: true } },
+              images: {
+                where: { isPrimary: true },
+                take: 1,
+                select: { url: true },
+              },
+            },
+          },
+          buyer: {
+            select: {
+              firstName: true,
+              lastName: true,
+              email: true,
+              profilePicture: true,
+            },
+          },
         },
         orderBy: { createdAt: 'desc' },
       }),
     ]);
 
-    return { success: true, meta: { total, page }, data: earnings };
+    return {
+      success: true,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+      data: earnings,
+    };
   }
-
   // --- GET MY PURCHASES (BUYER) ---
   async getMyPurchases(
     userId: string,
     query: { page?: number; limit?: number },
   ) {
-    const { page = 1, limit = 10 } = query;
-    const skip = (Number(page) - 1) * Number(limit);
+    const page = Number(query.page) || 1;
+    const limit = Number(query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const where = { buyerId: userId, status: 'COMPLETED' as any };
 
     const [total, purchases] = await Promise.all([
-      this.prisma.payment.count({ where: { buyerId: userId } }),
+      this.prisma.payment.count({ where }),
       this.prisma.payment.findMany({
-        where: { buyerId: userId },
+        where,
         skip,
-        take: Number(limit),
-        include: { ad: { select: { title: true, images: { take: 1 } } } },
+        take: limit,
+        select: {
+          id: true,
+          stripeId: true,
+          totalAmount: true,
+          status: true,
+          createdAt: true,
+          ad: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+              images: {
+                where: { isPrimary: true },
+                take: 1,
+                select: { url: true },
+              },
+              seller: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                  email: true,
+                  profilePicture: true,
+                },
+              },
+            },
+          },
+        },
         orderBy: { createdAt: 'desc' },
       }),
     ]);
 
-    return { success: true, meta: { total, page }, data: purchases };
+    return {
+      success: true,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+      data: purchases,
+    };
   }
-
   // --- SINGLE ITEM DETAILS ---
   async getSingleMyAd(userId: string, adId: string) {
     const ad = await this.prisma.ad.findFirst({
@@ -245,14 +318,146 @@ export class UserService {
   }
 
   async getSinglePayment(userId: string, paymentId: string) {
-    const payment = await this.prisma.payment.findFirst({
-      where: {
-        id: paymentId,
-        OR: [{ buyerId: userId }, { ad: { sellerId: userId } }],
+    const payment = await this.prisma.payment.findUnique({
+      where: { id: paymentId },
+      include: {
+        ad: {
+          select: {
+            id: true,
+            title: true,
+            price: true,
+            sellerId: true,
+            images: {
+              where: { isPrimary: true },
+              take: 1,
+              select: { url: true },
+            },
+          },
+        },
+        buyer: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            profilePicture: true,
+          },
+        },
       },
-      include: { ad: true, buyer: { select: { nickName: true } } },
     });
-    if (!payment) throw new NotFoundException('Payment not found');
-    return { success: true, data: payment };
+
+    if (
+      !payment ||
+      (payment.buyerId !== userId && payment.ad.sellerId !== userId)
+    ) {
+      throw new NotFoundException('Payment not found or access denied');
+    }
+
+    const isSeller = payment.ad.sellerId === userId;
+
+    const responseData = {
+      id: payment.id,
+      stripeId: payment.stripeId,
+      status: payment.status,
+      createdAt: payment.createdAt,
+      ad: payment.ad,
+      totalAmount: payment.totalAmount,
+      ...(isSeller && {
+        adminFee: payment.adminFee,
+        sellerAmount: payment.sellerAmount,
+        buyer: payment.buyer,
+      }),
+    };
+
+    return {
+      success: true,
+      role: isSeller ? 'SELLER' : 'BUYER',
+      data: responseData,
+    };
+  }
+
+  async getSellerDashboardStats(sellerId: string) {
+    try {
+      const [totalAds, soldItems, totalViewsData, totalIncomeData] =
+        await Promise.all([
+          this.prisma.ad.count({
+            where: { sellerId },
+          }),
+          this.prisma.ad.count({
+            where: {
+              sellerId,
+              isSold: true,
+            },
+          }),
+
+          this.prisma.ad.findMany({
+            where: { sellerId },
+            select: { viewerIds: true },
+          }),
+
+          this.prisma.payment.aggregate({
+            where: {
+              ad: { sellerId },
+              status: 'COMPLETED',
+            },
+            _sum: {
+              sellerAmount: true,
+            },
+          }),
+        ]);
+
+      const totalAdsViewed = totalViewsData.reduce(
+        (acc, ad) => acc + ad.viewerIds.length,
+        0,
+      );
+
+      return {
+        success: true,
+        data: {
+          totalAds,
+          totalIncome: totalIncomeData._sum.sellerAmount || 0,
+          itemSold: soldItems,
+          totalAdsViewed,
+        },
+      };
+    } catch (error: any) {
+      console.error('DASHBOARD_STATS_ERROR:', error);
+      throw new InternalServerErrorException('Failed to fetch dashboard stats');
+    }
+  }
+
+  async getSellerRecentAds(userId: string, query: { search?: string }) {
+    const { search } = query;
+
+    const where: any = {
+      sellerId: userId,
+      ...(search && {
+        OR: [
+          { title: { contains: search, mode: 'insensitive' } },
+          { description: { contains: search, mode: 'insensitive' } },
+        ],
+      }),
+    };
+
+    const ads = await this.prisma.ad.findMany({
+      where,
+      take: 10,
+      include: {
+        category: { select: { name: true } },
+        images: {
+          select: {
+            url: true,
+          },
+          take: 1,
+        },
+        _count: { select: { bids: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return {
+      success: true,
+      data: ads,
+    };
   }
 }

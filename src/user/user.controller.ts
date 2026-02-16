@@ -123,4 +123,30 @@ export class UserController {
   ) {
     return await this.userService.getSinglePayment(req.user.id, id);
   }
+
+  // --- SELLER DASHBOARD SECTION ---
+
+  @Get('seller-stats')
+  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard, SellerBankGuard)
+  @Roles('SELLER')
+  @ApiOperation({
+    summary:
+      'Seller: Get dashboard statistics (Total Ads, Income, Sold, Views)',
+  })
+  async getSellerStats(@Req() req: any) {
+    return await this.userService.getSellerDashboardStats(req.user.id);
+  }
+
+  @Get('seller-recent-ads')
+  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard, SellerBankGuard)
+  @Roles('SELLER')
+  @ApiOperation({ summary: 'Seller: Get latest 10 ads with search' })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Search recent ads by title or description',
+  })
+  async getRecentAds(@Req() req: any, @Query('search') search?: string) {
+    return await this.userService.getSellerRecentAds(req.user.id, { search });
+  }
 }

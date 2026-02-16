@@ -11,9 +11,9 @@ async function bootstrap() {
   // 1. Webhook er rawBody dorkar tai bodyParser false thakbe
   const app = await NestFactory.create(AppModule, { bodyParser: false });
 
-  // 2. Stripe Webhook Parser
   app.use(
     express.json({
+      limit: '50mb',
       verify: (req: any, res, buf) => {
         if (req.originalUrl.includes('/webhooks/stripe')) {
           req.rawBody = buf;
@@ -22,8 +22,6 @@ async function bootstrap() {
     }),
   );
 
-  // 3. IMPORTANT: Regular Request Parsers (FormData/JSON handle korar jonno)
-  app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
   // 4. Cookie Parser

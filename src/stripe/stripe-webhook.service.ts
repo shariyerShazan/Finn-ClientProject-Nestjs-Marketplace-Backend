@@ -68,8 +68,13 @@ export class StripeWebhookService {
 
   private async finalizePayment(intent: Stripe.PaymentIntent) {
     const { adId, buyerId, totalAmount } = intent.metadata;
-    const amount = Number(totalAmount);
 
+    if (!adId || !buyerId || !totalAmount) {
+      console.error('Missing metadata in PaymentIntent:', intent.id);
+      return;
+    }
+
+    const amount = Number(totalAmount);
     const adminFee = (amount * PLATFORM_FEE_PERCENT) / 100;
     const sellerAmount = amount - adminFee;
 
@@ -87,9 +92,9 @@ export class StripeWebhookService {
             totalAmount: amount,
             adminFee,
             sellerAmount,
-            adId,
-            buyerId,
             status: 'COMPLETED',
+            ad: { connect: { id: adId } },
+            buyer: { connect: { id: buyerId } },
           },
         });
 
@@ -102,9 +107,9 @@ export class StripeWebhookService {
         });
       });
 
-      console.log(`Payment completed for Ad ${adId}`);
+      console.log(`✅ Payment successful and DB updated for Ad: ${adId}`);
     } catch (error) {
-      console.error('Webhook DB Update failed:', error);
+      console.error('❌ Webhook DB Update failed:', error);
     }
   }
 

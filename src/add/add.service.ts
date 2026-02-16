@@ -248,7 +248,7 @@ export class AddService {
               ? {
                   create: newImageUrls.map((url) => ({
                     url,
-                    isPrimary: false, // আপনি চাইলে লজিক দিয়ে প্রথম ছবিকে প্রাইমারি করতে পারেন
+                    isPrimary: false,
                   })),
                 }
               : undefined,

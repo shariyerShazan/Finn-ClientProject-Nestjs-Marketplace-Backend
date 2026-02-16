@@ -34,7 +34,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @ApiConsumes('multipart/form-data')
+  // @ApiConsumes('multipart/form-data')
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({
