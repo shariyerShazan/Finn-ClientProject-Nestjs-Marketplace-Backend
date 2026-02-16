@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import {
@@ -6,7 +5,7 @@ import {
   NotFoundException,
   InternalServerErrorException,
   BadRequestException,
-  ForbiddenException,
+  // ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import Stripe from 'stripe';
@@ -23,13 +22,11 @@ export class PaymentService {
     });
   }
 
-  async createPaymentIntent(userId: string, dto: { adId: string }) {
+  async createPaymentIntent(
+    userId: string,
+    dto: { adId: string; token: string },
+  ) {
     try {
-      const user = await this.prisma.auth.findUnique({ where: { id: userId } });
-      if (!user || user.isSuspended) {
-        throw new ForbiddenException('User is suspended or not found');
-      }
-
       const ad = await this.prisma.ad.findUnique({
         where: { id: dto.adId },
         include: {
@@ -44,25 +41,11 @@ export class PaymentService {
 
       const sellerProfile = ad.seller.sellerProfile;
       if (!sellerProfile?.stripeAccountId) {
-        throw new BadRequestException(
-          'Seller bank account not connected via Stripe',
-        );
-      }
-
-      const account = await this.stripe.accounts.retrieve(
-        sellerProfile.stripeAccountId,
-      );
-
-      if (!account.charges_enabled || !account.payouts_enabled) {
-        throw new BadRequestException(
-          'Seller Stripe onboarding is not completed',
-        );
+        throw new BadRequestException('Seller bank account not connected');
       }
 
       const totalAmount = ad.price ?? ad.releasePrice;
-      if (!totalAmount || totalAmount <= 0) {
-        throw new BadRequestException('Invalid ad price');
-      }
+      if (!totalAmount) throw new BadRequestException('Invalid price');
 
       const amountInCents = Math.round(totalAmount * 100);
       const adminFeeInCents = Math.round(
@@ -73,10 +56,20 @@ export class PaymentService {
         {
           amount: amountInCents,
           currency: 'usd',
+          payment_method_data: {
+            type: 'card',
+            card: { token: dto.token },
+          } as any,
+          confirm: true,
+          automatic_payment_methods: {
+            enabled: true,
+            allow_redirects: 'never',
+          },
           application_fee_amount: adminFeeInCents,
           transfer_data: {
             destination: sellerProfile.stripeAccountId,
           },
+          on_behalf_of: sellerProfile.stripeAccountId,
           metadata: {
             adId: ad.id,
             buyerId: userId,
@@ -84,25 +77,30 @@ export class PaymentService {
           },
         },
         {
-          idempotencyKey: `pay_${ad.id}_${userId}`,
+          idempotencyKey: `pay_${ad.id}_${userId}_${Date.now()}`,
         },
       );
 
       return {
         success: true,
-        clientSecret: intent.client_secret,
+        status: intent.status,
+        transactionId: intent.id,
         amount: totalAmount,
       };
     } catch (error) {
+      if (error instanceof Stripe.errors.StripeError) {
+        throw new BadRequestException(error.message);
+      }
+
       if (
         error instanceof NotFoundException ||
-        error instanceof BadRequestException ||
-        error instanceof ForbiddenException
+        error instanceof BadRequestException
       ) {
         throw error;
       }
-      console.error('Payment Intent Error:', error);
-      throw new InternalServerErrorException('Failed to initialize payment');
+
+      console.error('Payment Error:', error);
+      throw new InternalServerErrorException('Payment processing failed');
     }
   }
 
