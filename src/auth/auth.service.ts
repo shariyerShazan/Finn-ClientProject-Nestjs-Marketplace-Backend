@@ -199,15 +199,31 @@ export class AuthService {
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       });
+      let customMessage = 'Login successful';
+
+      if (user.role === 'USER') {
+        customMessage = `Welcome back, ${user.firstName}!`;
+      } else if (user.role === 'SELLER') {
+        if (user.isSeller) {
+          customMessage = `Welcome to your Dashboard, ${user.firstName}!`;
+        } else {
+          customMessage = `Hi ${user.firstName}, please create your profile to get started!`;
+        }
+      } else {
+        customMessage = `Welcome back Boss, ${user.firstName}!`;
+      }
 
       return res.status(200).json({
-        message: 'Login successful',
+        message: customMessage,
         access_token: token,
         user: {
           id: user.id,
           email: user.email,
           firstName: user.firstName,
           role: user.role,
+          isSeller: user.isSeller,
+          isVerified: user.isVerified,
+          isSuspended: user.isSuspended,
         },
       });
     } catch (error) {

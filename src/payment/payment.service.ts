@@ -117,8 +117,8 @@ export class PaymentService {
 
       const accountLink = await this.stripe.accountLinks.create({
         account: user.sellerProfile.stripeAccountId,
-        refresh_url: `${process.env.FRONTEND_URL}/seller/onboarding-retry`,
-        return_url: `${process.env.FRONTEND_URL}/seller/onboarding-success`,
+        refresh_url: `${process.env.FRONTEND_URL}/seller/dashboard/?success=false`,
+        return_url: `${process.env.FRONTEND_URL}/seller/dashboard/?success=true`,
         type: 'account_onboarding',
       });
 
