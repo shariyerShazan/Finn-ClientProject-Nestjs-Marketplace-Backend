@@ -52,7 +52,7 @@ export class UserService {
         metadata: { userId: user.id },
       });
 
-      return await this.prisma.sellerProfile.create({
+      const profile = await this.prisma.sellerProfile.create({
         data: {
           authId: user.id,
           companyName: sellerDto.companyName,
@@ -65,6 +65,12 @@ export class UserService {
           stripeAccountId: stripeAccount.id,
         },
       });
+      return {
+        success: true,
+        message:
+          'Your seller profile has been created successfully! Please wait for admin approval to start selling.',
+        data: profile,
+      };
     } catch (error) {
       console.log(error);
       if (error instanceof HttpException) throw error;
