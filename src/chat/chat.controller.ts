@@ -41,7 +41,7 @@ export class ChatController {
     private readonly chatGateway: ChatGateway,
   ) {}
 
-  @ApiConsumes('multipart/form-data')
+  // @ApiConsumes('multipart/form-data')
   @Post('start')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Start or get a conversation with a Seller' })

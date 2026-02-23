@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/require-await */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Injectable,
   ForbiddenException,
@@ -98,6 +93,36 @@ export class ChatService {
   // 2. Send Message (Text and/or Cloudinary Image)
   async sendMessage(senderId: string, dto: SendMessageDto) {
     const { conversationId, text, fileUrl, fileType } = dto;
+    const conversation = await this.prisma.conversation.findUnique({
+      where: { id: conversationId },
+      select: { isBlocked: true, blockedById: true },
+    });
+
+    if (!conversation) {
+      throw new NotFoundException('Conversation not found');
+    }
+    if (conversation.isBlocked) {
+      let blockerName = 'Someone';
+
+      if (conversation.blockedById) {
+        if (conversation.blockedById === senderId) {
+          throw new ForbiddenException(
+            'You have blocked this conversation. Please unblock to send messages.',
+          );
+        }
+
+        const blocker = await this.prisma.auth.findUnique({
+          where: { id: conversation.blockedById },
+          select: { firstName: true, lastName: true },
+        });
+
+        if (blocker) {
+          blockerName = `${blocker.firstName} ${blocker.lastName}`;
+        }
+      }
+
+      throw new ForbiddenException(`blocked by ${blockerName}.`);
+    }
     try {
       const message = await this.prisma.message.create({
         data: {
