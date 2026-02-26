@@ -7,7 +7,7 @@ import {
   IsOptional,
   IsString,
   MinLength,
-  Matches,
+  // Matches,
 } from 'class-validator';
 import { Role } from 'prisma/generated/prisma/enums';
 // import { Role } from 'src/generated/prisma/enums';
@@ -36,7 +36,7 @@ export class RegisterDto {
   @ApiProperty({ example: '+8801700000000' })
   @IsString()
   @IsNotEmpty()
-  @Matches(/^\+?[1-9]\d{1,14}$/, { message: 'Invalid phone format' })
+  // @Matches(/^\+?[1-9]\d{1,14}$/, { message: 'Invalid phone format' })
   phone: string;
 
   @ApiProperty({ example: 'password123', minLength: 8 })

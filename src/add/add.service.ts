@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -270,32 +271,87 @@ export class AddService {
 
   async getAllAds(query: any) {
     try {
-      const { page = 1, limit = 10, search, isSold, categoryId } = query;
+      const {
+        page = 1,
+        limit = 10,
+        search,
+        isSold,
+        categoryId,
+        subCategoryId,
+        sortByPrice,
+      } = query;
+
       const skip = (Number(page) - 1) * Number(limit);
 
-      const where: any = {
-        ...(search && { title: { contains: search, mode: 'insensitive' } }),
-        ...(isSold !== undefined && { isSold: isSold === 'true' }),
-        ...(categoryId && { categoryId }),
-      };
+      // ১. 'where' অবজেক্টটি ক্লিনভাবে তৈরি করা
+      const where: any = {};
 
+      // সোল্ড স্ট্যাটাস (String to Boolean carefully)
+      if (isSold !== undefined && isSold !== '') {
+        where.isSold = isSold === 'true';
+      }
+
+      // সার্চ লজিক
+      if (search && search.trim() !== '') {
+        where.title = { contains: search, mode: 'insensitive' };
+      }
+
+      // 🔥 ক্যাটাগরি ফিল্টার ফিক্স:
+      // যদি categoryId থাকে এবং সেটা 'all' না হয়, তবেই where এ যোগ হবে।
+      if (
+        categoryId &&
+        categoryId !== 'all' &&
+        categoryId !== 'undefined' &&
+        categoryId !== ''
+      ) {
+        where.categoryId = categoryId;
+      }
+      console.log(categoryId);
+      // সাব-ক্যাটাগরি ফিল্টার:
+      if (
+        subCategoryId &&
+        subCategoryId !== 'all' &&
+        subCategoryId !== 'undefined' &&
+        subCategoryId !== ''
+      ) {
+        where.subCategoryId = subCategoryId;
+      }
+
+      // ২. সর্টিং লজিক
+      const orderBy: any = sortByPrice
+        ? { price: sortByPrice as 'asc' | 'desc' }
+        : { createdAt: 'desc' };
+
+      // ৩. ডেটাবেজ কুয়েরি
       const [total, ads] = await Promise.all([
         this.prisma.ad.count({ where }),
         this.prisma.ad.findMany({
-          where,
-          include: { images: true, category: true, seller: true, buyer: true },
-          orderBy: { createdAt: 'desc' },
+          where, // এখানে নিশ্চিত করা হয়েছে যে filter applied
+          include: {
+            images: true,
+            category: true,
+            seller: true,
+          },
+          orderBy,
           skip,
           take: Number(limit),
         }),
       ]);
 
+      const totalPage = Math.ceil(total / Number(limit));
+
       return {
         success: true,
-        meta: { total, page: Number(page), limit: Number(limit) },
+        meta: {
+          total,
+          page: Number(page),
+          limit: Number(limit),
+          totalPage,
+        },
         data: ads.map((ad) => this.transformAdData(ad)),
       };
     } catch (error: any) {
+      console.error('Error fetching ads:', error);
       throw new InternalServerErrorException(error.message);
     }
   }
@@ -326,17 +382,117 @@ export class AddService {
           images: true,
           category: true,
           subCategory: true,
-          seller: true,
-          buyer: true,
+          seller: {
+            select: {
+              // পুরো ইনক্লুড না করে নির্দিষ্ট ফিল্ড সিলেক্ট করা ভালো
+              id: true,
+              nickName: true,
+              profilePicture: true,
+              email: true,
+              phone: true,
+              sellerProfile: true,
+            },
+          },
+          buyer: {
+            select: {
+              nickName: true,
+            },
+          },
+          comments: {
+            where: { parentId: null }, // শুধুমাত্র মেইন কমেন্টগুলো আসবে
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                  profilePicture: true,
+                },
+              },
+              replies: {
+                include: {
+                  user: {
+                    select: {
+                      id: true,
+                      firstName: true,
+                      lastName: true,
+                      profilePicture: true,
+                    },
+                  },
+                },
+                orderBy: { createdAt: 'asc' }, // রিপ্লাইগুলো পুরনো থেকে নতুন ক্রমে
+              },
+            },
+            orderBy: { createdAt: 'desc' }, // কমেন্টগুলো নতুন থেকে পুরনো ক্রমে
+          },
         },
       });
 
-      if (!ad) throw new NotFoundException('Ad not found');
-      return { success: true, data: this.transformAdData(ad) };
+      if (!ad) {
+        throw new NotFoundException('Ad not found or might have been deleted');
+      }
+
+      return {
+        success: true,
+        data: this.transformAdData(ad),
+      };
     } catch (error: any) {
-      console.error('--- DEBUG: GET AD ERROR ---');
-      console.error(error);
       if (error instanceof HttpException) throw error;
+
+      // কনসোল লগ শুধু ডেভেলপমেন্টে রাখা ভালো
+      console.error(`[GetAdById Error]: ${error.message}`);
+      throw new InternalServerErrorException(
+        'An unexpected error occurred while fetching the ad',
+      );
+    }
+  }
+  // --- GET ADS BY SELLER ID ---
+  // --- GET ADS BY SELLER ID (FIXED) ---
+  async getAdsBySellerId(sellerId: string, query: any) {
+    try {
+      const { page = 1, limit = 10, isSold } = query;
+      const skip = (Number(page) - 1) * Number(limit);
+
+      // ফিল্টার অবজেক্ট তৈরি
+      const where: any = { sellerId: sellerId };
+
+      if (isSold !== undefined && isSold !== '') {
+        where.isSold = isSold === 'true';
+      }
+
+      const [total, ads] = await Promise.all([
+        this.prisma.ad.count({ where }),
+        this.prisma.ad.findMany({
+          where,
+          include: {
+            images: true,
+            category: true,
+            seller: true, // 🔥 এটি অতি জরুরি! transformAdData এটি ছাড়া কাজ করবে না।
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+          skip,
+          take: Number(limit),
+        }),
+      ]);
+
+      const totalPage = Math.ceil(total / Number(limit));
+
+      return {
+        success: true,
+        meta: {
+          total,
+          page: Number(page),
+          limit: Number(limit),
+          totalPage,
+        },
+        // এখন transformAdData সফলভাবে কাজ করবে
+        data: ads.map((ad) => this.transformAdData(ad)),
+      };
+    } catch (error: any) {
+      console.error('Error fetching ads by seller:', error);
+      // এরর মেসেজটি আরও ক্লিয়ার করার জন্য InternalServerErrorException ব্যবহার করা হয়েছে
       throw new InternalServerErrorException(error.message);
     }
   }
