@@ -80,6 +80,8 @@ export class AddController {
     @Query('search') search?: string,
     @Query('isSold') isSold?: string,
     @Query('sortByPrice') sortByPrice?: 'asc' | 'desc',
+    @Query('categoryId') categoryId?: string,
+    @Query('subCategoryId') subCategoryId?: string,
   ) {
     return await this.addService.getAllAds({
       page,
@@ -87,6 +89,8 @@ export class AddController {
       search,
       isSold,
       sortByPrice,
+      categoryId,
+      subCategoryId,
     });
   }
 
@@ -94,6 +98,30 @@ export class AddController {
   @ApiOperation({ summary: 'Get a single ad by ID' })
   async getAdById(@Param('adId') adId: string) {
     return await this.addService.getAdById(adId);
+  }
+
+  @Get('seller/:sellerId')
+  @ApiOperation({ summary: 'Get all ads of a specific seller' })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiQuery({
+    name: 'isSold',
+    required: false,
+    type: String,
+    enum: ['true', 'false'],
+    description: 'Filter by sold status',
+  })
+  async getAdsBySeller(
+    @Param('sellerId') sellerId: string,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+    @Query('isSold') isSold?: string,
+  ) {
+    return await this.addService.getAdsBySellerId(sellerId, {
+      page,
+      limit,
+      isSold,
+    });
   }
 
   @ApiBearerAuth()
