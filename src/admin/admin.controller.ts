@@ -68,10 +68,13 @@ export class AdminController {
   }
 
   @Patch('toggle-suspension/:userId')
-  @ApiOperation({ summary: 'Suspend or Activate a user' })
+  @ApiOperation({ summary: 'Suspend or Activate a user with a reason' })
   @ApiParam({ name: 'userId', description: 'UUID of the user' })
-  async toggleSuspension(@Param('userId', new ParseUUIDPipe()) id: string) {
-    return await this.adminService.toggleSellerSuspension(id);
+  async toggleSuspension(
+    @Param('userId', new ParseUUIDPipe()) id: string,
+    @Body('reason') reason?: string,
+  ) {
+    return await this.adminService.toggleSellerSuspension(id, reason);
   }
 
   @Delete('delete-seller/:userId')
@@ -193,5 +196,17 @@ export class AdminController {
   @ApiParam({ name: 'userId', description: 'UUID of the user/seller' })
   async toggleApproval(@Param('userId', new ParseUUIDPipe()) id: string) {
     return await this.adminService.toggleSellerApproval(id);
+  }
+
+  @Get('dashboard-stats')
+  @ApiOperation({ summary: 'Get overall admin dashboard statistics' })
+  async getStats() {
+    return await this.adminService.getAdminStats();
+  }
+
+  // admin.controller.ts
+  @Get('recent-users')
+  async getRecentUsers() {
+    return await this.adminService.getRecentUsers();
   }
 }

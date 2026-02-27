@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import {
@@ -142,33 +141,42 @@ export class AdminService {
     }
   }
 
-  async toggleSellerSuspension(sellerId: string) {
+  async toggleSellerSuspension(sellerId: string, reason?: string) {
     try {
       const user = await this.prisma.auth.findUnique({
         where: { id: sellerId },
-        select: { isSuspended: true },
       });
 
-      if (!user) throw new NotFoundException('Seller not found');
+      if (!user) {
+        throw new NotFoundException('Seller not found');
+      }
 
-      const newStatus = !user.isSuspended;
+      const newSuspendedStatus = !user.isSuspended;
 
-      await this.prisma.auth.update({
+      if (newSuspendedStatus === true && !reason) {
+        throw new BadRequestException('Reason is mandatory for suspension!');
+      }
+
+      const updatedUser = await this.prisma.auth.update({
         where: { id: sellerId },
-        data: { isSuspended: newStatus },
+        data: {
+          isSuspended: newSuspendedStatus,
+          suspensionReason: newSuspendedStatus ? reason : '',
+        },
       });
 
       return {
+        updatedUser,
         success: true,
-        message: newStatus
-          ? 'Seller suspended successfully'
-          : 'Seller activated successfully',
-        currentStatus: newStatus,
+        message: newSuspendedStatus
+          ? `Seller suspended successfully. Reason: ${reason}`
+          : 'Seller account activated successfully',
+        currentStatus: newSuspendedStatus,
       };
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      console.log(error);
-      throw new InternalServerErrorException('Status chnage error!');
+      console.error(error);
+      throw new InternalServerErrorException('Status toggle error!');
     }
   }
 
@@ -460,6 +468,78 @@ export class AdminService {
       throw new InternalServerErrorException(
         'Failed to fetch requested sellers list. Please try again later.',
       );
+    }
+  }
+
+  async getAdminStats() {
+    try {
+      const [totalUsers, totalSellers, totalAds, totalSoldAds, paymentStats] =
+        await Promise.all([
+          this.prisma.auth.count({ where: { isSeller: false, role: 'USER' } }),
+
+          this.prisma.auth.count({ where: { isSeller: true } }),
+
+          this.prisma.ad.count(),
+
+          this.prisma.ad.count({ where: { isSold: true } }),
+
+          this.prisma.payment.aggregate({
+            where: { status: 'COMPLETED' },
+            _sum: {
+              totalAmount: true,
+              adminFee: true,
+              sellerAmount: true,
+            },
+          }),
+        ]);
+
+      return {
+        success: true,
+        data: {
+          overview: {
+            totalUsers,
+            totalSellers,
+            totalAds,
+            totalSoldAds,
+            conversionRate:
+              totalAds > 0 ? ((totalSoldAds / totalAds) * 100).toFixed(2) : 0,
+          },
+          financials: {
+            totalRevenue: paymentStats._sum.totalAmount || 0,
+            netProfit: paymentStats._sum.adminFee || 0,
+            sellerPayouts: paymentStats._sum.sellerAmount || 0,
+          },
+        },
+      };
+    } catch (error) {
+      console.error('Stats Fetch Error:', error);
+      throw new InternalServerErrorException(
+        'Failed to generate dashboard statistics',
+      );
+    }
+  }
+
+  // AdminService.ts এর ভেতরে যোগ করুন
+  async getRecentUsers() {
+    try {
+      const recentUsers = await this.prisma.auth.findMany({
+        take: 5,
+        orderBy: { createdAt: 'desc' },
+        include: {
+          sellerProfile: true,
+          _count: {
+            select: { postedAds: true, boughtAds: true },
+          },
+        },
+      });
+
+      return {
+        success: true,
+        data: recentUsers,
+      };
+    } catch (error) {
+      console.error('Recent Users Fetch Error:', error);
+      throw new InternalServerErrorException('Failed to fetch recent users');
     }
   }
 }

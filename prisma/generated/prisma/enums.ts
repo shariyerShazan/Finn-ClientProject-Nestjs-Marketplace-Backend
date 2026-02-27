@@ -9,6 +9,16 @@
 * 🟢 You can import this file directly.
 */
 
+export const ReportStatus = {
+  PENDING: 'PENDING',
+  REVIEWING: 'REVIEWING',
+  RESOLVED: 'RESOLVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type ReportStatus = (typeof ReportStatus)[keyof typeof ReportStatus]
+
+
 export const Status = {
   PENDING: 'PENDING',
   COMPLETED: 'COMPLETED',

@@ -49,6 +49,8 @@ export type AuthMinAggregateOutputType = {
   lastLogin: Date | null
   isVerified: boolean | null
   isSuspended: boolean | null
+  suspensionReason: string | null
+  suspendedAt: Date | null
   role: $Enums.Role | null
   isSeller: boolean | null
   createdAt: Date | null
@@ -70,6 +72,8 @@ export type AuthMaxAggregateOutputType = {
   lastLogin: Date | null
   isVerified: boolean | null
   isSuspended: boolean | null
+  suspensionReason: string | null
+  suspendedAt: Date | null
   role: $Enums.Role | null
   isSeller: boolean | null
   createdAt: Date | null
@@ -91,6 +95,8 @@ export type AuthCountAggregateOutputType = {
   lastLogin: number
   isVerified: number
   isSuspended: number
+  suspensionReason: number
+  suspendedAt: number
   role: number
   isSeller: number
   createdAt: number
@@ -122,6 +128,8 @@ export type AuthMinAggregateInputType = {
   lastLogin?: true
   isVerified?: true
   isSuspended?: true
+  suspensionReason?: true
+  suspendedAt?: true
   role?: true
   isSeller?: true
   createdAt?: true
@@ -143,6 +151,8 @@ export type AuthMaxAggregateInputType = {
   lastLogin?: true
   isVerified?: true
   isSuspended?: true
+  suspensionReason?: true
+  suspendedAt?: true
   role?: true
   isSeller?: true
   createdAt?: true
@@ -164,6 +174,8 @@ export type AuthCountAggregateInputType = {
   lastLogin?: true
   isVerified?: true
   isSuspended?: true
+  suspensionReason?: true
+  suspendedAt?: true
   role?: true
   isSeller?: true
   createdAt?: true
@@ -272,6 +284,8 @@ export type AuthGroupByOutputType = {
   lastLogin: Date
   isVerified: boolean
   isSuspended: boolean
+  suspensionReason: string | null
+  suspendedAt: Date | null
   role: $Enums.Role
   isSeller: boolean
   createdAt: Date
@@ -316,6 +330,8 @@ export type AuthWhereInput = {
   lastLogin?: Prisma.DateTimeFilter<"Auth"> | Date | string
   isVerified?: Prisma.BoolFilter<"Auth"> | boolean
   isSuspended?: Prisma.BoolFilter<"Auth"> | boolean
+  suspensionReason?: Prisma.StringNullableFilter<"Auth"> | string | null
+  suspendedAt?: Prisma.DateTimeNullableFilter<"Auth"> | Date | string | null
   role?: Prisma.EnumRoleFilter<"Auth"> | $Enums.Role
   isSeller?: Prisma.BoolFilter<"Auth"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Auth"> | Date | string
@@ -328,6 +344,7 @@ export type AuthWhereInput = {
   payments?: Prisma.PaymentListRelationFilter
   sentMessages?: Prisma.MessageListRelationFilter
   conversations?: Prisma.ParticipantListRelationFilter
+  reports?: Prisma.ReportListRelationFilter
 }
 
 export type AuthOrderByWithRelationInput = {
@@ -345,6 +362,8 @@ export type AuthOrderByWithRelationInput = {
   lastLogin?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isSuspended?: Prisma.SortOrder
+  suspensionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  suspendedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   isSeller?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -357,6 +376,7 @@ export type AuthOrderByWithRelationInput = {
   payments?: Prisma.PaymentOrderByRelationAggregateInput
   sentMessages?: Prisma.MessageOrderByRelationAggregateInput
   conversations?: Prisma.ParticipantOrderByRelationAggregateInput
+  reports?: Prisma.ReportOrderByRelationAggregateInput
 }
 
 export type AuthWhereUniqueInput = Prisma.AtLeast<{
@@ -377,6 +397,8 @@ export type AuthWhereUniqueInput = Prisma.AtLeast<{
   lastLogin?: Prisma.DateTimeFilter<"Auth"> | Date | string
   isVerified?: Prisma.BoolFilter<"Auth"> | boolean
   isSuspended?: Prisma.BoolFilter<"Auth"> | boolean
+  suspensionReason?: Prisma.StringNullableFilter<"Auth"> | string | null
+  suspendedAt?: Prisma.DateTimeNullableFilter<"Auth"> | Date | string | null
   role?: Prisma.EnumRoleFilter<"Auth"> | $Enums.Role
   isSeller?: Prisma.BoolFilter<"Auth"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Auth"> | Date | string
@@ -389,6 +411,7 @@ export type AuthWhereUniqueInput = Prisma.AtLeast<{
   payments?: Prisma.PaymentListRelationFilter
   sentMessages?: Prisma.MessageListRelationFilter
   conversations?: Prisma.ParticipantListRelationFilter
+  reports?: Prisma.ReportListRelationFilter
 }, "id" | "email" | "phone">
 
 export type AuthOrderByWithAggregationInput = {
@@ -406,6 +429,8 @@ export type AuthOrderByWithAggregationInput = {
   lastLogin?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isSuspended?: Prisma.SortOrder
+  suspensionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  suspendedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   isSeller?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -435,6 +460,8 @@ export type AuthScalarWhereWithAggregatesInput = {
   lastLogin?: Prisma.DateTimeWithAggregatesFilter<"Auth"> | Date | string
   isVerified?: Prisma.BoolWithAggregatesFilter<"Auth"> | boolean
   isSuspended?: Prisma.BoolWithAggregatesFilter<"Auth"> | boolean
+  suspensionReason?: Prisma.StringNullableWithAggregatesFilter<"Auth"> | string | null
+  suspendedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Auth"> | Date | string | null
   role?: Prisma.EnumRoleWithAggregatesFilter<"Auth"> | $Enums.Role
   isSeller?: Prisma.BoolWithAggregatesFilter<"Auth"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Auth"> | Date | string
@@ -456,6 +483,8 @@ export type AuthCreateInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -468,6 +497,7 @@ export type AuthCreateInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
 
 export type AuthUncheckedCreateInput = {
@@ -485,6 +515,8 @@ export type AuthUncheckedCreateInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -497,6 +529,7 @@ export type AuthUncheckedCreateInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type AuthUpdateInput = {
@@ -514,6 +547,8 @@ export type AuthUpdateInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -526,6 +561,7 @@ export type AuthUpdateInput = {
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
 
 export type AuthUncheckedUpdateInput = {
@@ -543,6 +579,8 @@ export type AuthUncheckedUpdateInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -555,6 +593,7 @@ export type AuthUncheckedUpdateInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 export type AuthCreateManyInput = {
@@ -572,6 +611,8 @@ export type AuthCreateManyInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -593,6 +634,8 @@ export type AuthUpdateManyMutationInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -614,6 +657,8 @@ export type AuthUncheckedUpdateManyInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -635,6 +680,8 @@ export type AuthCountOrderByAggregateInput = {
   lastLogin?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isSuspended?: Prisma.SortOrder
+  suspensionReason?: Prisma.SortOrder
+  suspendedAt?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isSeller?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -660,6 +707,8 @@ export type AuthMaxOrderByAggregateInput = {
   lastLogin?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isSuspended?: Prisma.SortOrder
+  suspensionReason?: Prisma.SortOrder
+  suspendedAt?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isSeller?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -681,6 +730,8 @@ export type AuthMinOrderByAggregateInput = {
   lastLogin?: Prisma.SortOrder
   isVerified?: Prisma.SortOrder
   isSuspended?: Prisma.SortOrder
+  suspensionReason?: Prisma.SortOrder
+  suspendedAt?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isSeller?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -777,6 +828,20 @@ export type AuthUpdateOneRequiredWithoutPostedAdsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AuthUpdateToOneWithWhereWithoutPostedAdsInput, Prisma.AuthUpdateWithoutPostedAdsInput>, Prisma.AuthUncheckedUpdateWithoutPostedAdsInput>
 }
 
+export type AuthCreateNestedOneWithoutReportsInput = {
+  create?: Prisma.XOR<Prisma.AuthCreateWithoutReportsInput, Prisma.AuthUncheckedCreateWithoutReportsInput>
+  connectOrCreate?: Prisma.AuthCreateOrConnectWithoutReportsInput
+  connect?: Prisma.AuthWhereUniqueInput
+}
+
+export type AuthUpdateOneRequiredWithoutReportsNestedInput = {
+  create?: Prisma.XOR<Prisma.AuthCreateWithoutReportsInput, Prisma.AuthUncheckedCreateWithoutReportsInput>
+  connectOrCreate?: Prisma.AuthCreateOrConnectWithoutReportsInput
+  upsert?: Prisma.AuthUpsertWithoutReportsInput
+  connect?: Prisma.AuthWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AuthUpdateToOneWithWhereWithoutReportsInput, Prisma.AuthUpdateWithoutReportsInput>, Prisma.AuthUncheckedUpdateWithoutReportsInput>
+}
+
 export type AuthCreateNestedOneWithoutCommentsInput = {
   create?: Prisma.XOR<Prisma.AuthCreateWithoutCommentsInput, Prisma.AuthUncheckedCreateWithoutCommentsInput>
   connectOrCreate?: Prisma.AuthCreateOrConnectWithoutCommentsInput
@@ -862,6 +927,8 @@ export type AuthCreateWithoutSellerProfileInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -873,6 +940,7 @@ export type AuthCreateWithoutSellerProfileInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
 
 export type AuthUncheckedCreateWithoutSellerProfileInput = {
@@ -890,6 +958,8 @@ export type AuthUncheckedCreateWithoutSellerProfileInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -901,6 +971,7 @@ export type AuthUncheckedCreateWithoutSellerProfileInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type AuthCreateOrConnectWithoutSellerProfileInput = {
@@ -934,6 +1005,8 @@ export type AuthUpdateWithoutSellerProfileInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -945,6 +1018,7 @@ export type AuthUpdateWithoutSellerProfileInput = {
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
 
 export type AuthUncheckedUpdateWithoutSellerProfileInput = {
@@ -962,6 +1036,8 @@ export type AuthUncheckedUpdateWithoutSellerProfileInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -973,6 +1049,7 @@ export type AuthUncheckedUpdateWithoutSellerProfileInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 export type AuthCreateWithoutBoughtAdsInput = {
@@ -990,6 +1067,8 @@ export type AuthCreateWithoutBoughtAdsInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -1001,6 +1080,7 @@ export type AuthCreateWithoutBoughtAdsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
 
 export type AuthUncheckedCreateWithoutBoughtAdsInput = {
@@ -1018,6 +1098,8 @@ export type AuthUncheckedCreateWithoutBoughtAdsInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -1029,6 +1111,7 @@ export type AuthUncheckedCreateWithoutBoughtAdsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type AuthCreateOrConnectWithoutBoughtAdsInput = {
@@ -1051,6 +1134,8 @@ export type AuthCreateWithoutPostedAdsInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -1062,6 +1147,7 @@ export type AuthCreateWithoutPostedAdsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
 
 export type AuthUncheckedCreateWithoutPostedAdsInput = {
@@ -1079,6 +1165,8 @@ export type AuthUncheckedCreateWithoutPostedAdsInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -1090,6 +1178,7 @@ export type AuthUncheckedCreateWithoutPostedAdsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type AuthCreateOrConnectWithoutPostedAdsInput = {
@@ -1123,6 +1212,8 @@ export type AuthUpdateWithoutBoughtAdsInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1134,6 +1225,7 @@ export type AuthUpdateWithoutBoughtAdsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
 
 export type AuthUncheckedUpdateWithoutBoughtAdsInput = {
@@ -1151,6 +1243,8 @@ export type AuthUncheckedUpdateWithoutBoughtAdsInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1162,6 +1256,7 @@ export type AuthUncheckedUpdateWithoutBoughtAdsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 export type AuthUpsertWithoutPostedAdsInput = {
@@ -1190,6 +1285,8 @@ export type AuthUpdateWithoutPostedAdsInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1201,6 +1298,7 @@ export type AuthUpdateWithoutPostedAdsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
 
 export type AuthUncheckedUpdateWithoutPostedAdsInput = {
@@ -1218,6 +1316,8 @@ export type AuthUncheckedUpdateWithoutPostedAdsInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1225,6 +1325,147 @@ export type AuthUncheckedUpdateWithoutPostedAdsInput = {
   sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+}
+
+export type AuthCreateWithoutReportsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  nickName: string
+  email: string
+  phone: string
+  password: string
+  otp?: string | null
+  otpExpires?: Date | string | null
+  profilePicture?: string | null
+  otpAttemp?: number
+  lastLogin?: Date | string
+  isVerified?: boolean
+  isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
+  role?: $Enums.Role
+  isSeller?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  postedAds?: Prisma.AdCreateNestedManyWithoutSellerInput
+  boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
+}
+
+export type AuthUncheckedCreateWithoutReportsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  nickName: string
+  email: string
+  phone: string
+  password: string
+  otp?: string | null
+  otpExpires?: Date | string | null
+  profilePicture?: string | null
+  otpAttemp?: number
+  lastLogin?: Date | string
+  isVerified?: boolean
+  isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
+  role?: $Enums.Role
+  isSeller?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  postedAds?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
+  boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type AuthCreateOrConnectWithoutReportsInput = {
+  where: Prisma.AuthWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuthCreateWithoutReportsInput, Prisma.AuthUncheckedCreateWithoutReportsInput>
+}
+
+export type AuthUpsertWithoutReportsInput = {
+  update: Prisma.XOR<Prisma.AuthUpdateWithoutReportsInput, Prisma.AuthUncheckedUpdateWithoutReportsInput>
+  create: Prisma.XOR<Prisma.AuthCreateWithoutReportsInput, Prisma.AuthUncheckedCreateWithoutReportsInput>
+  where?: Prisma.AuthWhereInput
+}
+
+export type AuthUpdateToOneWithWhereWithoutReportsInput = {
+  where?: Prisma.AuthWhereInput
+  data: Prisma.XOR<Prisma.AuthUpdateWithoutReportsInput, Prisma.AuthUncheckedUpdateWithoutReportsInput>
+}
+
+export type AuthUpdateWithoutReportsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  nickName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  postedAds?: Prisma.AdUpdateManyWithoutSellerNestedInput
+  boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
+}
+
+export type AuthUncheckedUpdateWithoutReportsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  nickName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  postedAds?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1246,6 +1487,8 @@ export type AuthCreateWithoutCommentsInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -1257,6 +1500,7 @@ export type AuthCreateWithoutCommentsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
 
 export type AuthUncheckedCreateWithoutCommentsInput = {
@@ -1274,6 +1518,8 @@ export type AuthUncheckedCreateWithoutCommentsInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -1285,6 +1531,7 @@ export type AuthUncheckedCreateWithoutCommentsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type AuthCreateOrConnectWithoutCommentsInput = {
@@ -1318,6 +1565,8 @@ export type AuthUpdateWithoutCommentsInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1329,6 +1578,7 @@ export type AuthUpdateWithoutCommentsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
 
 export type AuthUncheckedUpdateWithoutCommentsInput = {
@@ -1346,6 +1596,8 @@ export type AuthUncheckedUpdateWithoutCommentsInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1357,6 +1609,7 @@ export type AuthUncheckedUpdateWithoutCommentsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 export type AuthCreateWithoutBidsInput = {
@@ -1374,6 +1627,8 @@ export type AuthCreateWithoutBidsInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -1385,6 +1640,7 @@ export type AuthCreateWithoutBidsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
 
 export type AuthUncheckedCreateWithoutBidsInput = {
@@ -1402,6 +1658,8 @@ export type AuthUncheckedCreateWithoutBidsInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -1413,6 +1671,7 @@ export type AuthUncheckedCreateWithoutBidsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type AuthCreateOrConnectWithoutBidsInput = {
@@ -1446,6 +1705,8 @@ export type AuthUpdateWithoutBidsInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1457,6 +1718,7 @@ export type AuthUpdateWithoutBidsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
 
 export type AuthUncheckedUpdateWithoutBidsInput = {
@@ -1474,6 +1736,8 @@ export type AuthUncheckedUpdateWithoutBidsInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1485,6 +1749,7 @@ export type AuthUncheckedUpdateWithoutBidsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 export type AuthCreateWithoutPaymentsInput = {
@@ -1502,6 +1767,8 @@ export type AuthCreateWithoutPaymentsInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -1513,6 +1780,7 @@ export type AuthCreateWithoutPaymentsInput = {
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
 
 export type AuthUncheckedCreateWithoutPaymentsInput = {
@@ -1530,6 +1798,8 @@ export type AuthUncheckedCreateWithoutPaymentsInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -1541,6 +1811,7 @@ export type AuthUncheckedCreateWithoutPaymentsInput = {
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type AuthCreateOrConnectWithoutPaymentsInput = {
@@ -1574,6 +1845,8 @@ export type AuthUpdateWithoutPaymentsInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1585,6 +1858,7 @@ export type AuthUpdateWithoutPaymentsInput = {
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
 
 export type AuthUncheckedUpdateWithoutPaymentsInput = {
@@ -1602,6 +1876,8 @@ export type AuthUncheckedUpdateWithoutPaymentsInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1613,6 +1889,7 @@ export type AuthUncheckedUpdateWithoutPaymentsInput = {
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 export type AuthCreateWithoutConversationsInput = {
@@ -1630,6 +1907,8 @@ export type AuthCreateWithoutConversationsInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -1641,6 +1920,7 @@ export type AuthCreateWithoutConversationsInput = {
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
 
 export type AuthUncheckedCreateWithoutConversationsInput = {
@@ -1658,6 +1938,8 @@ export type AuthUncheckedCreateWithoutConversationsInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -1669,6 +1951,7 @@ export type AuthUncheckedCreateWithoutConversationsInput = {
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type AuthCreateOrConnectWithoutConversationsInput = {
@@ -1702,6 +1985,8 @@ export type AuthUpdateWithoutConversationsInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1713,6 +1998,7 @@ export type AuthUpdateWithoutConversationsInput = {
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
 
 export type AuthUncheckedUpdateWithoutConversationsInput = {
@@ -1730,6 +2016,8 @@ export type AuthUncheckedUpdateWithoutConversationsInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1741,6 +2029,7 @@ export type AuthUncheckedUpdateWithoutConversationsInput = {
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 export type AuthCreateWithoutSentMessagesInput = {
@@ -1758,6 +2047,8 @@ export type AuthCreateWithoutSentMessagesInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -1769,6 +2060,7 @@ export type AuthCreateWithoutSentMessagesInput = {
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
 
 export type AuthUncheckedCreateWithoutSentMessagesInput = {
@@ -1786,6 +2078,8 @@ export type AuthUncheckedCreateWithoutSentMessagesInput = {
   lastLogin?: Date | string
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
   role?: $Enums.Role
   isSeller?: boolean
   createdAt?: Date | string
@@ -1797,6 +2091,7 @@ export type AuthUncheckedCreateWithoutSentMessagesInput = {
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
 
 export type AuthCreateOrConnectWithoutSentMessagesInput = {
@@ -1830,6 +2125,8 @@ export type AuthUpdateWithoutSentMessagesInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1841,6 +2138,7 @@ export type AuthUpdateWithoutSentMessagesInput = {
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
 
 export type AuthUncheckedUpdateWithoutSentMessagesInput = {
@@ -1858,6 +2156,8 @@ export type AuthUncheckedUpdateWithoutSentMessagesInput = {
   lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1869,6 +2169,7 @@ export type AuthUncheckedUpdateWithoutSentMessagesInput = {
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
 
 
@@ -1884,6 +2185,7 @@ export type AuthCountOutputType = {
   payments: number
   sentMessages: number
   conversations: number
+  reports: number
 }
 
 export type AuthCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1894,6 +2196,7 @@ export type AuthCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   payments?: boolean | AuthCountOutputTypeCountPaymentsArgs
   sentMessages?: boolean | AuthCountOutputTypeCountSentMessagesArgs
   conversations?: boolean | AuthCountOutputTypeCountConversationsArgs
+  reports?: boolean | AuthCountOutputTypeCountReportsArgs
 }
 
 /**
@@ -1955,6 +2258,13 @@ export type AuthCountOutputTypeCountConversationsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.ParticipantWhereInput
 }
 
+/**
+ * AuthCountOutputType without action
+ */
+export type AuthCountOutputTypeCountReportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReportWhereInput
+}
+
 
 export type AuthSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1971,6 +2281,8 @@ export type AuthSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   lastLogin?: boolean
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: boolean
+  suspendedAt?: boolean
   role?: boolean
   isSeller?: boolean
   createdAt?: boolean
@@ -1983,6 +2295,7 @@ export type AuthSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   payments?: boolean | Prisma.Auth$paymentsArgs<ExtArgs>
   sentMessages?: boolean | Prisma.Auth$sentMessagesArgs<ExtArgs>
   conversations?: boolean | Prisma.Auth$conversationsArgs<ExtArgs>
+  reports?: boolean | Prisma.Auth$reportsArgs<ExtArgs>
   _count?: boolean | Prisma.AuthCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["auth"]>
 
@@ -2001,6 +2314,8 @@ export type AuthSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   lastLogin?: boolean
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: boolean
+  suspendedAt?: boolean
   role?: boolean
   isSeller?: boolean
   createdAt?: boolean
@@ -2022,6 +2337,8 @@ export type AuthSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   lastLogin?: boolean
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: boolean
+  suspendedAt?: boolean
   role?: boolean
   isSeller?: boolean
   createdAt?: boolean
@@ -2043,13 +2360,15 @@ export type AuthSelectScalar = {
   lastLogin?: boolean
   isVerified?: boolean
   isSuspended?: boolean
+  suspensionReason?: boolean
+  suspendedAt?: boolean
   role?: boolean
   isSeller?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AuthOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "nickName" | "email" | "phone" | "password" | "otp" | "otpExpires" | "profilePicture" | "otpAttemp" | "lastLogin" | "isVerified" | "isSuspended" | "role" | "isSeller" | "createdAt" | "updatedAt", ExtArgs["result"]["auth"]>
+export type AuthOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "firstName" | "lastName" | "nickName" | "email" | "phone" | "password" | "otp" | "otpExpires" | "profilePicture" | "otpAttemp" | "lastLogin" | "isVerified" | "isSuspended" | "suspensionReason" | "suspendedAt" | "role" | "isSeller" | "createdAt" | "updatedAt", ExtArgs["result"]["auth"]>
 export type AuthInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sellerProfile?: boolean | Prisma.Auth$sellerProfileArgs<ExtArgs>
   comments?: boolean | Prisma.Auth$commentsArgs<ExtArgs>
@@ -2059,6 +2378,7 @@ export type AuthInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   payments?: boolean | Prisma.Auth$paymentsArgs<ExtArgs>
   sentMessages?: boolean | Prisma.Auth$sentMessagesArgs<ExtArgs>
   conversations?: boolean | Prisma.Auth$conversationsArgs<ExtArgs>
+  reports?: boolean | Prisma.Auth$reportsArgs<ExtArgs>
   _count?: boolean | Prisma.AuthCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AuthIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2075,6 +2395,7 @@ export type $AuthPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     payments: Prisma.$PaymentPayload<ExtArgs>[]
     sentMessages: Prisma.$MessagePayload<ExtArgs>[]
     conversations: Prisma.$ParticipantPayload<ExtArgs>[]
+    reports: Prisma.$ReportPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2091,6 +2412,8 @@ export type $AuthPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     lastLogin: Date
     isVerified: boolean
     isSuspended: boolean
+    suspensionReason: string | null
+    suspendedAt: Date | null
     role: $Enums.Role
     isSeller: boolean
     createdAt: Date
@@ -2497,6 +2820,7 @@ export interface Prisma__AuthClient<T, Null = never, ExtArgs extends runtime.Typ
   payments<T extends Prisma.Auth$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sentMessages<T extends Prisma.Auth$sentMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$sentMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   conversations<T extends Prisma.Auth$conversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reports<T extends Prisma.Auth$reportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2540,6 +2864,8 @@ export interface AuthFieldRefs {
   readonly lastLogin: Prisma.FieldRef<"Auth", 'DateTime'>
   readonly isVerified: Prisma.FieldRef<"Auth", 'Boolean'>
   readonly isSuspended: Prisma.FieldRef<"Auth", 'Boolean'>
+  readonly suspensionReason: Prisma.FieldRef<"Auth", 'String'>
+  readonly suspendedAt: Prisma.FieldRef<"Auth", 'DateTime'>
   readonly role: Prisma.FieldRef<"Auth", 'Role'>
   readonly isSeller: Prisma.FieldRef<"Auth", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Auth", 'DateTime'>
@@ -3116,6 +3442,30 @@ export type Auth$conversationsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.ParticipantScalarFieldEnum | Prisma.ParticipantScalarFieldEnum[]
+}
+
+/**
+ * Auth.reports
+ */
+export type Auth$reportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Report
+   */
+  select?: Prisma.ReportSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Report
+   */
+  omit?: Prisma.ReportOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReportInclude<ExtArgs> | null
+  where?: Prisma.ReportWhereInput
+  orderBy?: Prisma.ReportOrderByWithRelationInput | Prisma.ReportOrderByWithRelationInput[]
+  cursor?: Prisma.ReportWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReportScalarFieldEnum | Prisma.ReportScalarFieldEnum[]
 }
 
 /**

@@ -22,6 +22,7 @@ import { CommentModule } from './comment/comment.module';
 import { PaymentModule } from './payment/payment.module';
 import { StripeModule } from './stripe/stripe.module';
 // import { SellerBankModule } from './seller-bank/seller-bank.module';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { StripeModule } from './stripe/stripe.module';
     AdminModule,
     CommentModule,
     PaymentModule,
+    ReportModule,
     // SellerBankModule,
   ],
   controllers: [AppController],

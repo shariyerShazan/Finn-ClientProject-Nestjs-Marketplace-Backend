@@ -40,9 +40,14 @@ export class SellerBankGuard implements CanActivate {
 
     // 2. Suspension Check
     if (user.isSuspended) {
-      throw new ForbiddenException('Your account is suspended.');
-    }
+      const reasonMsg = user.suspensionReason
+        ? `Reason: ${user.suspensionReason}`
+        : 'Please contact support for more details.';
 
+      throw new ForbiddenException(
+        `Access denied. Your account is currently suspended. ${reasonMsg}`,
+      );
+    }
     // 3. Seller Role Check
     // (Jodi user.role === 'SELLER' thake, oitao check korte paren)
     if (user.role !== 'SELLER') {
