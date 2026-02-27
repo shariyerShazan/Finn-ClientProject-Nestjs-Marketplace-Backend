@@ -41,8 +41,12 @@ export class SellerGuard implements CanActivate {
 
     // 2. Suspension Check
     if (user.isSuspended) {
+      const reasonMsg = user.suspensionReason
+        ? `Reason: ${user.suspensionReason}`
+        : 'Please contact support for more details.';
+
       throw new ForbiddenException(
-        'Access denied. Your account is currently suspended. Please contact support.',
+        `Access denied. Your account is currently suspended. ${reasonMsg}`,
       );
     }
 

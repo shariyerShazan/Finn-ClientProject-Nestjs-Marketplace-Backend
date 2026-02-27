@@ -48,8 +48,12 @@ export class RolesGuard implements CanActivate {
     if (!isAdmin) {
       // 1. Suspended check (Database theke real value)
       if (user.isSuspended) {
+        const reasonMsg = user.suspensionReason
+          ? `Reason: ${user.suspensionReason}`
+          : 'Please contact support for more details.';
+
         throw new ForbiddenException(
-          'Your account has been suspended. Please contact support.',
+          `Access denied. Your account is currently suspended. ${reasonMsg}`,
         );
       }
 

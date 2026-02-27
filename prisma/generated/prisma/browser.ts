@@ -43,6 +43,11 @@ export type SubCategory = Prisma.SubCategoryModel
  */
 export type Ad = Prisma.AdModel
 /**
+ * Model Report
+ * 
+ */
+export type Report = Prisma.ReportModel
+/**
  * Model Comment
  * 
  */

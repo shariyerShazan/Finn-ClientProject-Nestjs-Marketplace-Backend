@@ -56,6 +56,7 @@ export const ModelName = {
   Category: 'Category',
   SubCategory: 'SubCategory',
   Ad: 'Ad',
+  Report: 'Report',
   Comment: 'Comment',
   AdImage: 'AdImage',
   Bid: 'Bid',
@@ -96,6 +97,8 @@ export const AuthScalarFieldEnum = {
   lastLogin: 'lastLogin',
   isVerified: 'isVerified',
   isSuspended: 'isSuspended',
+  suspensionReason: 'suspensionReason',
+  suspendedAt: 'suspendedAt',
   role: 'role',
   isSeller: 'isSeller',
   createdAt: 'createdAt',
@@ -179,6 +182,20 @@ export const AdScalarFieldEnum = {
 } as const
 
 export type AdScalarFieldEnum = (typeof AdScalarFieldEnum)[keyof typeof AdScalarFieldEnum]
+
+
+export const ReportScalarFieldEnum = {
+  id: 'id',
+  reason: 'reason',
+  description: 'description',
+  status: 'status',
+  reporterId: 'reporterId',
+  adId: 'adId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReportScalarFieldEnum = (typeof ReportScalarFieldEnum)[keyof typeof ReportScalarFieldEnum]
 
 
 export const CommentScalarFieldEnum = {
