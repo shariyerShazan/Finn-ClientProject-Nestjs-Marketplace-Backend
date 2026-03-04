@@ -28,7 +28,8 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { UserService } from './user.service';
 import { UpdateProfileDto } from './dto/UpdateProfileDto';
 import { SellerGuard } from 'src/auth/guards/seller.guard';
-import { SellerBankGuard } from 'src/auth/guards/seller-bank.guard';
+import { AuthGuard } from '@nestjs/passport';
+// import { SellerBankGuard } from 'src/auth/guards/seller-bank.guard';
 
 @ApiTags('User & Seller Dashboard')
 @ApiBearerAuth()
@@ -66,7 +67,7 @@ export class UserController {
   // --- SELLER SECTION ---
 
   @Get('my-ads')
-  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard, SellerBankGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard)
   @Roles('SELLER')
   @ApiOperation({ summary: 'Seller: Get own ads with pagination & search' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
@@ -81,7 +82,7 @@ export class UserController {
   }
 
   @Get('my-ads/:adId')
-  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard, SellerBankGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard)
   @Roles('SELLER')
   @ApiOperation({ summary: 'Seller: Get single ad details' })
   @ApiParam({ name: 'adId', description: 'UUID of the Advertisement' })
@@ -93,7 +94,7 @@ export class UserController {
   }
 
   @Get('my-earnings')
-  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard, SellerBankGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard)
   @Roles('SELLER')
   @ApiOperation({ summary: 'Seller: Get payments received' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
@@ -127,7 +128,7 @@ export class UserController {
   // --- SELLER DASHBOARD SECTION ---
 
   @Get('seller-stats')
-  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard, SellerBankGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard)
   @Roles('SELLER')
   @ApiOperation({
     summary:
@@ -138,7 +139,7 @@ export class UserController {
   }
 
   @Get('seller-recent-ads')
-  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard, SellerBankGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard)
   @Roles('SELLER')
   @ApiOperation({ summary: 'Seller: Get latest 10 ads with search' })
   @ApiQuery({
@@ -148,5 +149,12 @@ export class UserController {
   })
   async getRecentAds(@Req() req: any, @Query('search') search?: string) {
     return await this.userService.getSellerRecentAds(req.user.id, { search });
+  }
+
+  @Get('subscription/my-history')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Get current seller payment history' })
+  async getMyHistory(@Req() req: any) {
+    return await this.userService.getMySubscriptions(req.user.id);
   }
 }

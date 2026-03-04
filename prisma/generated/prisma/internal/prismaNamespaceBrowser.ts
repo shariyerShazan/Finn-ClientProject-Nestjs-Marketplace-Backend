@@ -63,7 +63,9 @@ export const ModelName = {
   Payment: 'Payment',
   Conversation: 'Conversation',
   Participant: 'Participant',
-  Message: 'Message'
+  Message: 'Message',
+  SubscriptionPlan: 'SubscriptionPlan',
+  Subscription: 'Subscription'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -278,6 +280,40 @@ export const MessageScalarFieldEnum = {
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+export const SubscriptionPlanScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  price: 'price',
+  durationDays: 'durationDays',
+  postLimit: 'postLimit',
+  description: 'description',
+  features: 'features',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubscriptionPlanScalarFieldEnum = (typeof SubscriptionPlanScalarFieldEnum)[keyof typeof SubscriptionPlanScalarFieldEnum]
+
+
+export const SubscriptionScalarFieldEnum = {
+  id: 'id',
+  sellerId: 'sellerId',
+  planId: 'planId',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  usedAdIds: 'usedAdIds',
+  totalLimit: 'totalLimit',
+  status: 'status',
+  paymentStatus: 'paymentStatus',
+  transactionId: 'transactionId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
 
 
 export const SortOrder = {

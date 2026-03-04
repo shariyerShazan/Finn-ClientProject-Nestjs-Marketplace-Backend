@@ -62,6 +62,15 @@ export const PropertyFor = {
 export type PropertyFor = (typeof PropertyFor)[keyof typeof PropertyFor]
 
 
+export const SubscriptionStatus = {
+  ACTIVE: 'ACTIVE',
+  EXPIRED: 'EXPIRED',
+  CANCELED: 'CANCELED'
+} as const
+
+export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus]
+
+
 export const PaymentStatus = {
   PENDING: 'PENDING',
   COMPLETED: 'COMPLETED',

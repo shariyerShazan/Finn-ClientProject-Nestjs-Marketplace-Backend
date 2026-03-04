@@ -82,3 +82,13 @@ export type Participant = Prisma.ParticipantModel
  * 
  */
 export type Message = Prisma.MessageModel
+/**
+ * Model SubscriptionPlan
+ * 
+ */
+export type SubscriptionPlan = Prisma.SubscriptionPlanModel
+/**
+ * Model Subscription
+ * 
+ */
+export type Subscription = Prisma.SubscriptionModel
