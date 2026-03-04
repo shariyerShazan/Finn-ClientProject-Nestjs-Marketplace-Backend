@@ -50,6 +50,9 @@ model Auth {
   comments       Comment[]
 
   bids           Bid[]   
+   
+  subscription      Subscription?
+
   postedAds       Ad[]           @relation("SellerAds")
   boughtAds       Ad[]           @relation("BuyerAds")
   
@@ -307,12 +310,6 @@ enum PropertyFor {
 //   REJECTED
 // }
 
-enum PaymentStatus {
-  PENDING
-  COMPLETED
-  FAILED
-}
-
 
 
 
@@ -374,3 +371,57 @@ model Message {
   createdAt      DateTime     @default(now())
 }
 
+
+
+
+
+
+
+model SubscriptionPlan {
+  id              String         @id @default(uuid())
+  name            String        
+  price           Float          
+  durationDays    Int      
+  postLimit       Int         
+  description     String?
+  features        String[]   
+  isActive        Boolean        @default(true)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  
+  subscriptions   Subscription[] 
+}
+
+model Subscription {
+  id                 String           @id @default(uuid())
+  sellerId           String           @unique
+  seller             Auth             @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  planId             String
+  plan               SubscriptionPlan @relation(fields: [planId], references: [id])
+  
+  startDate          DateTime         @default(now())
+  endDate            DateTime      
+  
+  usedAdIds          String[]         @default([])
+
+  totalLimit       Int   
+  status             SubscriptionStatus @default(ACTIVE)
+  
+  paymentStatus      PaymentStatus    @default(PENDING)
+  transactionId      String?       
+
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}

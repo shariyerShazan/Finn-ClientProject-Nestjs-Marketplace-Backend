@@ -33,7 +33,8 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { SellerGuard } from 'src/auth/guards/seller.guard';
-import { SellerBankGuard } from 'src/auth/guards/seller-bank.guard';
+import { SubscriptionGuard } from 'src/auth/guards/subscription.guard';
+// import { SellerBankGuard } from 'src/auth/guards/seller-bank.guard';
 // import { SellerBankGuard } from 'src/auth/guards/seller-bank.guard';
 
 @ApiTags('Seller Ads Management')
@@ -125,7 +126,7 @@ export class AddController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard, SellerBankGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard, SubscriptionGuard)
   @Roles('SELLER')
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -144,7 +145,7 @@ export class AddController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard, SellerBankGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard)
   @Roles('SELLER')
   @Patch(':adId')
   @HttpCode(HttpStatus.OK)
@@ -162,7 +163,7 @@ export class AddController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard, SellerBankGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard)
   @Roles('SELLER')
   @Delete(':adId')
   @HttpCode(HttpStatus.OK)
@@ -173,7 +174,7 @@ export class AddController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard, SellerBankGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard)
   @Roles('SELLER')
   @Patch(':adId/toggle-sold')
   @ApiOperation({ summary: 'Toggle Ad sold status (true/false)' })

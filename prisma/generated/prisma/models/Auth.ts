@@ -339,6 +339,7 @@ export type AuthWhereInput = {
   sellerProfile?: Prisma.XOR<Prisma.SellerProfileNullableScalarRelationFilter, Prisma.SellerProfileWhereInput> | null
   comments?: Prisma.CommentListRelationFilter
   bids?: Prisma.BidListRelationFilter
+  subscription?: Prisma.XOR<Prisma.SubscriptionNullableScalarRelationFilter, Prisma.SubscriptionWhereInput> | null
   postedAds?: Prisma.AdListRelationFilter
   boughtAds?: Prisma.AdListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
@@ -371,6 +372,7 @@ export type AuthOrderByWithRelationInput = {
   sellerProfile?: Prisma.SellerProfileOrderByWithRelationInput
   comments?: Prisma.CommentOrderByRelationAggregateInput
   bids?: Prisma.BidOrderByRelationAggregateInput
+  subscription?: Prisma.SubscriptionOrderByWithRelationInput
   postedAds?: Prisma.AdOrderByRelationAggregateInput
   boughtAds?: Prisma.AdOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
@@ -406,6 +408,7 @@ export type AuthWhereUniqueInput = Prisma.AtLeast<{
   sellerProfile?: Prisma.XOR<Prisma.SellerProfileNullableScalarRelationFilter, Prisma.SellerProfileWhereInput> | null
   comments?: Prisma.CommentListRelationFilter
   bids?: Prisma.BidListRelationFilter
+  subscription?: Prisma.XOR<Prisma.SubscriptionNullableScalarRelationFilter, Prisma.SubscriptionWhereInput> | null
   postedAds?: Prisma.AdListRelationFilter
   boughtAds?: Prisma.AdListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
@@ -492,6 +495,7 @@ export type AuthCreateInput = {
   sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
@@ -524,6 +528,7 @@ export type AuthUncheckedCreateInput = {
   sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
@@ -556,6 +561,7 @@ export type AuthUpdateInput = {
   sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
@@ -588,6 +594,7 @@ export type AuthUncheckedUpdateInput = {
   sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
@@ -912,6 +919,20 @@ export type AuthUpdateOneRequiredWithoutSentMessagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AuthUpdateToOneWithWhereWithoutSentMessagesInput, Prisma.AuthUpdateWithoutSentMessagesInput>, Prisma.AuthUncheckedUpdateWithoutSentMessagesInput>
 }
 
+export type AuthCreateNestedOneWithoutSubscriptionInput = {
+  create?: Prisma.XOR<Prisma.AuthCreateWithoutSubscriptionInput, Prisma.AuthUncheckedCreateWithoutSubscriptionInput>
+  connectOrCreate?: Prisma.AuthCreateOrConnectWithoutSubscriptionInput
+  connect?: Prisma.AuthWhereUniqueInput
+}
+
+export type AuthUpdateOneRequiredWithoutSubscriptionNestedInput = {
+  create?: Prisma.XOR<Prisma.AuthCreateWithoutSubscriptionInput, Prisma.AuthUncheckedCreateWithoutSubscriptionInput>
+  connectOrCreate?: Prisma.AuthCreateOrConnectWithoutSubscriptionInput
+  upsert?: Prisma.AuthUpsertWithoutSubscriptionInput
+  connect?: Prisma.AuthWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AuthUpdateToOneWithWhereWithoutSubscriptionInput, Prisma.AuthUpdateWithoutSubscriptionInput>, Prisma.AuthUncheckedUpdateWithoutSubscriptionInput>
+}
+
 export type AuthCreateWithoutSellerProfileInput = {
   id?: string
   firstName: string
@@ -935,6 +956,7 @@ export type AuthCreateWithoutSellerProfileInput = {
   updatedAt?: Date | string
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
@@ -966,6 +988,7 @@ export type AuthUncheckedCreateWithoutSellerProfileInput = {
   updatedAt?: Date | string
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
@@ -1013,6 +1036,7 @@ export type AuthUpdateWithoutSellerProfileInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
@@ -1044,6 +1068,7 @@ export type AuthUncheckedUpdateWithoutSellerProfileInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
@@ -1076,6 +1101,7 @@ export type AuthCreateWithoutBoughtAdsInput = {
   sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdCreateNestedManyWithoutSellerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -1107,6 +1133,7 @@ export type AuthUncheckedCreateWithoutBoughtAdsInput = {
   sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -1143,6 +1170,7 @@ export type AuthCreateWithoutPostedAdsInput = {
   sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutSellerInput
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -1174,6 +1202,7 @@ export type AuthUncheckedCreateWithoutPostedAdsInput = {
   sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutSellerInput
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -1221,6 +1250,7 @@ export type AuthUpdateWithoutBoughtAdsInput = {
   sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUpdateManyWithoutSellerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -1252,6 +1282,7 @@ export type AuthUncheckedUpdateWithoutBoughtAdsInput = {
   sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1294,6 +1325,7 @@ export type AuthUpdateWithoutPostedAdsInput = {
   sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutSellerNestedInput
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -1325,6 +1357,7 @@ export type AuthUncheckedUpdateWithoutPostedAdsInput = {
   sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutSellerNestedInput
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1356,6 +1389,7 @@ export type AuthCreateWithoutReportsInput = {
   sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
@@ -1387,6 +1421,7 @@ export type AuthUncheckedCreateWithoutReportsInput = {
   sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
@@ -1434,6 +1469,7 @@ export type AuthUpdateWithoutReportsInput = {
   sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
@@ -1465,6 +1501,7 @@ export type AuthUncheckedUpdateWithoutReportsInput = {
   sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
@@ -1495,6 +1532,7 @@ export type AuthCreateWithoutCommentsInput = {
   updatedAt?: Date | string
   sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
   bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
@@ -1526,6 +1564,7 @@ export type AuthUncheckedCreateWithoutCommentsInput = {
   updatedAt?: Date | string
   sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
@@ -1573,6 +1612,7 @@ export type AuthUpdateWithoutCommentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
   bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
@@ -1604,6 +1644,7 @@ export type AuthUncheckedUpdateWithoutCommentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
@@ -1635,6 +1676,7 @@ export type AuthCreateWithoutBidsInput = {
   updatedAt?: Date | string
   sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
@@ -1666,6 +1708,7 @@ export type AuthUncheckedCreateWithoutBidsInput = {
   updatedAt?: Date | string
   sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
@@ -1713,6 +1756,7 @@ export type AuthUpdateWithoutBidsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
@@ -1744,6 +1788,7 @@ export type AuthUncheckedUpdateWithoutBidsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
@@ -1776,6 +1821,7 @@ export type AuthCreateWithoutPaymentsInput = {
   sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -1807,6 +1853,7 @@ export type AuthUncheckedCreateWithoutPaymentsInput = {
   sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -1854,6 +1901,7 @@ export type AuthUpdateWithoutPaymentsInput = {
   sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -1885,6 +1933,7 @@ export type AuthUncheckedUpdateWithoutPaymentsInput = {
   sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1916,6 +1965,7 @@ export type AuthCreateWithoutConversationsInput = {
   sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
@@ -1947,6 +1997,7 @@ export type AuthUncheckedCreateWithoutConversationsInput = {
   sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
@@ -1994,6 +2045,7 @@ export type AuthUpdateWithoutConversationsInput = {
   sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
@@ -2025,6 +2077,7 @@ export type AuthUncheckedUpdateWithoutConversationsInput = {
   sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
@@ -2056,6 +2109,7 @@ export type AuthCreateWithoutSentMessagesInput = {
   sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
   comments?: Prisma.CommentCreateNestedManyWithoutUserInput
   bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
@@ -2087,6 +2141,7 @@ export type AuthUncheckedCreateWithoutSentMessagesInput = {
   sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutSellerInput
   postedAds?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
@@ -2134,6 +2189,7 @@ export type AuthUpdateWithoutSentMessagesInput = {
   sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
@@ -2165,9 +2221,154 @@ export type AuthUncheckedUpdateWithoutSentMessagesInput = {
   sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutSellerNestedInput
   postedAds?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
+  conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+}
+
+export type AuthCreateWithoutSubscriptionInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  nickName: string
+  email: string
+  phone: string
+  password: string
+  otp?: string | null
+  otpExpires?: Date | string | null
+  profilePicture?: string | null
+  otpAttemp?: number
+  lastLogin?: Date | string
+  isVerified?: boolean
+  isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
+  role?: $Enums.Role
+  isSeller?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  postedAds?: Prisma.AdCreateNestedManyWithoutSellerInput
+  boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
+}
+
+export type AuthUncheckedCreateWithoutSubscriptionInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  nickName: string
+  email: string
+  phone: string
+  password: string
+  otp?: string | null
+  otpExpires?: Date | string | null
+  profilePicture?: string | null
+  otpAttemp?: number
+  lastLogin?: Date | string
+  isVerified?: boolean
+  isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
+  role?: $Enums.Role
+  isSeller?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  postedAds?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
+  boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+}
+
+export type AuthCreateOrConnectWithoutSubscriptionInput = {
+  where: Prisma.AuthWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuthCreateWithoutSubscriptionInput, Prisma.AuthUncheckedCreateWithoutSubscriptionInput>
+}
+
+export type AuthUpsertWithoutSubscriptionInput = {
+  update: Prisma.XOR<Prisma.AuthUpdateWithoutSubscriptionInput, Prisma.AuthUncheckedUpdateWithoutSubscriptionInput>
+  create: Prisma.XOR<Prisma.AuthCreateWithoutSubscriptionInput, Prisma.AuthUncheckedCreateWithoutSubscriptionInput>
+  where?: Prisma.AuthWhereInput
+}
+
+export type AuthUpdateToOneWithWhereWithoutSubscriptionInput = {
+  where?: Prisma.AuthWhereInput
+  data: Prisma.XOR<Prisma.AuthUpdateWithoutSubscriptionInput, Prisma.AuthUncheckedUpdateWithoutSubscriptionInput>
+}
+
+export type AuthUpdateWithoutSubscriptionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  nickName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  postedAds?: Prisma.AdUpdateManyWithoutSellerNestedInput
+  boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+}
+
+export type AuthUncheckedUpdateWithoutSubscriptionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  nickName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  postedAds?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
+  boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
@@ -2290,6 +2491,7 @@ export type AuthSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   sellerProfile?: boolean | Prisma.Auth$sellerProfileArgs<ExtArgs>
   comments?: boolean | Prisma.Auth$commentsArgs<ExtArgs>
   bids?: boolean | Prisma.Auth$bidsArgs<ExtArgs>
+  subscription?: boolean | Prisma.Auth$subscriptionArgs<ExtArgs>
   postedAds?: boolean | Prisma.Auth$postedAdsArgs<ExtArgs>
   boughtAds?: boolean | Prisma.Auth$boughtAdsArgs<ExtArgs>
   payments?: boolean | Prisma.Auth$paymentsArgs<ExtArgs>
@@ -2373,6 +2575,7 @@ export type AuthInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   sellerProfile?: boolean | Prisma.Auth$sellerProfileArgs<ExtArgs>
   comments?: boolean | Prisma.Auth$commentsArgs<ExtArgs>
   bids?: boolean | Prisma.Auth$bidsArgs<ExtArgs>
+  subscription?: boolean | Prisma.Auth$subscriptionArgs<ExtArgs>
   postedAds?: boolean | Prisma.Auth$postedAdsArgs<ExtArgs>
   boughtAds?: boolean | Prisma.Auth$boughtAdsArgs<ExtArgs>
   payments?: boolean | Prisma.Auth$paymentsArgs<ExtArgs>
@@ -2390,6 +2593,7 @@ export type $AuthPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     sellerProfile: Prisma.$SellerProfilePayload<ExtArgs> | null
     comments: Prisma.$CommentPayload<ExtArgs>[]
     bids: Prisma.$BidPayload<ExtArgs>[]
+    subscription: Prisma.$SubscriptionPayload<ExtArgs> | null
     postedAds: Prisma.$AdPayload<ExtArgs>[]
     boughtAds: Prisma.$AdPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
@@ -2815,6 +3019,7 @@ export interface Prisma__AuthClient<T, Null = never, ExtArgs extends runtime.Typ
   sellerProfile<T extends Prisma.Auth$sellerProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$sellerProfileArgs<ExtArgs>>): Prisma.Prisma__SellerProfileClient<runtime.Types.Result.GetResult<Prisma.$SellerProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   comments<T extends Prisma.Auth$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bids<T extends Prisma.Auth$bidsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$bidsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BidPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  subscription<T extends Prisma.Auth$subscriptionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$subscriptionArgs<ExtArgs>>): Prisma.Prisma__SubscriptionClient<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   postedAds<T extends Prisma.Auth$postedAdsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$postedAdsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   boughtAds<T extends Prisma.Auth$boughtAdsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$boughtAdsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Auth$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3322,6 +3527,25 @@ export type Auth$bidsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   take?: number
   skip?: number
   distinct?: Prisma.BidScalarFieldEnum | Prisma.BidScalarFieldEnum[]
+}
+
+/**
+ * Auth.subscription
+ */
+export type Auth$subscriptionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Subscription
+   */
+  select?: Prisma.SubscriptionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Subscription
+   */
+  omit?: Prisma.SubscriptionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SubscriptionInclude<ExtArgs> | null
+  where?: Prisma.SubscriptionWhereInput
 }
 
 /**

@@ -23,6 +23,7 @@ import { PaymentModule } from './payment/payment.module';
 import { StripeModule } from './stripe/stripe.module';
 // import { SellerBankModule } from './seller-bank/seller-bank.module';
 import { ReportModule } from './report/report.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { ReportModule } from './report/report.module';
     CommentModule,
     PaymentModule,
     ReportModule,
+    SubscriptionModule,
     // SellerBankModule,
   ],
   controllers: [AppController],

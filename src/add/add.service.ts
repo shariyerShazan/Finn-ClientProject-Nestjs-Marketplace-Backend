@@ -93,6 +93,20 @@ export class AddService {
       if (!files || files.length === 0)
         throw new BadRequestException('Images are required');
 
+      const subscription = await this.prisma.subscription.findUnique({
+        where: { sellerId },
+      });
+
+      if (!subscription || subscription.status !== 'ACTIVE') {
+        throw new BadRequestException('No active subscription plan found.');
+      }
+      const usedCount = subscription.usedAdIds.length;
+      if (usedCount >= subscription.totalLimit) {
+        throw new BadRequestException(
+          `Ad limit reached (${usedCount}/${subscription.totalLimit}). Please upgrade your plan.`,
+        );
+      }
+
       // B. Manual Parsing (FormData safety)
       const price = Number(createAdDto.price);
       const lat = createAdDto.latitude ? Number(createAdDto.latitude) : null;
@@ -150,6 +164,17 @@ export class AddService {
             })),
           },
         },
+      });
+
+      await this.prisma.$transaction(async (tx) => {
+        await tx.subscription.update({
+          where: { sellerId },
+          data: {
+            usedAdIds: {
+              push: newAdd.id,
+            },
+          },
+        });
       });
       return { newAdd, success: true, message: 'Ad created successfully' };
     } catch (error) {
@@ -283,21 +308,15 @@ export class AddService {
 
       const skip = (Number(page) - 1) * Number(limit);
 
-      // ১. 'where' অবজেক্টটি ক্লিনভাবে তৈরি করা
       const where: any = {};
 
-      // সোল্ড স্ট্যাটাস (String to Boolean carefully)
       if (isSold !== undefined && isSold !== '') {
         where.isSold = isSold === 'true';
       }
 
-      // সার্চ লজিক
       if (search && search.trim() !== '') {
         where.title = { contains: search, mode: 'insensitive' };
       }
-
-      // 🔥 ক্যাটাগরি ফিল্টার ফিক্স:
-      // যদি categoryId থাকে এবং সেটা 'all' না হয়, তবেই where এ যোগ হবে।
       if (
         categoryId &&
         categoryId !== 'all' &&
@@ -307,7 +326,6 @@ export class AddService {
         where.categoryId = categoryId;
       }
       console.log(categoryId);
-      // সাব-ক্যাটাগরি ফিল্টার:
       if (
         subCategoryId &&
         subCategoryId !== 'all' &&
@@ -317,16 +335,14 @@ export class AddService {
         where.subCategoryId = subCategoryId;
       }
 
-      // ২. সর্টিং লজিক
       const orderBy: any = sortByPrice
         ? { price: sortByPrice as 'asc' | 'desc' }
         : { createdAt: 'desc' };
 
-      // ৩. ডেটাবেজ কুয়েরি
       const [total, ads] = await Promise.all([
         this.prisma.ad.count({ where }),
         this.prisma.ad.findMany({
-          where, // এখানে নিশ্চিত করা হয়েছে যে filter applied
+          where,
           include: {
             images: true,
             category: true,
@@ -361,15 +377,38 @@ export class AddService {
       const existingAd = await this.prisma.ad.findUnique({
         where: { id: adId },
       });
+
       if (!existingAd) throw new NotFoundException('Ad not found');
       if (existingAd.sellerId !== sellerId)
         throw new ForbiddenException('Not authorized');
 
-      await this.prisma.ad.delete({ where: { id: adId } });
-      return { message: 'Ad deleted successfully', success: true };
+      await this.prisma.$transaction(async (tx) => {
+        await tx.ad.delete({ where: { id: adId } });
+        const subscription = await tx.subscription.findUnique({
+          where: { sellerId },
+        });
+
+        if (subscription) {
+          const updatedUsedAdIds = subscription.usedAdIds.filter(
+            (id) => id !== adId,
+          );
+
+          await tx.subscription.update({
+            where: { sellerId },
+            data: {
+              usedAdIds: updatedUsedAdIds,
+            },
+          });
+        }
+      });
+
+      return {
+        message: 'Ad deleted successfully and slot freed',
+        success: true,
+      };
     } catch (error: any) {
       if (error instanceof HttpException) throw error;
-      throw new InternalServerErrorException('Delete failed');
+      throw new InternalServerErrorException('Delete failed: ' + error.message);
     }
   }
 
@@ -384,7 +423,6 @@ export class AddService {
           subCategory: true,
           seller: {
             select: {
-              // পুরো ইনক্লুড না করে নির্দিষ্ট ফিল্ড সিলেক্ট করা ভালো
               id: true,
               nickName: true,
               profilePicture: true,
@@ -438,22 +476,18 @@ export class AddService {
       };
     } catch (error: any) {
       if (error instanceof HttpException) throw error;
-
-      // কনসোল লগ শুধু ডেভেলপমেন্টে রাখা ভালো
       console.error(`[GetAdById Error]: ${error.message}`);
       throw new InternalServerErrorException(
         'An unexpected error occurred while fetching the ad',
       );
     }
   }
-  // --- GET ADS BY SELLER ID ---
-  // --- GET ADS BY SELLER ID (FIXED) ---
+
   async getAdsBySellerId(sellerId: string, query: any) {
     try {
       const { page = 1, limit = 10, isSold } = query;
       const skip = (Number(page) - 1) * Number(limit);
 
-      // ফিল্টার অবজেক্ট তৈরি
       const where: any = { sellerId: sellerId };
 
       if (isSold !== undefined && isSold !== '') {
@@ -467,7 +501,7 @@ export class AddService {
           include: {
             images: true,
             category: true,
-            seller: true, // 🔥 এটি অতি জরুরি! transformAdData এটি ছাড়া কাজ করবে না।
+            seller: true,
           },
           orderBy: {
             createdAt: 'desc',
@@ -487,12 +521,10 @@ export class AddService {
           limit: Number(limit),
           totalPage,
         },
-        // এখন transformAdData সফলভাবে কাজ করবে
         data: ads.map((ad) => this.transformAdData(ad)),
       };
     } catch (error: any) {
       console.error('Error fetching ads by seller:', error);
-      // এরর মেসেজটি আরও ক্লিয়ার করার জন্য InternalServerErrorException ব্যবহার করা হয়েছে
       throw new InternalServerErrorException(error.message);
     }
   }
@@ -530,13 +562,12 @@ export class AddService {
 
       if (!ad) throw new NotFoundException('Ad not found');
 
-      // Check jodi user agei dekhe thake (Unique view logic)
       if (!ad.viewerIds.includes(userId)) {
         await this.prisma.ad.update({
           where: { id: adId },
           data: {
             viewerIds: {
-              push: userId, // Array-te user ID-ta dhukay dibe
+              push: userId,
             },
           },
         });

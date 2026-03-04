@@ -5,6 +5,7 @@ import {
   IsInt,
   MinLength,
   Length,
+  IsOptional,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -17,7 +18,7 @@ export class CreateSellerProfileDto {
 
   @ApiProperty({ example: 'https://shazantech.com' })
   @IsUrl({}, { message: 'Invalid website URL' })
-  @IsNotEmpty()
+  @IsOptional()
   companyWebSite: string;
 
   @ApiProperty({ example: '123 Business Avenue' })

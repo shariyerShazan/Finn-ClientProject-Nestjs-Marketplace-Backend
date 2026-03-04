@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   // BadRequestException,
@@ -16,11 +18,7 @@ import Stripe from 'stripe';
 @Injectable()
 export class UserService {
   private stripe: Stripe;
-  constructor(private readonly prisma: PrismaService) {
-    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: '2024-12-18.acacia' as any,
-    });
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
   // --- SELLER PROFILE CREATION ---
   async createSellerProfile(userId: string, sellerDto: CreateSellerProfileDto) {
@@ -30,28 +28,21 @@ export class UserService {
         include: { sellerProfile: true },
       });
 
-      if (!user) throw new NotFoundException('User not found');
-      if (user.role !== 'SELLER')
-        throw new ForbiddenException('Only sellers can create a profile');
-      if (user.sellerProfile)
-        throw new ConflictException('Profile already exists');
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
 
-      const stripeAccount = await this.stripe.accounts.create({
-        type: 'express',
-        country: sellerDto.country, // BD hole card_payments bad jabe
-        email: user.email,
-        capabilities:
-          sellerDto.country === 'BD'
-            ? {
-                transfers: { requested: true }, // BD-r jonno shudhu transfers ba cross-border logic thake
-              }
-            : {
-                card_payments: { requested: true },
-                transfers: { requested: true },
-              },
-        metadata: { userId: user.id },
-      });
+      if (user.role !== 'SELLER') {
+        throw new ForbiddenException(
+          'Only users with SELLER role can create a profile',
+        );
+      }
 
+      if (user.sellerProfile) {
+        throw new ConflictException(
+          'Seller profile already exists for this user',
+        );
+      }
       const profile = await this.prisma.sellerProfile.create({
         data: {
           authId: user.id,
@@ -62,23 +53,28 @@ export class UserService {
           companyWebSite: sellerDto.companyWebSite,
           country: sellerDto.country,
           state: sellerDto.state,
-          stripeAccountId: stripeAccount.id,
         },
       });
+
       return {
         success: true,
         message:
-          'Your seller profile has been created successfully! Please wait for admin approval to start selling.',
+          'Your seller profile has been created successfully! Please purchase a subscription plan to start posting ads.',
         data: profile,
       };
     } catch (error) {
-      console.log(error);
-      if (error instanceof HttpException) throw error;
+      console.error('Create Seller Profile Error:', error);
+      if (
+        error instanceof NotFoundException ||
+        error instanceof ForbiddenException ||
+        error instanceof ConflictException
+      ) {
+        throw error;
+      }
       throw new InternalServerErrorException('Failed to create seller profile');
     }
   }
 
-  // --- PROFILE UPDATE ---
   async updateProfile(userId: string, updateData: UpdateProfileDto) {
     try {
       const user = await this.prisma.auth.findUnique({
@@ -465,5 +461,27 @@ export class UserService {
       success: true,
       data: ads,
     };
+  }
+
+  async getMySubscriptions(userId: string) {
+    try {
+      const subscriptions = await this.prisma.subscription.findMany({
+        where: { sellerId: userId },
+        include: {
+          plan: true,
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      return {
+        success: true,
+        data: subscriptions,
+      };
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException(
+        'Failed to fetch your subscription history',
+      );
+    }
   }
 }

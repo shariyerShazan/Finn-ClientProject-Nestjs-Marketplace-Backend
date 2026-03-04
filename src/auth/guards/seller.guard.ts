@@ -58,6 +58,12 @@ export class SellerGuard implements CanActivate {
       );
     }
 
+    if (!user.isSeller) {
+      throw new ForbiddenException(
+        'Your seller account is currently pending admin approval. Please wait for verification.',
+      );
+    }
+
     // Update request user with database info
     request.user = user;
 
