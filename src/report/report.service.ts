@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
+
 import {
   BadRequestException,
   HttpException,
@@ -57,7 +57,14 @@ export class ReportService {
         this.prisma.report.count(),
         this.prisma.report.findMany({
           include: {
-            reporter: { select: { id: true, nickName: true, email: true } },
+            reporter: {
+              select: {
+                id: true,
+                nickName: true,
+                email: true,
+                profilePicture: true,
+              },
+            },
             ad: { select: { id: true, title: true, sellerId: true } },
           },
           orderBy: { createdAt: 'desc' },

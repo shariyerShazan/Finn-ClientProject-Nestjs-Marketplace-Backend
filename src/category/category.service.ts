@@ -27,11 +27,47 @@ export class CategoryService {
     private readonly cloudinary: CloudinaryService,
   ) {}
 
-  async getAllCategories() {
+  async getAllCategories(
+    page: number = 1,
+    limit: number = 10,
+    search?: string,
+  ) {
     try {
-      return await this.prisma.category.findMany({
-        include: { subCategories: true },
-      });
+      const skip = (page - 1) * limit;
+
+      // Search filters তৈরি করা
+      // এখানে Slug অথবা Name যেকোনো একটি মিললে ডাটা আসবে
+      const where: any = search
+        ? {
+            OR: [
+              { name: { contains: search, mode: 'insensitive' } },
+              { slug: { contains: search, mode: 'insensitive' } },
+            ],
+          }
+        : {};
+      const [data, total] = await Promise.all([
+        this.prisma.category.findMany({
+          where,
+          skip,
+          take: Number(limit),
+          include: {
+            _count: { select: { subCategories: true } },
+            subCategories: true,
+          },
+        }),
+        this.prisma.category.count({ where }),
+      ]);
+
+      return {
+        success: true,
+        data,
+        meta: {
+          total,
+          page: Number(page),
+          limit: Number(limit),
+          totalPage: Math.ceil(total / limit),
+        },
+      };
     } catch (error) {
       if (error instanceof HttpException) throw error;
       console.error('GetAllCategories Error:', error);

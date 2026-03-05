@@ -10,7 +10,9 @@ import {
   Post,
   Query,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -29,6 +31,7 @@ import { UserService } from './user.service';
 import { UpdateProfileDto } from './dto/UpdateProfileDto';
 import { SellerGuard } from 'src/auth/guards/seller.guard';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 // import { SellerBankGuard } from 'src/auth/guards/seller-bank.guard';
 
 @ApiTags('User & Seller Dashboard')
@@ -50,11 +53,15 @@ export class UserController {
 
   @Patch('update-profile')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('SELLER')
+  @Roles('SELLER', 'USER')
   @ApiConsumes('multipart/form-data')
-  @ApiOperation({ summary: 'Update user or seller profile info' })
-  async updateProfile(@Req() req: any, @Body() updateDto: UpdateProfileDto) {
-    return await this.userService.updateProfile(req.user.id, updateDto);
+  @UseInterceptors(FileInterceptor('profilePicture'))
+  async updateProfile(
+    @Req() req: any,
+    @Body() updateDto: UpdateProfileDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return await this.userService.updateProfile(req.user.id, updateDto, file);
   }
 
   @Get('me')

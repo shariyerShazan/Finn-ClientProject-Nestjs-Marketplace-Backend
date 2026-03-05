@@ -1,28 +1,26 @@
-import { ApiProperty, PartialType, OmitType } from '@nestjs/swagger';
-// import { RegisterDto } from './auth.register-dto';
-import {
-  IsOptional,
-  IsString,
-  ValidateNested,
-  IsObject,
-} from 'class-validator';
-import { Type } from 'class-transformer';
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+import { PartialType, OmitType, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, ValidateNested } from 'class-validator';
+import { Type, Transform } from 'class-transformer';
 import { RegisterDto } from 'src/auth/dto/auth.register-dto';
 import { UpdateSellerProfileDto } from './UpdateSellerProfileDto';
-// import { UpdateSellerProfileDto } from './UpdateSellerProfileDto';
 
 export class UpdateProfileDto extends PartialType(
   OmitType(RegisterDto, ['email', 'role'] as const),
 ) {
-  @ApiProperty({ example: 'https://image.com/profile.jpg', required: false })
-  @IsString()
+  @ApiPropertyOptional({ type: UpdateSellerProfileDto })
   @IsOptional()
-  profilePicture?: string;
-
-  @ApiProperty({ type: UpdateSellerProfileDto, required: false })
-  @IsOptional()
-  @IsObject()
   @ValidateNested()
   @Type(() => UpdateSellerProfileDto)
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch {
+        return undefined;
+      }
+    }
+    return value;
+  })
   sellerData?: UpdateSellerProfileDto;
 }

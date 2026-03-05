@@ -315,8 +315,13 @@ export class AddService {
       }
 
       if (search && search.trim() !== '') {
-        where.title = { contains: search, mode: 'insensitive' };
+        where.OR = [
+          { title: { contains: search, mode: 'insensitive' } },
+          { category: { name: { contains: search, mode: 'insensitive' } } },
+          { category: { slug: { contains: search, mode: 'insensitive' } } },
+        ];
       }
+
       if (
         categoryId &&
         categoryId !== 'all' &&
@@ -530,26 +535,32 @@ export class AddService {
   }
 
   async toggleSoldStatus(adId: string, sellerId: string) {
-    const ad = await this.prisma.ad.findUnique({ where: { id: adId } });
+    // ১. অ্যাডটি খুঁজে দেখা
+    const ad = await this.prisma.ad.findUnique({
+      where: { id: adId },
+      select: { id: true, sellerId: true, isSold: true },
+    });
 
     if (!ad) throw new NotFoundException('Ad not found');
-    if (ad.sellerId !== sellerId)
-      throw new ForbiddenException('Not authorized');
-
-    // Toggle logic: jodi true thake false hobe, false thakle true hobe
+    if (ad.sellerId !== sellerId) {
+      throw new ForbiddenException(
+        'You are not authorized to mark this ad as sold.',
+      );
+    }
     const updatedAd = await this.prisma.ad.update({
       where: { id: adId },
       data: { isSold: !ad.isSold },
     });
 
-    const statusMessage = updatedAd.isSold
-      ? 'Item marked as sold'
-      : 'Item marked as available';
-
     return {
-      message: statusMessage,
       success: true,
-      //   data: updatedAd,
+      message: updatedAd.isSold
+        ? 'Your item has been marked as Sold.'
+        : 'Your item is now marked as Available.',
+      data: {
+        id: updatedAd.id,
+        isSold: updatedAd.isSold,
+      },
     };
   }
 

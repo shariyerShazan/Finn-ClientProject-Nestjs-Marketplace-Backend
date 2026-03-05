@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   // BadRequestException,
@@ -14,11 +12,15 @@ import { CreateSellerProfileDto } from 'src/user/dto/create-seller-profile.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateProfileDto } from './dto/UpdateProfileDto';
 import Stripe from 'stripe';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class UserService {
   private stripe: Stripe;
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly cloudinary: CloudinaryService,
+  ) {}
 
   // --- SELLER PROFILE CREATION ---
   async createSellerProfile(userId: string, sellerDto: CreateSellerProfileDto) {
@@ -74,8 +76,11 @@ export class UserService {
       throw new InternalServerErrorException('Failed to create seller profile');
     }
   }
-
-  async updateProfile(userId: string, updateData: UpdateProfileDto) {
+  async updateProfile(
+    userId: string,
+    updateData: UpdateProfileDto,
+    file?: Express.Multer.File,
+  ) {
     try {
       const user = await this.prisma.auth.findUnique({
         where: { id: userId },
@@ -84,49 +89,56 @@ export class UserService {
 
       if (!user) throw new NotFoundException('User not found');
 
-      const {
-        firstName,
-        lastName,
-        nickName,
-        phone,
-        profilePicture,
-        sellerData,
-      } = updateData;
+      let profileImageUrl = user.profilePicture;
+      if (file) {
+        const uploadResult = await this.cloudinary.uploadImages([file]);
+        profileImageUrl = uploadResult[0];
+      }
 
       const updatedAuth = await this.prisma.auth.update({
         where: { id: userId },
         data: {
-          firstName: firstName ?? user.firstName,
-          lastName: lastName ?? user.lastName,
-          nickName: nickName ?? user.nickName,
-          phone: phone ?? user.phone,
-          profilePicture: profilePicture ?? user.profilePicture,
+          firstName: updateData.firstName ?? user.firstName,
+          lastName: updateData.lastName ?? user.lastName,
+          nickName: updateData.nickName ?? user.nickName,
+          phone: updateData.phone ?? user.phone,
+          profilePicture: profileImageUrl,
         },
       });
 
-      if (user.role === 'SELLER' && sellerData && user.sellerProfile) {
-        if (!user.isSeller) {
-          throw new ForbiddenException('Seller profile pending approval.');
-        }
+      if (
+        user.role === 'SELLER' &&
+        user.sellerProfile &&
+        updateData.sellerData
+      ) {
+        const sData = updateData.sellerData;
 
         await this.prisma.sellerProfile.update({
           where: { authId: userId },
           data: {
-            companyName:
-              sellerData.companyName ?? user.sellerProfile.companyName,
-            address: sellerData.address ?? user.sellerProfile.address,
-            city: sellerData.city ?? user.sellerProfile.city,
-            state: sellerData.state ?? user.sellerProfile.state,
-            zip: sellerData.zip ?? user.sellerProfile.zip,
+            companyName: sData.companyName ?? user.sellerProfile.companyName,
+            address: sData.address ?? user.sellerProfile.address,
+            city: sData.city ?? user.sellerProfile.city,
+            state: sData.state ?? user.sellerProfile.state,
+            country: sData.country ?? user.sellerProfile.country,
+            zip: sData.zip ? Number(sData.zip) : user.sellerProfile.zip,
+            companyWebSite:
+              sData.companyWebSite ?? user.sellerProfile.companyWebSite,
           },
         });
       }
 
-      return { success: true, data: updatedAuth };
+      return {
+        success: true,
+        message: 'Profile updated successfully',
+        data: updatedAuth,
+      };
     } catch (error) {
-      // console.log(error)
+      console.error('Update Error:', error);
       if (error instanceof HttpException) throw error;
-      throw new InternalServerErrorException('Update failed');
+      throw new InternalServerErrorException(
+        'Profile update failed due to a server error',
+      );
     }
   }
 
