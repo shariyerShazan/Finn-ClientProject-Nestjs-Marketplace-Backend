@@ -1,13 +1,30 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
-  ApiTags, ApiOperation, ApiParam, ApiBearerAuth, ApiConsumes,
+  ApiTags,
+  ApiOperation,
+  // ApiParam,
+  ApiBearerAuth,
+  ApiConsumes,
 } from '@nestjs/swagger';
 import { CategoryService } from './category.service';
 import {
-  Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Query, Post, UseGuards, UseInterceptors, UploadedFile,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Query,
+  Post,
+  UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import {
-  CreateCategoryDto, CreateSubCategoryDto, UpdateCategoryDto, UpdateSubCategoryDto,
+  CreateCategoryDto,
+  CreateSubCategoryDto,
+  UpdateCategoryDto,
+  UpdateSubCategoryDto,
 } from './dto/categoryCrud.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -23,7 +40,10 @@ export class CategoryController {
 
   @Get('sub-categories')
   @ApiOperation({ summary: 'Get all sub-categories' })
-  async getAllSubCategories(@Query('page') page?: string, @Query('limit') limit?: string) {
+  async getAllSubCategories(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
     return await this.categoryService.getAllSubCategories(
       page ? parseInt(page) : 1,
       limit ? parseInt(limit) : 10,
@@ -44,7 +64,10 @@ export class CategoryController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @ApiOperation({ summary: 'Update a sub-category' })
-  async updateSub(@Param('subCategoryId') id: string, @Body() dto: UpdateSubCategoryDto) {
+  async updateSub(
+    @Param('subCategoryId') id: string,
+    @Body() dto: UpdateSubCategoryDto,
+  ) {
     return await this.categoryService.updateSubCategory(id, dto);
   }
 
@@ -64,8 +87,16 @@ export class CategoryController {
   // --- GENERAL CATEGORY ROUTES ---
 
   @Get()
-  async findAll() {
-    return await this.categoryService.getAllCategories();
+  async getAll(
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+    @Query('search') search?: string,
+  ) {
+    return this.categoryService.getAllCategories(
+      Number(page),
+      Number(limit),
+      search,
+    );
   }
 
   @Post()
@@ -74,7 +105,10 @@ export class CategoryController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @UseInterceptors(FileInterceptor('image'))
-  async createCat(@Body() dto: CreateCategoryDto, @UploadedFile() file: Express.Multer.File) {
+  async createCat(
+    @Body() dto: CreateCategoryDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
     return await this.categoryService.createCategory(dto, file);
   }
 
@@ -84,7 +118,11 @@ export class CategoryController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @UseInterceptors(FileInterceptor('image'))
-  async updateCat(@Param('categoryId') id: string, @Body() dto: UpdateCategoryDto, @UploadedFile() file: Express.Multer.File) {
+  async updateCat(
+    @Param('categoryId') id: string,
+    @Body() dto: UpdateCategoryDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
     return await this.categoryService.updateCategory(id, dto, file);
   }
 

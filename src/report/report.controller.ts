@@ -26,7 +26,7 @@ import { CreateReportDto } from './dto/ReportAdDto';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 
-@ApiTags('Reports') // Swagger এ আলাদা সেকশন তৈরি করবে
+@ApiTags('Reports')
 @Controller('report')
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}

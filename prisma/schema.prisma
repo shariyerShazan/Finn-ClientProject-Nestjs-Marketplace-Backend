@@ -404,7 +404,7 @@ model Subscription {
   
   usedAdIds          String[]         @default([])
 
-  totalLimit       Int   
+  totalLimit         Int   
   status             SubscriptionStatus @default(ACTIVE)
   
   paymentStatus      PaymentStatus    @default(PENDING)
