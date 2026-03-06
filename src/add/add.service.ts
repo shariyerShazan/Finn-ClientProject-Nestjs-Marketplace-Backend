@@ -89,9 +89,9 @@ export class AddService {
 
   async createAd(sellerId: string, createAdDto: CreateAdDto, files: any) {
     try {
-      // A. Image Check
-      if (!files || files.length === 0)
+      if (!files || files.length === 0) {
         throw new BadRequestException('Images are required');
+      }
 
       const subscription = await this.prisma.subscription.findUnique({
         where: { sellerId },
@@ -100,24 +100,20 @@ export class AddService {
       if (!subscription || subscription.status !== 'ACTIVE') {
         throw new BadRequestException('No active subscription plan found.');
       }
-      const usedCount = subscription.usedAdIds.length;
-      if (usedCount >= subscription.totalLimit) {
-        throw new BadRequestException(
-          `Ad limit reached (${usedCount}/${subscription.totalLimit}). Please upgrade your plan.`,
-        );
+
+      if (subscription.usedAdIds.length >= subscription.totalLimit) {
+        throw new BadRequestException('Ad limit reached.');
       }
 
-      // B. Manual Parsing (FormData safety)
+      // --- String to Boolean Conversion Logic ---
+      const showAddress = createAdDto.showAddress === 'true';
+      const allowPhone = createAdDto.allowPhone === 'true';
+      const allowEmail = createAdDto.allowEmail === 'true';
+
       const price = Number(createAdDto.price);
       const lat = createAdDto.latitude ? Number(createAdDto.latitude) : null;
       const lng = createAdDto.longitude ? Number(createAdDto.longitude) : null;
 
-      // FormData theke asha string ke boolean banano
-      const showAddress = String(createAdDto.showAddress) === 'true';
-      const allowPhone = String(createAdDto.allowPhone) === 'true';
-      const allowEmail = String(createAdDto.allowEmail) === 'true';
-
-      // C. Specifications handling (The biggest suspect)
       let specs = createAdDto.specifications;
       if (typeof specs === 'string') {
         try {
@@ -127,58 +123,62 @@ export class AddService {
         }
       }
 
-      // Specification validate korar agey dekhen specs object kina
       const validatedSpecs = await this.validateSpecifications(
         createAdDto.subCategoryId,
         specs,
       );
 
-      // D. Cloudinary Upload
       const imageUrls = await this.cloudinary.uploadImages(files);
 
-      // E. Prisma Create
-      const newAdd = await this.prisma.ad.create({
-        data: {
-          title: createAdDto.title,
-          description: createAdDto.description,
-          type: createAdDto.type,
-          price: price,
-          propertyFor: createAdDto.propertyFor,
-          state: createAdDto.state,
-          city: createAdDto.city,
-          zipCode: createAdDto.zipCode,
-          country: createAdDto.country,
-          latitude: lat,
-          longitude: lng,
-          showAddress,
-          allowPhone,
-          allowEmail,
-          categoryId: createAdDto.categoryId,
-          subCategoryId: createAdDto.subCategoryId,
-          specifications: validatedSpecs,
-          sellerId: sellerId,
-          images: {
-            create: imageUrls.map((url, index) => ({
-              url,
-              isPrimary: index === 0,
-            })),
+      const result = await this.prisma.$transaction(async (tx) => {
+        const newAd = await tx.ad.create({
+          data: {
+            title: createAdDto.title,
+            description: createAdDto.description,
+            type: createAdDto.type,
+            price: price,
+            propertyFor: createAdDto.propertyFor,
+            state: createAdDto.state,
+            city: createAdDto.city,
+            zipCode: createAdDto.zipCode,
+            country: createAdDto.country,
+            latitude: lat,
+            longitude: lng,
+            showAddress, // এখানে এখন পিওর বুলিয়ান যাবে
+            allowPhone, // এখানে এখন পিওর বুলিয়ান যাবে
+            allowEmail, // এখানে এখন পিওর বুলিয়ান যাবে
+            categoryId: createAdDto.categoryId,
+            subCategoryId: createAdDto.subCategoryId,
+            specifications: validatedSpecs,
+            sellerId: sellerId,
+            images: {
+              create: imageUrls.map((url, index) => ({
+                url,
+                isPrimary: index === 0,
+              })),
+            },
           },
-        },
-      });
+        });
 
-      await this.prisma.$transaction(async (tx) => {
         await tx.subscription.update({
           where: { sellerId },
           data: {
             usedAdIds: {
-              push: newAdd.id,
+              push: newAd.id,
             },
           },
         });
+
+        return newAd;
       });
-      return { newAdd, success: true, message: 'Ad created successfully' };
+
+      return {
+        newAdd: result,
+        success: true,
+        message: 'Ad created successfully',
+      };
     } catch (error) {
-      console.error('DETAILED_ERROR:', error); // Eita apnar terminal-e bolbe ashol kahini
+      console.error('CREATE_AD_ERROR:', error);
       if (error instanceof HttpException) throw error;
       throw new InternalServerErrorException(error.message);
     }

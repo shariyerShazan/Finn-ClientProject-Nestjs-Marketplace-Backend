@@ -9,9 +9,22 @@ import {
   IsNumber,
   IsObject,
   IsArray,
-  IsBoolean,
+  // IsBoolean,
 } from 'class-validator';
 import { AdType, PropertyFor } from 'prisma/generated/prisma/enums';
+
+// ✅ Boolean parser helper (DTO এর বাইরে রাখতে হবে)
+// const toBoolean = (value: any): boolean => {
+//   if (value === true || value === 'true' || value === 1 || value === '1') {
+//     return true;
+//   }
+
+//   if (value === false || value === 'false' || value === 0 || value === '0') {
+//     return false;
+//   }
+
+//   return false;
+// };
 
 export class CreateAdDto {
   @ApiProperty({ example: 'MacBook Pro M2' })
@@ -36,8 +49,6 @@ export class CreateAdDto {
   @ApiProperty({ enum: PropertyFor, example: PropertyFor.SALE })
   @IsEnum(PropertyFor)
   propertyFor: PropertyFor;
-
-  // ---------------- LOCATION ----------------
 
   @ApiPropertyOptional({ example: 23.7757 })
   @IsOptional()
@@ -71,8 +82,6 @@ export class CreateAdDto {
   @IsNotEmpty()
   country: string;
 
-  // ---------------- CATEGORY ----------------
-
   @ApiProperty({ example: 'cat-uuid-here' })
   @IsString()
   categoryId: string;
@@ -81,14 +90,10 @@ export class CreateAdDto {
   @IsString()
   subCategoryId: string;
 
-  // ---------------- SPECIFICATIONS ----------------
-
   @ApiPropertyOptional({
     example: { brand: 'Apple', processor: 'M2' },
-    description: 'Object or JSON string',
   })
   @IsOptional()
-  @IsObject()
   @Transform(({ value }) => {
     if (typeof value === 'string') {
       try {
@@ -99,45 +104,34 @@ export class CreateAdDto {
     }
     return value;
   })
+  @IsObject()
   specifications?: Record<string, any>;
 
-  // ---------------- PRIVACY FLAGS ----------------
-
-  @ApiPropertyOptional({ example: true })
+  @ApiPropertyOptional({ example: 'true' })
   @IsOptional()
-  @IsBoolean()
-  @Transform(({ value }) => value === 'true' || value === true)
-  showAddress?: boolean;
+  @IsString()
+  showAddress?: string; // string হিসেবে নিলাম
 
-  @ApiPropertyOptional({ example: true })
+  @ApiPropertyOptional({ example: 'true' })
   @IsOptional()
-  @IsBoolean()
-  @Transform(({ value }) => value === 'true' || value === true)
-  allowPhone?: boolean;
+  @IsString()
+  allowPhone?: string; // string হিসেবে নিলাম
 
-  @ApiPropertyOptional({ example: false })
+  @ApiPropertyOptional({ example: 'false' })
   @IsOptional()
-  @IsBoolean()
-  @Transform(({ value }) => value === 'true' || value === true)
-  allowEmail?: boolean;
-
-  // ---------------- IMAGES ----------------
+  @IsString()
+  allowEmail?: string; // string হিসেবে নিলাম
 
   @ApiPropertyOptional({
     type: 'string',
     format: 'binary',
     isArray: true,
-    description: 'Upload multiple images',
   })
   @IsOptional()
   images?: Express.Multer.File[];
 }
 
 export class UpdateAddDto extends PartialType(CreateAdDto) {
-  @ApiPropertyOptional({
-    example: ['img-id-1', 'img-id-2'],
-    description: 'Image IDs to delete',
-  })
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
