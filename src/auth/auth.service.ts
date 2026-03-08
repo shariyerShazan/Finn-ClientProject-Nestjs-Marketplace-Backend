@@ -224,6 +224,7 @@ export class AuthService {
           isSeller: user.isSeller,
           isVerified: user.isVerified,
           isSuspended: user.isSuspended,
+          sellerProfile: user.sellerProfile,
         },
       });
     } catch (error) {

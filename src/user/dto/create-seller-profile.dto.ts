@@ -1,7 +1,7 @@
 import {
   IsString,
   IsNotEmpty,
-  IsUrl,
+  // IsUrl,
   IsInt,
   MinLength,
   Length,
@@ -17,9 +17,8 @@ export class CreateSellerProfileDto {
   companyName: string;
 
   @ApiProperty({ example: 'https://shazantech.com' })
-  @IsUrl({}, { message: 'Invalid website URL' })
   @IsOptional()
-  companyWebSite: string;
+  companyWebSite?: string;
 
   @ApiProperty({ example: '123 Business Avenue' })
   @IsString()

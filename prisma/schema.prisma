@@ -70,7 +70,7 @@ model Auth {
 model SellerProfile {
   id             String  @id @default(uuid())
   companyName    String
-  companyWebSite String  @unique
+  companyWebSite String?  @unique
   address  String
   city    String
   state   String

@@ -473,25 +473,51 @@ export class AdminService {
 
   async getAdminStats() {
     try {
-      const [totalUsers, totalSellers, totalAds, totalSoldAds, paymentStats] =
-        await Promise.all([
-          this.prisma.auth.count({ where: { isSeller: false, role: 'USER' } }),
+      const [
+        totalUsers,
+        totalSellers,
+        totalAds,
+        totalSoldAds,
+        paymentStats,
+        subscriptions,
+      ] = await Promise.all([
+        this.prisma.auth.count({ where: { isSeller: false, role: 'USER' } }),
 
-          this.prisma.auth.count({ where: { isSeller: true } }),
+        this.prisma.auth.count({ where: { isSeller: true } }),
 
-          this.prisma.ad.count(),
+        this.prisma.ad.count(),
 
-          this.prisma.ad.count({ where: { isSold: true } }),
+        this.prisma.ad.count({ where: { isSold: true } }),
 
-          this.prisma.payment.aggregate({
-            where: { status: 'COMPLETED' },
-            _sum: {
-              totalAmount: true,
-              adminFee: true,
-              sellerAmount: true,
+        this.prisma.payment.aggregate({
+          where: { status: 'COMPLETED' },
+          _sum: {
+            totalAmount: true,
+            adminFee: true,
+            sellerAmount: true,
+          },
+        }),
+
+        this.prisma.subscription.findMany({
+          where: {
+            paymentStatus: 'COMPLETED',
+          },
+          include: {
+            plan: {
+              select: {
+                price: true,
+              },
             },
-          }),
-        ]);
+          },
+        }),
+      ]);
+
+      const totalSubscriptionRevenue = subscriptions.reduce(
+        (sum, sub) => sum + (sub.plan?.price || 0),
+        0,
+      );
+
+      const totalSubscriptionsSold = subscriptions.length;
 
       return {
         success: true,
@@ -504,10 +530,14 @@ export class AdminService {
             conversionRate:
               totalAds > 0 ? ((totalSoldAds / totalAds) * 100).toFixed(2) : 0,
           },
+
           financials: {
             totalRevenue: paymentStats._sum.totalAmount || 0,
             netProfit: paymentStats._sum.adminFee || 0,
             sellerPayouts: paymentStats._sum.sellerAmount || 0,
+
+            subscriptionRevenue: totalSubscriptionRevenue,
+            totalSubscriptionsSold,
           },
         },
       };

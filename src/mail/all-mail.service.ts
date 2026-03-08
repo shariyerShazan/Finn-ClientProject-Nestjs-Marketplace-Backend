@@ -7,39 +7,39 @@ export class AllMailService {
   constructor(private readonly mailService: MailService) {}
 
   async sendOtpEmail(email: string, otp: string, name: string) {
-    const subject = '🔐 Verify Your ByBench Account';
-    const brandColor = '#EA2754';
+    const subject = '🔐 Verify Your Finn Account';
+    const brandColor = '#0064AE'; // আপনার ব্র্যান্ড কালার
 
     const html = `
       <div style="background-color: #f4f4f7; padding: 40px 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; line-height: 1.6;">
         <div style="max-width: 550px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 1px solid #e1e1e1;">
           
           <div style="background-color: ${brandColor}; padding: 35px; text-align: center;">
-            <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 800; letter-spacing: -1.5px; text-transform: uppercase;">ByBench</h1>
+            <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 800; letter-spacing: -1.5px; text-transform: uppercase;">Finn</h1>
             <div style="height: 3px; width: 40px; background-color: #ffffff; margin: 10px auto; border-radius: 2px; opacity: 0.5;"></div>
           </div>
 
           <div style="padding: 45px 35px;">
             <p style="font-size: 18px; font-weight: 600; color: #111; margin-bottom: 15px;">Hey ${name},</p>
-            <p style="color: #555; font-size: 15px; margin-bottom: 30px;">Welcome to the family! We're excited to have you. To keep your account secure, please verify your email address using the code below:</p>
-            
-            <div style="background-color: #fff5f6; border: 2px solid ${brandColor}; border-radius: 12px; padding: 30px; text-align: center; margin-bottom: 30px;">
+            <p style="color: #555; font-size: 15px; margin-bottom: 30px;">Welcome to the family! We're excited to have you at Finn. To keep your account secure, please verify your email address using the code below:</p>
+
+            <div style="background-color: #f0f7ff; border: 2px solid ${brandColor}; border-radius: 12px; padding: 30px; text-align: center; margin-bottom: 30px;">
               <span style="display: block; font-size: 11px; text-transform: uppercase; color: ${brandColor}; margin-bottom: 10px; font-weight: 800; letter-spacing: 2px;">Verification Code</span>
               <span style="font-size: 42px; font-weight: 900; color: #111; letter-spacing: 10px; font-family: 'Courier New', Courier, monospace;">${otp}</span>
             </div>
 
             <p style="margin: 0; font-size: 13px; color: #888; text-align: center;">
               Code valid for <span style="color: ${brandColor}; font-weight: 600;">5 minutes</span>. <br>
-              If you didn't create an account, just ignore this message.
+              If you didn't create an account with Finn, just ignore this message.
             </p>
           </div>
 
           <div style="background-color: #111; padding: 25px; text-align: center;">
             <p style="margin: 0; font-size: 12px; color: #888;">
-              Questions? Contact us at <a href="mailto:support@bybench.com" style="color: ${brandColor}; text-decoration: none;">support@bybench.com</a>
+              Questions? Contact us at <a href="mailto:support@finnapp.com" style="color: ${brandColor}; text-decoration: none;">support@finnapp.com</a>
             </p>
             <p style="margin: 10px 0 0 0; font-size: 11px; color: #555;">
-              © 2026 ByBench Inc. Dhaka, Bangladesh.
+              © 2026 Finn Inc. Dhaka, Bangladesh.
             </p>
           </div>
         </div>
@@ -50,41 +50,41 @@ export class AllMailService {
   }
 
   async sendForgotOtp(email: string, otp: string, name: string) {
-    const subject = '🔐 Reset Your ByBench Password';
-    const brandColor = '#EA2754';
+    const subject = '🔐 Reset Your Finn Password';
+    const brandColor = '#0064AE'; // আপনার ব্র্যান্ড কালার
 
     const html = `
       <div style="background-color: #f4f4f7; padding: 40px 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; line-height: 1.6;">
         <div style="max-width: 550px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 1px solid #e1e1e1;">
           
           <div style="background-color: ${brandColor}; padding: 35px; text-align: center;">
-            <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 800; letter-spacing: -1.5px; text-transform: uppercase;">ByBench</h1>
+            <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 800; letter-spacing: -1.5px; text-transform: uppercase;">Finn</h1>
             <div style="height: 3px; width: 40px; background-color: #ffffff; margin: 10px auto; border-radius: 2px; opacity: 0.5;"></div>
           </div>
 
           <div style="padding: 45px 35px;">
             <p style="font-size: 18px; font-weight: 600; color: #111; margin-bottom: 15px;">Hey ${name},</p>
             <p style="color: #555; font-size: 15px; margin-bottom: 30px;">
-              Forgot your password? No worries, it happens! Use the security code below to reset your password and get back to your account:
+              Forgot your password? No worries, it happens! Use the security code below to reset your password and get back to your Finn account:
             </p>
             
-            <div style="background-color: #fff5f6; border: 2px solid ${brandColor}; border-radius: 12px; padding: 30px; text-align: center; margin-bottom: 30px;">
+            <div style="background-color: #f0f7ff; border: 2px solid ${brandColor}; border-radius: 12px; padding: 30px; text-align: center; margin-bottom: 30px;">
               <span style="display: block; font-size: 11px; text-transform: uppercase; color: ${brandColor}; margin-bottom: 10px; font-weight: 800; letter-spacing: 2px;">Password Reset Code</span>
               <span style="font-size: 42px; font-weight: 900; color: #111; letter-spacing: 10px; font-family: 'Courier New', Courier, monospace;">${otp}</span>
             </div>
 
             <p style="margin: 0; font-size: 13px; color: #888; text-align: center;">
               This code is valid for <span style="color: ${brandColor}; font-weight: 600;">5 minutes</span>. <br>
-              <strong style="color: #111;">Security Note:</strong> If you didn't request a password reset, please ignore this email or contact support if you're concerned about your account.
+              <strong style="color: #111;">Security Note:</strong> If you didn't request a password reset from Finn, please ignore this email or contact support.
             </p>
           </div>
 
           <div style="background-color: #111; padding: 25px; text-align: center;">
             <p style="margin: 0; font-size: 12px; color: #888;">
-              Questions? Contact us at <a href="mailto:support@bybench.com" style="color: ${brandColor}; text-decoration: none;">support@bybench.com</a>
+              Questions? Contact us at <a href="mailto:support@finnapp.com" style="color: ${brandColor}; text-decoration: none;">support@finnapp.com</a>
             </p>
             <p style="margin: 10px 0 0 0; font-size: 11px; color: #555;">
-              © 2026 ByBench Inc. Dhaka, Bangladesh.
+              © 2026 Finn Inc. Dhaka, Bangladesh.
             </p>
           </div>
         </div>
@@ -95,43 +95,42 @@ export class AllMailService {
   }
 
   async sendSellerCredentials(email: string, pass: string, name: string) {
-    const subject = '🚀 Welcome to ByBench - Your Seller Account is Ready!';
-    const brandColor = '#EA2754';
-    const loginUrl = 'https://bybench.com/login';
+    const subject = '🚀 Welcome to Finn - Your Seller Account is Ready!';
+    const brandColor = '#0064AE';
+    const loginUrl = 'https://finnapp.com/login';
 
     const html = `
       <div style="background-color: #f4f4f7; padding: 40px 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; line-height: 1.6;">
         <div style="max-width: 550px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 1px solid #e1e1e1;">
           
           <div style="background-color: ${brandColor}; padding: 35px; text-align: center;">
-            <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 800; text-transform: uppercase;">ByBench Seller</h1>
+            <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 800; text-transform: uppercase;">Finn Seller</h1>
             <p style="color: #ffffff; opacity: 0.8; margin-top: 5px;">Your Business Journey Starts Here</p>
           </div>
 
           <div style="padding: 45px 35px;">
             <p style="font-size: 18px; font-weight: 600; color: #111;">Congratulations ${name}!</p>
-            <p style="color: #555; font-size: 15px;">Admin has created a verified seller account for you. Use the credentials below to log in and start managing your store:</p>
+            <p style="color: #555; font-size: 15px;">Admin has created a verified seller account for you at Finn. Use the credentials below to log in and start managing your listings:</p>
             
-            <div style="background-color: #f9f9fb; border-left: 4px solid ${brandColor}; padding: 20px; margin: 30px 0; border-radius: 4px;">
+            <div style="background-color: #f0f7ff; border-left: 4px solid ${brandColor}; padding: 20px; margin: 30px 0; border-radius: 4px;">
               <p style="margin: 5px 0; font-size: 14px;"><strong>Email:</strong> ${email}</p>
               <p style="margin: 5px 0; font-size: 14px;"><strong>Temporary Password:</strong> <span style="color: ${brandColor}; font-family: monospace; font-weight: bold;">${pass}</span></p>
             </div>
-
             <div style="text-align: center; margin-bottom: 35px;">
               <a href="${loginUrl}" style="background-color: ${brandColor}; color: #ffffff; padding: 15px 35px; text-decoration: none; border-radius: 8px; font-weight: 700; display: inline-block;">Login to Dashboard</a>
             </div>
 
             <div style="background-color: #fff9e6; border-radius: 8px; padding: 15px; border: 1px solid #ffeeba;">
                <p style="margin: 0; font-size: 13px; color: #856404; text-align: center;">
-                ⚠️ <strong>Security Tip:</strong> For your safety, please <strong>change your password</strong> immediately after your first login.
+                ⚠️ <strong>Security Tip:</strong> For your safety, please <strong>change your password</strong> immediately after your first login to Finn.
               </p>
             </div>
           </div>
 
           <div style="background-color: #111; padding: 25px; text-align: center;">
             <p style="margin: 0; font-size: 11px; color: #555;">
-              © 2026 ByBench Inc. Dhaka, Bangladesh. <br>
-              If you didn't expect this email, please contact our support team.
+              © 2026 Finn Inc. Dhaka, Bangladesh. <br>
+              If you didn't expect this email from Finn, please contact our support team.
             </p>
           </div>
         </div>
@@ -139,5 +138,61 @@ export class AllMailService {
     `;
 
     return await this.mailService.send(email, subject, html);
+  }
+
+  async sendContactAdminEmail(
+    adminEmail: string,
+    contactData: {
+      name: string;
+      email: string;
+      subject: string;
+      message: string;
+    },
+  ) {
+    const brandColor = '#0064AE';
+    const { name, email, subject, message } = contactData;
+
+    const html = `
+      <div style="background-color: #f4f4f7; padding: 40px 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; line-height: 1.6;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 1px solid #e1e1e1;">
+          
+          <div style="background-color: ${brandColor}; padding: 30px; text-align: center;">
+            <h2 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; text-transform: uppercase;">New Support Inquiry</h2>
+            <p style="color: #ffffff; opacity: 0.9; margin-top: 5px; font-size: 14px;">Finn Marketplace Contact Form</p>
+          </div>
+
+          <div style="padding: 40px 35px;">
+            <div style="margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+              <p style="margin: 5px 0; font-size: 14px; color: #777;">From</p>
+              <p style="margin: 0; font-size: 18px; font-weight: 700; color: #111;">${name}</p>
+              <p style="margin: 0; font-size: 14px; color: ${brandColor};">${email}</p>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+              <p style="margin: 5px 0; font-size: 14px; color: #777;">Subject</p>
+              <p style="margin: 0; font-size: 16px; font-weight: 600; color: #111;">${subject}</p>
+            </div>
+
+            <div style="background-color: #f8f9fa; border-radius: 12px; padding: 25px; border: 1px dashed #ddd;">
+              <p style="margin: 0; font-size: 14px; color: #777; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 800;">Message Content:</p>
+              <p style="margin: 0; font-size: 15px; color: #333; white-space: pre-wrap; line-height: 1.8;">${message}</p>
+            </div>
+          </div>
+
+          <div style="background-color: #111; padding: 20px; text-align: center;">
+             <p style="margin: 0; font-size: 11px; color: #666;">
+              This email was sent from the contact form on <strong>Finn</strong>. <br>
+              Directly reply to this email to contact the user.
+            </p>
+          </div>
+        </div>
+      </div>
+    `;
+
+    return await this.mailService.send(
+      adminEmail,
+      `📩 Contact: ${subject}`,
+      html,
+    );
   }
 }
