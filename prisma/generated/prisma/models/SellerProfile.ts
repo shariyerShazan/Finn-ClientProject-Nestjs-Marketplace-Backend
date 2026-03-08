@@ -236,7 +236,7 @@ export type SellerProfileGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 export type SellerProfileGroupByOutputType = {
   id: string
   companyName: string
-  companyWebSite: string
+  companyWebSite: string | null
   address: string
   city: string
   state: string
@@ -276,7 +276,7 @@ export type SellerProfileWhereInput = {
   NOT?: Prisma.SellerProfileWhereInput | Prisma.SellerProfileWhereInput[]
   id?: Prisma.StringFilter<"SellerProfile"> | string
   companyName?: Prisma.StringFilter<"SellerProfile"> | string
-  companyWebSite?: Prisma.StringFilter<"SellerProfile"> | string
+  companyWebSite?: Prisma.StringNullableFilter<"SellerProfile"> | string | null
   address?: Prisma.StringFilter<"SellerProfile"> | string
   city?: Prisma.StringFilter<"SellerProfile"> | string
   state?: Prisma.StringFilter<"SellerProfile"> | string
@@ -294,7 +294,7 @@ export type SellerProfileWhereInput = {
 export type SellerProfileOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
-  companyWebSite?: Prisma.SortOrder
+  companyWebSite?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrder
   city?: Prisma.SortOrder
   state?: Prisma.SortOrder
@@ -333,7 +333,7 @@ export type SellerProfileWhereUniqueInput = Prisma.AtLeast<{
 export type SellerProfileOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   companyName?: Prisma.SortOrder
-  companyWebSite?: Prisma.SortOrder
+  companyWebSite?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrder
   city?: Prisma.SortOrder
   state?: Prisma.SortOrder
@@ -358,7 +358,7 @@ export type SellerProfileScalarWhereWithAggregatesInput = {
   NOT?: Prisma.SellerProfileScalarWhereWithAggregatesInput | Prisma.SellerProfileScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
   companyName?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
-  companyWebSite?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
+  companyWebSite?: Prisma.StringNullableWithAggregatesFilter<"SellerProfile"> | string | null
   address?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
   city?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
   state?: Prisma.StringWithAggregatesFilter<"SellerProfile"> | string
@@ -375,7 +375,7 @@ export type SellerProfileScalarWhereWithAggregatesInput = {
 export type SellerProfileCreateInput = {
   id?: string
   companyName: string
-  companyWebSite: string
+  companyWebSite?: string | null
   address: string
   city: string
   state: string
@@ -392,7 +392,7 @@ export type SellerProfileCreateInput = {
 export type SellerProfileUncheckedCreateInput = {
   id?: string
   companyName: string
-  companyWebSite: string
+  companyWebSite?: string | null
   address: string
   city: string
   state: string
@@ -409,7 +409,7 @@ export type SellerProfileUncheckedCreateInput = {
 export type SellerProfileUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
-  companyWebSite?: Prisma.StringFieldUpdateOperationsInput | string
+  companyWebSite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
@@ -426,7 +426,7 @@ export type SellerProfileUpdateInput = {
 export type SellerProfileUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
-  companyWebSite?: Prisma.StringFieldUpdateOperationsInput | string
+  companyWebSite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
@@ -443,7 +443,7 @@ export type SellerProfileUncheckedUpdateInput = {
 export type SellerProfileCreateManyInput = {
   id?: string
   companyName: string
-  companyWebSite: string
+  companyWebSite?: string | null
   address: string
   city: string
   state: string
@@ -460,7 +460,7 @@ export type SellerProfileCreateManyInput = {
 export type SellerProfileUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
-  companyWebSite?: Prisma.StringFieldUpdateOperationsInput | string
+  companyWebSite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
@@ -476,7 +476,7 @@ export type SellerProfileUpdateManyMutationInput = {
 export type SellerProfileUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
-  companyWebSite?: Prisma.StringFieldUpdateOperationsInput | string
+  companyWebSite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
@@ -593,7 +593,7 @@ export type EnumSellerStatusFieldUpdateOperationsInput = {
 export type SellerProfileCreateWithoutAuthInput = {
   id?: string
   companyName: string
-  companyWebSite: string
+  companyWebSite?: string | null
   address: string
   city: string
   state: string
@@ -609,7 +609,7 @@ export type SellerProfileCreateWithoutAuthInput = {
 export type SellerProfileUncheckedCreateWithoutAuthInput = {
   id?: string
   companyName: string
-  companyWebSite: string
+  companyWebSite?: string | null
   address: string
   city: string
   state: string
@@ -641,7 +641,7 @@ export type SellerProfileUpdateToOneWithWhereWithoutAuthInput = {
 export type SellerProfileUpdateWithoutAuthInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
-  companyWebSite?: Prisma.StringFieldUpdateOperationsInput | string
+  companyWebSite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
@@ -657,7 +657,7 @@ export type SellerProfileUpdateWithoutAuthInput = {
 export type SellerProfileUncheckedUpdateWithoutAuthInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   companyName?: Prisma.StringFieldUpdateOperationsInput | string
-  companyWebSite?: Prisma.StringFieldUpdateOperationsInput | string
+  companyWebSite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.StringFieldUpdateOperationsInput | string
   city?: Prisma.StringFieldUpdateOperationsInput | string
   state?: Prisma.StringFieldUpdateOperationsInput | string
@@ -762,7 +762,7 @@ export type $SellerProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     companyName: string
-    companyWebSite: string
+    companyWebSite: string | null
     address: string
     city: string
     state: string
