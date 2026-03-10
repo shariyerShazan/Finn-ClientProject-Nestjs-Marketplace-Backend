@@ -59,6 +59,9 @@ model Auth {
   payments        Payment[]      @relation("BuyerPayments") 
 
   sentMessages    Message[]      @relation("SentMessages")
+
+  notifications  Notification[] @relation("UserNotifications")
+
   conversations   Participant[]
 
   reports Report[] @relation("UserReports")
@@ -177,6 +180,8 @@ model Ad {
   categoryId    String
   subCategory   SubCategory @relation(fields: [subCategoryId], references: [id])
   subCategoryId String
+
+  notifications Notification[] @relation("AdNotifications")
 
   bids          Bid[]
   comments       Comment[]
@@ -424,4 +429,28 @@ enum PaymentStatus {
   PENDING
   COMPLETED
   FAILED
+}
+
+model Notification {
+  id          String           @id @default(uuid())
+  title       String
+  message     String
+  type        NotificationType
+  isRead      Boolean          @default(false)
+
+  userId      String
+  user        Auth             @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+
+  adId        String?
+  ad          Ad?              @relation("AdNotifications", fields: [adId], references: [id], onDelete: SetNull)
+
+  conversationId String?
+  
+  createdAt   DateTime         @default(now())
+}
+
+enum NotificationType {
+  NEW_COMMENT
+  NEW_REPLY
+  NEW_MESSAGE
 }

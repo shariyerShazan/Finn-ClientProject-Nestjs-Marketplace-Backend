@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Injectable,
@@ -9,12 +11,15 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { SendMessageDto } from './dto/chat.dto';
 import { TranslationService } from 'src/translation/translation.service';
+import { NotificationService } from 'src/notification/notification.service';
+import { NotificationType } from 'prisma/generated/prisma/enums';
 
 @Injectable()
 export class ChatService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly translationService: TranslationService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   // 1. Create or Get Conversation
@@ -122,9 +127,11 @@ export class ChatService {
     lang: string = 'en',
   ) {
     const { conversationId, text, fileUrl, fileType } = dto;
+
+    // কনভারসেশন এবং পার্টিসিপেন্ট চেক
     const conversation = await this.prisma.conversation.findUnique({
       where: { id: conversationId },
-      select: { isBlocked: true, blockedById: true },
+      include: { participants: true }, // পার্টিসিপেন্টসহ লোড করুন
     });
 
     if (!conversation) {
@@ -133,6 +140,7 @@ export class ChatService {
       );
     }
 
+    // ব্লক চেক লজিক (আপনার আগের কোড)
     if (conversation.isBlocked) {
       if (conversation.blockedById === senderId) {
         throw new ForbiddenException(
@@ -142,11 +150,12 @@ export class ChatService {
           ),
         );
       }
-      const blockerMsg = await this.translationService.translate(
-        'This conversation is blocked',
-        lang,
+      throw new ForbiddenException(
+        await this.translationService.translate(
+          'This conversation is blocked',
+          lang,
+        ),
       );
-      throw new ForbiddenException(blockerMsg);
     }
 
     try {
@@ -163,6 +172,23 @@ export class ChatService {
         where: { id: conversationId },
         data: { updatedAt: new Date() },
       });
+
+      // --- নতুন নোটিফিকেশন লজিক ---
+      // রিসিভার আইডি বের করা (পার্টিসিপেন্ট লিস্ট থেকে যে সে নিজে না)
+      const receiver = conversation.participants.find(
+        (p) => p.userId !== senderId,
+      );
+
+      if (receiver) {
+        await this.notificationService.createNotification({
+          userId: receiver.userId,
+          title: 'New Message',
+          message: 'You have a new message in chat',
+          type: NotificationType.NEW_MESSAGE,
+          conversationId: conversation.id,
+          lang,
+        });
+      }
 
       return { success: true, message };
     } catch (error) {

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Injectable,
@@ -10,6 +13,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ChatGateway } from '../chat/chat.gateway';
 import { CreateCommentDto, UpdateCommentDto } from './dto/comment.dto';
 import { TranslationService } from 'src/translation/translation.service';
+import { NotificationType } from 'prisma/generated/prisma/enums';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class CommentService {
@@ -17,6 +22,7 @@ export class CommentService {
     private readonly prisma: PrismaService,
     private readonly chatGateway: ChatGateway,
     private readonly translationService: TranslationService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async createComment(
@@ -46,40 +52,34 @@ export class CommentService {
         },
       });
 
-      // --- REAL-TIME NOTIFICATION LOGIC ---
+      // --- NEW NOTIFICATION LOGIC ---
       if (!dto.parentId) {
         // নতুন কমেন্ট হলে সেলারকে জানাবে
         if (ad.sellerId !== userId) {
-          const msg = await this.translationService.translate(
-            'Someone commented on your ad',
-            lang,
-          );
-          this.chatGateway.server.to(ad.sellerId).emit('notification', {
-            type: 'NEW_COMMENT',
-            message: `${msg}: ${ad.title}`,
+          await this.notificationService.createNotification({
+            userId: ad.sellerId,
+            title: 'New Comment',
+            message: `Someone commented on your ad: ${ad.title}`,
+            type: NotificationType.NEW_COMMENT,
             adId: ad.id,
+            lang,
           });
         }
       } else {
-        // রিপ্লাই হলে প্যারেন্ট কমেন্টারকে জানাবে
         const parentComment = await this.prisma.comment.findUnique({
           where: { id: dto.parentId },
           select: { userId: true },
         });
 
         if (parentComment && parentComment.userId !== userId) {
-          const msg = await this.translationService.translate(
-            'Someone replied to your comment on',
+          await this.notificationService.createNotification({
+            userId: parentComment.userId,
+            title: 'New Reply',
+            message: `Someone replied to your comment on: ${ad.title}`,
+            type: NotificationType.NEW_REPLY,
+            adId: ad.id,
             lang,
-          );
-          this.chatGateway.server
-            .to(parentComment.userId)
-            .emit('notification', {
-              type: 'NEW_REPLY',
-              message: `${msg}: ${ad.title}`,
-              adId: ad.id,
-              commentId: comment.id,
-            });
+          });
         }
       }
 
@@ -93,6 +93,7 @@ export class CommentService {
       };
     } catch (error) {
       if (error instanceof HttpException) throw error;
+      console.error(error);
       throw new InternalServerErrorException(
         await this.translationService.translate(
           'Failed to create comment',

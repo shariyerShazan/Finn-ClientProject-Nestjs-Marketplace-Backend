@@ -422,6 +422,7 @@ export type AdWhereInput = {
   images?: Prisma.AdImageListRelationFilter
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   subCategory?: Prisma.XOR<Prisma.SubCategoryScalarRelationFilter, Prisma.SubCategoryWhereInput>
+  notifications?: Prisma.NotificationListRelationFilter
   bids?: Prisma.BidListRelationFilter
   comments?: Prisma.CommentListRelationFilter
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
@@ -463,6 +464,7 @@ export type AdOrderByWithRelationInput = {
   images?: Prisma.AdImageOrderByRelationAggregateInput
   category?: Prisma.CategoryOrderByWithRelationInput
   subCategory?: Prisma.SubCategoryOrderByWithRelationInput
+  notifications?: Prisma.NotificationOrderByRelationAggregateInput
   bids?: Prisma.BidOrderByRelationAggregateInput
   comments?: Prisma.CommentOrderByRelationAggregateInput
   payment?: Prisma.PaymentOrderByWithRelationInput
@@ -507,6 +509,7 @@ export type AdWhereUniqueInput = Prisma.AtLeast<{
   images?: Prisma.AdImageListRelationFilter
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   subCategory?: Prisma.XOR<Prisma.SubCategoryScalarRelationFilter, Prisma.SubCategoryWhereInput>
+  notifications?: Prisma.NotificationListRelationFilter
   bids?: Prisma.BidListRelationFilter
   comments?: Prisma.CommentListRelationFilter
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
@@ -616,6 +619,7 @@ export type AdCreateInput = {
   images?: Prisma.AdImageCreateNestedManyWithoutAdInput
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
@@ -653,6 +657,7 @@ export type AdUncheckedCreateInput = {
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
@@ -690,6 +695,7 @@ export type AdUpdateInput = {
   images?: Prisma.AdImageUpdateManyWithoutAdNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
@@ -727,6 +733,7 @@ export type AdUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
@@ -953,6 +960,11 @@ export type AdSumOrderByAggregateInput = {
 export type AdScalarRelationFilter = {
   is?: Prisma.AdWhereInput
   isNot?: Prisma.AdWhereInput
+}
+
+export type AdNullableScalarRelationFilter = {
+  is?: Prisma.AdWhereInput | null
+  isNot?: Prisma.AdWhereInput | null
 }
 
 export type AdCreateNestedManyWithoutSellerInput = {
@@ -1218,6 +1230,22 @@ export type AdUpdateOneRequiredWithoutPaymentNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AdUpdateToOneWithWhereWithoutPaymentInput, Prisma.AdUpdateWithoutPaymentInput>, Prisma.AdUncheckedUpdateWithoutPaymentInput>
 }
 
+export type AdCreateNestedOneWithoutNotificationsInput = {
+  create?: Prisma.XOR<Prisma.AdCreateWithoutNotificationsInput, Prisma.AdUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.AdCreateOrConnectWithoutNotificationsInput
+  connect?: Prisma.AdWhereUniqueInput
+}
+
+export type AdUpdateOneWithoutNotificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.AdCreateWithoutNotificationsInput, Prisma.AdUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.AdCreateOrConnectWithoutNotificationsInput
+  upsert?: Prisma.AdUpsertWithoutNotificationsInput
+  disconnect?: Prisma.AdWhereInput | boolean
+  delete?: Prisma.AdWhereInput | boolean
+  connect?: Prisma.AdWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdUpdateToOneWithWhereWithoutNotificationsInput, Prisma.AdUpdateWithoutNotificationsInput>, Prisma.AdUncheckedUpdateWithoutNotificationsInput>
+}
+
 export type AdCreateWithoutSellerInput = {
   id?: string
   title: string
@@ -1249,6 +1277,7 @@ export type AdCreateWithoutSellerInput = {
   images?: Prisma.AdImageCreateNestedManyWithoutAdInput
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
@@ -1285,6 +1314,7 @@ export type AdUncheckedCreateWithoutSellerInput = {
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
@@ -1331,6 +1361,7 @@ export type AdCreateWithoutBuyerInput = {
   images?: Prisma.AdImageCreateNestedManyWithoutAdInput
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
@@ -1367,6 +1398,7 @@ export type AdUncheckedCreateWithoutBuyerInput = {
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
@@ -1480,6 +1512,7 @@ export type AdCreateWithoutCategoryInput = {
   reports?: Prisma.ReportCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageCreateNestedManyWithoutAdInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
@@ -1516,6 +1549,7 @@ export type AdUncheckedCreateWithoutCategoryInput = {
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
@@ -1578,6 +1612,7 @@ export type AdCreateWithoutSubCategoryInput = {
   reports?: Prisma.ReportCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageCreateNestedManyWithoutAdInput
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
@@ -1614,6 +1649,7 @@ export type AdUncheckedCreateWithoutSubCategoryInput = {
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
@@ -1676,6 +1712,7 @@ export type AdCreateWithoutReportsInput = {
   images?: Prisma.AdImageCreateNestedManyWithoutAdInput
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
@@ -1712,6 +1749,7 @@ export type AdUncheckedCreateWithoutReportsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
@@ -1764,6 +1802,7 @@ export type AdUpdateWithoutReportsInput = {
   images?: Prisma.AdImageUpdateManyWithoutAdNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
@@ -1800,6 +1839,7 @@ export type AdUncheckedUpdateWithoutReportsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
@@ -1837,6 +1877,7 @@ export type AdCreateWithoutCommentsInput = {
   images?: Prisma.AdImageCreateNestedManyWithoutAdInput
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
 }
@@ -1873,6 +1914,7 @@ export type AdUncheckedCreateWithoutCommentsInput = {
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
 }
@@ -1925,6 +1967,7 @@ export type AdUpdateWithoutCommentsInput = {
   images?: Prisma.AdImageUpdateManyWithoutAdNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
 }
@@ -1961,6 +2004,7 @@ export type AdUncheckedUpdateWithoutCommentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
 }
@@ -1996,6 +2040,7 @@ export type AdCreateWithoutImagesInput = {
   reports?: Prisma.ReportCreateNestedManyWithoutAdInput
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
@@ -2032,6 +2077,7 @@ export type AdUncheckedCreateWithoutImagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
@@ -2084,6 +2130,7 @@ export type AdUpdateWithoutImagesInput = {
   reports?: Prisma.ReportUpdateManyWithoutAdNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
@@ -2120,6 +2167,7 @@ export type AdUncheckedUpdateWithoutImagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
@@ -2157,6 +2205,7 @@ export type AdCreateWithoutBidsInput = {
   images?: Prisma.AdImageCreateNestedManyWithoutAdInput
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
 }
@@ -2193,6 +2242,7 @@ export type AdUncheckedCreateWithoutBidsInput = {
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
 }
@@ -2245,6 +2295,7 @@ export type AdUpdateWithoutBidsInput = {
   images?: Prisma.AdImageUpdateManyWithoutAdNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
 }
@@ -2281,6 +2332,7 @@ export type AdUncheckedUpdateWithoutBidsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
 }
@@ -2317,6 +2369,7 @@ export type AdCreateWithoutPaymentInput = {
   images?: Prisma.AdImageCreateNestedManyWithoutAdInput
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
 }
@@ -2353,6 +2406,7 @@ export type AdUncheckedCreateWithoutPaymentInput = {
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
 }
@@ -2405,6 +2459,7 @@ export type AdUpdateWithoutPaymentInput = {
   images?: Prisma.AdImageUpdateManyWithoutAdNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
 }
@@ -2441,8 +2496,173 @@ export type AdUncheckedUpdateWithoutPaymentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
+}
+
+export type AdCreateWithoutNotificationsInput = {
+  id?: string
+  title: string
+  description: string
+  type?: $Enums.AdType
+  price?: number | null
+  basePrice?: number | null
+  releasePrice?: number | null
+  propertyFor?: $Enums.PropertyFor
+  rentalPeriod?: string | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  latitude?: number | null
+  longitude?: number | null
+  specifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  country?: string
+  state: string
+  city: string
+  zipCode?: string | null
+  showAddress?: boolean
+  allowPhone?: boolean
+  allowEmail?: boolean
+  isSold?: boolean
+  viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  buyer?: Prisma.AuthCreateNestedOneWithoutBoughtAdsInput
+  seller: Prisma.AuthCreateNestedOneWithoutPostedAdsInput
+  reports?: Prisma.ReportCreateNestedManyWithoutAdInput
+  images?: Prisma.AdImageCreateNestedManyWithoutAdInput
+  category: Prisma.CategoryCreateNestedOneWithoutAdsInput
+  subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
+  bids?: Prisma.BidCreateNestedManyWithoutAdInput
+  comments?: Prisma.CommentCreateNestedManyWithoutAdInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
+}
+
+export type AdUncheckedCreateWithoutNotificationsInput = {
+  id?: string
+  title: string
+  description: string
+  type?: $Enums.AdType
+  price?: number | null
+  basePrice?: number | null
+  releasePrice?: number | null
+  propertyFor?: $Enums.PropertyFor
+  rentalPeriod?: string | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  latitude?: number | null
+  longitude?: number | null
+  specifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  country?: string
+  state: string
+  city: string
+  zipCode?: string | null
+  showAddress?: boolean
+  allowPhone?: boolean
+  allowEmail?: boolean
+  isSold?: boolean
+  buyerId?: string | null
+  sellerId: string
+  viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
+  categoryId: string
+  subCategoryId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
+  images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
+  payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
+}
+
+export type AdCreateOrConnectWithoutNotificationsInput = {
+  where: Prisma.AdWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdCreateWithoutNotificationsInput, Prisma.AdUncheckedCreateWithoutNotificationsInput>
+}
+
+export type AdUpsertWithoutNotificationsInput = {
+  update: Prisma.XOR<Prisma.AdUpdateWithoutNotificationsInput, Prisma.AdUncheckedUpdateWithoutNotificationsInput>
+  create: Prisma.XOR<Prisma.AdCreateWithoutNotificationsInput, Prisma.AdUncheckedCreateWithoutNotificationsInput>
+  where?: Prisma.AdWhereInput
+}
+
+export type AdUpdateToOneWithWhereWithoutNotificationsInput = {
+  where?: Prisma.AdWhereInput
+  data: Prisma.XOR<Prisma.AdUpdateWithoutNotificationsInput, Prisma.AdUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type AdUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumAdTypeFieldUpdateOperationsInput | $Enums.AdType
+  price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  basePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  releasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  propertyFor?: Prisma.EnumPropertyForFieldUpdateOperationsInput | $Enums.PropertyFor
+  rentalPeriod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  specifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showAddress?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowPhone?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  buyer?: Prisma.AuthUpdateOneWithoutBoughtAdsNestedInput
+  seller?: Prisma.AuthUpdateOneRequiredWithoutPostedAdsNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutAdNestedInput
+  images?: Prisma.AdImageUpdateManyWithoutAdNestedInput
+  category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
+  subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
+  bids?: Prisma.BidUpdateManyWithoutAdNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
+}
+
+export type AdUncheckedUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumAdTypeFieldUpdateOperationsInput | $Enums.AdType
+  price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  basePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  releasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  propertyFor?: Prisma.EnumPropertyForFieldUpdateOperationsInput | $Enums.PropertyFor
+  rentalPeriod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  specifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showAddress?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowPhone?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  buyerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellerId?: Prisma.StringFieldUpdateOperationsInput | string
+  viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
+  images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
+  payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
 }
 
 export type AdCreateManySellerInput = {
@@ -2538,6 +2758,7 @@ export type AdUpdateWithoutSellerInput = {
   images?: Prisma.AdImageUpdateManyWithoutAdNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
@@ -2574,6 +2795,7 @@ export type AdUncheckedUpdateWithoutSellerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
@@ -2641,6 +2863,7 @@ export type AdUpdateWithoutBuyerInput = {
   images?: Prisma.AdImageUpdateManyWithoutAdNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
@@ -2677,6 +2900,7 @@ export type AdUncheckedUpdateWithoutBuyerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
@@ -2775,6 +2999,7 @@ export type AdUpdateWithoutCategoryInput = {
   reports?: Prisma.ReportUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUpdateManyWithoutAdNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
@@ -2811,6 +3036,7 @@ export type AdUncheckedUpdateWithoutCategoryInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
@@ -2909,6 +3135,7 @@ export type AdUpdateWithoutSubCategoryInput = {
   reports?: Prisma.ReportUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUpdateManyWithoutAdNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
@@ -2945,6 +3172,7 @@ export type AdUncheckedUpdateWithoutSubCategoryInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
@@ -2989,6 +3217,7 @@ export type AdUncheckedUpdateManyWithoutSubCategoryInput = {
 export type AdCountOutputType = {
   reports: number
   images: number
+  notifications: number
   bids: number
   comments: number
 }
@@ -2996,6 +3225,7 @@ export type AdCountOutputType = {
 export type AdCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   reports?: boolean | AdCountOutputTypeCountReportsArgs
   images?: boolean | AdCountOutputTypeCountImagesArgs
+  notifications?: boolean | AdCountOutputTypeCountNotificationsArgs
   bids?: boolean | AdCountOutputTypeCountBidsArgs
   comments?: boolean | AdCountOutputTypeCountCommentsArgs
 }
@@ -3022,6 +3252,13 @@ export type AdCountOutputTypeCountReportsArgs<ExtArgs extends runtime.Types.Exte
  */
 export type AdCountOutputTypeCountImagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AdImageWhereInput
+}
+
+/**
+ * AdCountOutputType without action
+ */
+export type AdCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NotificationWhereInput
 }
 
 /**
@@ -3075,6 +3312,7 @@ export type AdSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
   images?: boolean | Prisma.Ad$imagesArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   subCategory?: boolean | Prisma.SubCategoryDefaultArgs<ExtArgs>
+  notifications?: boolean | Prisma.Ad$notificationsArgs<ExtArgs>
   bids?: boolean | Prisma.Ad$bidsArgs<ExtArgs>
   comments?: boolean | Prisma.Ad$commentsArgs<ExtArgs>
   payment?: boolean | Prisma.Ad$paymentArgs<ExtArgs>
@@ -3193,6 +3431,7 @@ export type AdInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   images?: boolean | Prisma.Ad$imagesArgs<ExtArgs>
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   subCategory?: boolean | Prisma.SubCategoryDefaultArgs<ExtArgs>
+  notifications?: boolean | Prisma.Ad$notificationsArgs<ExtArgs>
   bids?: boolean | Prisma.Ad$bidsArgs<ExtArgs>
   comments?: boolean | Prisma.Ad$commentsArgs<ExtArgs>
   payment?: boolean | Prisma.Ad$paymentArgs<ExtArgs>
@@ -3220,6 +3459,7 @@ export type $AdPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
     images: Prisma.$AdImagePayload<ExtArgs>[]
     category: Prisma.$CategoryPayload<ExtArgs>
     subCategory: Prisma.$SubCategoryPayload<ExtArgs>
+    notifications: Prisma.$NotificationPayload<ExtArgs>[]
     bids: Prisma.$BidPayload<ExtArgs>[]
     comments: Prisma.$CommentPayload<ExtArgs>[]
     payment: Prisma.$PaymentPayload<ExtArgs> | null
@@ -3654,6 +3894,7 @@ export interface Prisma__AdClient<T, Null = never, ExtArgs extends runtime.Types
   images<T extends Prisma.Ad$imagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Ad$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   category<T extends Prisma.CategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   subCategory<T extends Prisma.SubCategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SubCategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__SubCategoryClient<runtime.Types.Result.GetResult<Prisma.$SubCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  notifications<T extends Prisma.Ad$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Ad$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bids<T extends Prisma.Ad$bidsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Ad$bidsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BidPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   comments<T extends Prisma.Ad$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Ad$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payment<T extends Prisma.Ad$paymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Ad$paymentArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -4175,6 +4416,30 @@ export type Ad$imagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   take?: number
   skip?: number
   distinct?: Prisma.AdImageScalarFieldEnum | Prisma.AdImageScalarFieldEnum[]
+}
+
+/**
+ * Ad.notifications
+ */
+export type Ad$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Notification
+   */
+  select?: Prisma.NotificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Notification
+   */
+  omit?: Prisma.NotificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NotificationInclude<ExtArgs> | null
+  where?: Prisma.NotificationWhereInput
+  orderBy?: Prisma.NotificationOrderByWithRelationInput | Prisma.NotificationOrderByWithRelationInput[]
+  cursor?: Prisma.NotificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
 }
 
 /**
