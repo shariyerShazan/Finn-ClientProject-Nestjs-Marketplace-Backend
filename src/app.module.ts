@@ -26,6 +26,7 @@ import { ReportModule } from './report/report.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { TranslationService } from './translation/translation.service';
 import { TranslationModule } from './translation/translation.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { TranslationModule } from './translation/translation.module';
     ReportModule,
     SubscriptionModule,
     TranslationModule,
+    NotificationModule,
     // SellerBankModule,
   ],
   controllers: [AppController],

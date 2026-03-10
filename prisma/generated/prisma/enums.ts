@@ -78,3 +78,12 @@ export const PaymentStatus = {
 } as const
 
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const NotificationType = {
+  NEW_COMMENT: 'NEW_COMMENT',
+  NEW_REPLY: 'NEW_REPLY',
+  NEW_MESSAGE: 'NEW_MESSAGE'
+} as const
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]

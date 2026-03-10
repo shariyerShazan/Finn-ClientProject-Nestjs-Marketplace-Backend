@@ -344,6 +344,7 @@ export type AuthWhereInput = {
   boughtAds?: Prisma.AdListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
   sentMessages?: Prisma.MessageListRelationFilter
+  notifications?: Prisma.NotificationListRelationFilter
   conversations?: Prisma.ParticipantListRelationFilter
   reports?: Prisma.ReportListRelationFilter
 }
@@ -377,6 +378,7 @@ export type AuthOrderByWithRelationInput = {
   boughtAds?: Prisma.AdOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
   sentMessages?: Prisma.MessageOrderByRelationAggregateInput
+  notifications?: Prisma.NotificationOrderByRelationAggregateInput
   conversations?: Prisma.ParticipantOrderByRelationAggregateInput
   reports?: Prisma.ReportOrderByRelationAggregateInput
 }
@@ -413,6 +415,7 @@ export type AuthWhereUniqueInput = Prisma.AtLeast<{
   boughtAds?: Prisma.AdListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
   sentMessages?: Prisma.MessageListRelationFilter
+  notifications?: Prisma.NotificationListRelationFilter
   conversations?: Prisma.ParticipantListRelationFilter
   reports?: Prisma.ReportListRelationFilter
 }, "id" | "email" | "phone">
@@ -500,6 +503,7 @@ export type AuthCreateInput = {
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
@@ -533,6 +537,7 @@ export type AuthUncheckedCreateInput = {
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
@@ -566,6 +571,7 @@ export type AuthUpdateInput = {
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
@@ -599,6 +605,7 @@ export type AuthUncheckedUpdateInput = {
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
@@ -933,6 +940,20 @@ export type AuthUpdateOneRequiredWithoutSubscriptionNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AuthUpdateToOneWithWhereWithoutSubscriptionInput, Prisma.AuthUpdateWithoutSubscriptionInput>, Prisma.AuthUncheckedUpdateWithoutSubscriptionInput>
 }
 
+export type AuthCreateNestedOneWithoutNotificationsInput = {
+  create?: Prisma.XOR<Prisma.AuthCreateWithoutNotificationsInput, Prisma.AuthUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.AuthCreateOrConnectWithoutNotificationsInput
+  connect?: Prisma.AuthWhereUniqueInput
+}
+
+export type AuthUpdateOneRequiredWithoutNotificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.AuthCreateWithoutNotificationsInput, Prisma.AuthUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.AuthCreateOrConnectWithoutNotificationsInput
+  upsert?: Prisma.AuthUpsertWithoutNotificationsInput
+  connect?: Prisma.AuthWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AuthUpdateToOneWithWhereWithoutNotificationsInput, Prisma.AuthUpdateWithoutNotificationsInput>, Prisma.AuthUncheckedUpdateWithoutNotificationsInput>
+}
+
 export type AuthCreateWithoutSellerProfileInput = {
   id?: string
   firstName: string
@@ -961,6 +982,7 @@ export type AuthCreateWithoutSellerProfileInput = {
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
@@ -993,6 +1015,7 @@ export type AuthUncheckedCreateWithoutSellerProfileInput = {
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
@@ -1041,6 +1064,7 @@ export type AuthUpdateWithoutSellerProfileInput = {
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
@@ -1073,6 +1097,7 @@ export type AuthUncheckedUpdateWithoutSellerProfileInput = {
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
@@ -1105,6 +1130,7 @@ export type AuthCreateWithoutBoughtAdsInput = {
   postedAds?: Prisma.AdCreateNestedManyWithoutSellerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
@@ -1137,6 +1163,7 @@ export type AuthUncheckedCreateWithoutBoughtAdsInput = {
   postedAds?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
@@ -1174,6 +1201,7 @@ export type AuthCreateWithoutPostedAdsInput = {
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
@@ -1206,6 +1234,7 @@ export type AuthUncheckedCreateWithoutPostedAdsInput = {
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
@@ -1254,6 +1283,7 @@ export type AuthUpdateWithoutBoughtAdsInput = {
   postedAds?: Prisma.AdUpdateManyWithoutSellerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
@@ -1286,6 +1316,7 @@ export type AuthUncheckedUpdateWithoutBoughtAdsInput = {
   postedAds?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
@@ -1329,6 +1360,7 @@ export type AuthUpdateWithoutPostedAdsInput = {
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
@@ -1361,6 +1393,7 @@ export type AuthUncheckedUpdateWithoutPostedAdsInput = {
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
@@ -1394,6 +1427,7 @@ export type AuthCreateWithoutReportsInput = {
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
 }
 
@@ -1426,6 +1460,7 @@ export type AuthUncheckedCreateWithoutReportsInput = {
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1474,6 +1509,7 @@ export type AuthUpdateWithoutReportsInput = {
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
 }
 
@@ -1506,6 +1542,7 @@ export type AuthUncheckedUpdateWithoutReportsInput = {
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1537,6 +1574,7 @@ export type AuthCreateWithoutCommentsInput = {
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
@@ -1569,6 +1607,7 @@ export type AuthUncheckedCreateWithoutCommentsInput = {
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
@@ -1617,6 +1656,7 @@ export type AuthUpdateWithoutCommentsInput = {
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
@@ -1649,6 +1689,7 @@ export type AuthUncheckedUpdateWithoutCommentsInput = {
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
@@ -1681,6 +1722,7 @@ export type AuthCreateWithoutBidsInput = {
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
@@ -1713,6 +1755,7 @@ export type AuthUncheckedCreateWithoutBidsInput = {
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
@@ -1761,6 +1804,7 @@ export type AuthUpdateWithoutBidsInput = {
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
@@ -1793,6 +1837,7 @@ export type AuthUncheckedUpdateWithoutBidsInput = {
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
@@ -1825,6 +1870,7 @@ export type AuthCreateWithoutPaymentsInput = {
   postedAds?: Prisma.AdCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
@@ -1857,6 +1903,7 @@ export type AuthUncheckedCreateWithoutPaymentsInput = {
   postedAds?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
@@ -1905,6 +1952,7 @@ export type AuthUpdateWithoutPaymentsInput = {
   postedAds?: Prisma.AdUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
@@ -1937,6 +1985,7 @@ export type AuthUncheckedUpdateWithoutPaymentsInput = {
   postedAds?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
@@ -1970,6 +2019,7 @@ export type AuthCreateWithoutConversationsInput = {
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
 
@@ -2002,6 +2052,7 @@ export type AuthUncheckedCreateWithoutConversationsInput = {
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
 
@@ -2050,6 +2101,7 @@ export type AuthUpdateWithoutConversationsInput = {
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
 
@@ -2082,6 +2134,7 @@ export type AuthUncheckedUpdateWithoutConversationsInput = {
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
 
@@ -2113,6 +2166,7 @@ export type AuthCreateWithoutSentMessagesInput = {
   postedAds?: Prisma.AdCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
@@ -2145,6 +2199,7 @@ export type AuthUncheckedCreateWithoutSentMessagesInput = {
   postedAds?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
@@ -2193,6 +2248,7 @@ export type AuthUpdateWithoutSentMessagesInput = {
   postedAds?: Prisma.AdUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
@@ -2225,6 +2281,7 @@ export type AuthUncheckedUpdateWithoutSentMessagesInput = {
   postedAds?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
@@ -2257,6 +2314,7 @@ export type AuthCreateWithoutSubscriptionInput = {
   boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
 }
@@ -2289,6 +2347,7 @@ export type AuthUncheckedCreateWithoutSubscriptionInput = {
   boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
 }
@@ -2337,6 +2396,7 @@ export type AuthUpdateWithoutSubscriptionInput = {
   boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
 }
@@ -2369,6 +2429,155 @@ export type AuthUncheckedUpdateWithoutSubscriptionInput = {
   boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+}
+
+export type AuthCreateWithoutNotificationsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  nickName: string
+  email: string
+  phone: string
+  password: string
+  otp?: string | null
+  otpExpires?: Date | string | null
+  profilePicture?: string | null
+  otpAttemp?: number
+  lastLogin?: Date | string
+  isVerified?: boolean
+  isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
+  role?: $Enums.Role
+  isSeller?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile?: Prisma.SellerProfileCreateNestedOneWithoutAuthInput
+  comments?: Prisma.CommentCreateNestedManyWithoutUserInput
+  bids?: Prisma.BidCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutSellerInput
+  postedAds?: Prisma.AdCreateNestedManyWithoutSellerInput
+  boughtAds?: Prisma.AdCreateNestedManyWithoutBuyerInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutBuyerInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportCreateNestedManyWithoutReporterInput
+}
+
+export type AuthUncheckedCreateWithoutNotificationsInput = {
+  id?: string
+  firstName: string
+  lastName: string
+  nickName: string
+  email: string
+  phone: string
+  password: string
+  otp?: string | null
+  otpExpires?: Date | string | null
+  profilePicture?: string | null
+  otpAttemp?: number
+  lastLogin?: Date | string
+  isVerified?: boolean
+  isSuspended?: boolean
+  suspensionReason?: string | null
+  suspendedAt?: Date | string | null
+  role?: $Enums.Role
+  isSeller?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sellerProfile?: Prisma.SellerProfileUncheckedCreateNestedOneWithoutAuthInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutUserInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutBidderInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutSellerInput
+  postedAds?: Prisma.AdUncheckedCreateNestedManyWithoutSellerInput
+  boughtAds?: Prisma.AdUncheckedCreateNestedManyWithoutBuyerInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBuyerInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  conversations?: Prisma.ParticipantUncheckedCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+}
+
+export type AuthCreateOrConnectWithoutNotificationsInput = {
+  where: Prisma.AuthWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuthCreateWithoutNotificationsInput, Prisma.AuthUncheckedCreateWithoutNotificationsInput>
+}
+
+export type AuthUpsertWithoutNotificationsInput = {
+  update: Prisma.XOR<Prisma.AuthUpdateWithoutNotificationsInput, Prisma.AuthUncheckedUpdateWithoutNotificationsInput>
+  create: Prisma.XOR<Prisma.AuthCreateWithoutNotificationsInput, Prisma.AuthUncheckedCreateWithoutNotificationsInput>
+  where?: Prisma.AuthWhereInput
+}
+
+export type AuthUpdateToOneWithWhereWithoutNotificationsInput = {
+  where?: Prisma.AuthWhereInput
+  data: Prisma.XOR<Prisma.AuthUpdateWithoutNotificationsInput, Prisma.AuthUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type AuthUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  nickName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUpdateOneWithoutAuthNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutUserNestedInput
+  bids?: Prisma.BidUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutSellerNestedInput
+  postedAds?: Prisma.AdUpdateManyWithoutSellerNestedInput
+  boughtAds?: Prisma.AdUpdateManyWithoutBuyerNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutBuyerNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  conversations?: Prisma.ParticipantUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+}
+
+export type AuthUncheckedUpdateWithoutNotificationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.StringFieldUpdateOperationsInput | string
+  nickName?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  otp?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profilePicture?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  otpAttemp?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLogin?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSuspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  suspensionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  suspendedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isSeller?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sellerProfile?: Prisma.SellerProfileUncheckedUpdateOneWithoutAuthNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutUserNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutBidderNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutSellerNestedInput
+  postedAds?: Prisma.AdUncheckedUpdateManyWithoutSellerNestedInput
+  boughtAds?: Prisma.AdUncheckedUpdateManyWithoutBuyerNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutBuyerNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   conversations?: Prisma.ParticipantUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
 }
@@ -2385,6 +2594,7 @@ export type AuthCountOutputType = {
   boughtAds: number
   payments: number
   sentMessages: number
+  notifications: number
   conversations: number
   reports: number
 }
@@ -2396,6 +2606,7 @@ export type AuthCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   boughtAds?: boolean | AuthCountOutputTypeCountBoughtAdsArgs
   payments?: boolean | AuthCountOutputTypeCountPaymentsArgs
   sentMessages?: boolean | AuthCountOutputTypeCountSentMessagesArgs
+  notifications?: boolean | AuthCountOutputTypeCountNotificationsArgs
   conversations?: boolean | AuthCountOutputTypeCountConversationsArgs
   reports?: boolean | AuthCountOutputTypeCountReportsArgs
 }
@@ -2455,6 +2666,13 @@ export type AuthCountOutputTypeCountSentMessagesArgs<ExtArgs extends runtime.Typ
 /**
  * AuthCountOutputType without action
  */
+export type AuthCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NotificationWhereInput
+}
+
+/**
+ * AuthCountOutputType without action
+ */
 export type AuthCountOutputTypeCountConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ParticipantWhereInput
 }
@@ -2496,6 +2714,7 @@ export type AuthSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   boughtAds?: boolean | Prisma.Auth$boughtAdsArgs<ExtArgs>
   payments?: boolean | Prisma.Auth$paymentsArgs<ExtArgs>
   sentMessages?: boolean | Prisma.Auth$sentMessagesArgs<ExtArgs>
+  notifications?: boolean | Prisma.Auth$notificationsArgs<ExtArgs>
   conversations?: boolean | Prisma.Auth$conversationsArgs<ExtArgs>
   reports?: boolean | Prisma.Auth$reportsArgs<ExtArgs>
   _count?: boolean | Prisma.AuthCountOutputTypeDefaultArgs<ExtArgs>
@@ -2580,6 +2799,7 @@ export type AuthInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   boughtAds?: boolean | Prisma.Auth$boughtAdsArgs<ExtArgs>
   payments?: boolean | Prisma.Auth$paymentsArgs<ExtArgs>
   sentMessages?: boolean | Prisma.Auth$sentMessagesArgs<ExtArgs>
+  notifications?: boolean | Prisma.Auth$notificationsArgs<ExtArgs>
   conversations?: boolean | Prisma.Auth$conversationsArgs<ExtArgs>
   reports?: boolean | Prisma.Auth$reportsArgs<ExtArgs>
   _count?: boolean | Prisma.AuthCountOutputTypeDefaultArgs<ExtArgs>
@@ -2598,6 +2818,7 @@ export type $AuthPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     boughtAds: Prisma.$AdPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
     sentMessages: Prisma.$MessagePayload<ExtArgs>[]
+    notifications: Prisma.$NotificationPayload<ExtArgs>[]
     conversations: Prisma.$ParticipantPayload<ExtArgs>[]
     reports: Prisma.$ReportPayload<ExtArgs>[]
   }
@@ -3024,6 +3245,7 @@ export interface Prisma__AuthClient<T, Null = never, ExtArgs extends runtime.Typ
   boughtAds<T extends Prisma.Auth$boughtAdsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$boughtAdsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Auth$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sentMessages<T extends Prisma.Auth$sentMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$sentMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notifications<T extends Prisma.Auth$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   conversations<T extends Prisma.Auth$conversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reports<T extends Prisma.Auth$reportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Auth$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -3642,6 +3864,30 @@ export type Auth$sentMessagesArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.MessageScalarFieldEnum | Prisma.MessageScalarFieldEnum[]
+}
+
+/**
+ * Auth.notifications
+ */
+export type Auth$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Notification
+   */
+  select?: Prisma.NotificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Notification
+   */
+  omit?: Prisma.NotificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NotificationInclude<ExtArgs> | null
+  where?: Prisma.NotificationWhereInput
+  orderBy?: Prisma.NotificationOrderByWithRelationInput | Prisma.NotificationOrderByWithRelationInput[]
+  cursor?: Prisma.NotificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
 }
 
 /**

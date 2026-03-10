@@ -11,7 +11,10 @@ import {
 import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
-  cors: { origin: 'http://localhost:5173' },
+  // live
+  cors: { origin: 'https://zen-buy.com' },
+  // local
+  // cors:{origin: 'http:localhost:3002'},
   namespace: 'chat',
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -26,6 +29,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       client.disconnect();
       return;
     }
+    client.join(userId);
 
     ChatGateway.activeUsers.set(userId, client.id);
 

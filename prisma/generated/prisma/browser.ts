@@ -92,3 +92,8 @@ export type SubscriptionPlan = Prisma.SubscriptionPlanModel
  * 
  */
 export type Subscription = Prisma.SubscriptionModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
