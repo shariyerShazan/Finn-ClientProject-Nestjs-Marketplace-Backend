@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Injectable,
   ForbiddenException,
@@ -7,16 +8,29 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { SendMessageDto } from './dto/chat.dto';
+import { TranslationService } from 'src/translation/translation.service';
 
 @Injectable()
 export class ChatService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly translationService: TranslationService,
+  ) {}
 
   // 1. Create or Get Conversation
-  async getOrCreateConversation(currentUserId: string, targetUserId: string) {
+  async getOrCreateConversation(
+    currentUserId: string,
+    targetUserId: string,
+    lang: string = 'en',
+  ) {
     try {
       if (currentUserId === targetUserId) {
-        throw new ForbiddenException('You cannot chat with yourself');
+        throw new ForbiddenException(
+          await this.translationService.translate(
+            'You cannot chat with yourself',
+            lang,
+          ),
+        );
       }
 
       const users = await this.prisma.auth.findMany({
@@ -24,14 +38,21 @@ export class ChatService {
         select: { id: true, role: true },
       });
 
-      if (users.length < 2) throw new NotFoundException('User not found');
+      if (users.length < 2) {
+        throw new NotFoundException(
+          await this.translationService.translate('User not found', lang),
+        );
+      }
 
       const canChat = users.some(
         (u) => u.role === 'SELLER' || u.role === 'ADMIN',
       );
       if (!canChat) {
         throw new ForbiddenException(
-          'User-to-User chat is restricted. One participant must be a Seller.',
+          await this.translationService.translate(
+            'User-to-User chat is restricted. One participant must be a Seller.',
+            lang,
+          ),
         );
       }
 
@@ -85,13 +106,21 @@ export class ChatService {
       return { success: true, conversation };
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      console.error('getOrCreateConversation Error:', error);
-      throw new InternalServerErrorException('Error initializing conversation');
+      throw new InternalServerErrorException(
+        await this.translationService.translate(
+          'Error initializing conversation',
+          lang,
+        ),
+      );
     }
   }
 
-  // 2. Send Message (Text and/or Cloudinary Image)
-  async sendMessage(senderId: string, dto: SendMessageDto) {
+  // 2. Send Message
+  async sendMessage(
+    senderId: string,
+    dto: SendMessageDto,
+    lang: string = 'en',
+  ) {
     const { conversationId, text, fileUrl, fileType } = dto;
     const conversation = await this.prisma.conversation.findUnique({
       where: { id: conversationId },
@@ -99,39 +128,30 @@ export class ChatService {
     });
 
     if (!conversation) {
-      throw new NotFoundException('Conversation not found');
+      throw new NotFoundException(
+        await this.translationService.translate('Conversation not found', lang),
+      );
     }
+
     if (conversation.isBlocked) {
-      let blockerName = 'Someone';
-
-      if (conversation.blockedById) {
-        if (conversation.blockedById === senderId) {
-          throw new ForbiddenException(
+      if (conversation.blockedById === senderId) {
+        throw new ForbiddenException(
+          await this.translationService.translate(
             'You have blocked this conversation. Please unblock to send messages.',
-          );
-        }
-
-        const blocker = await this.prisma.auth.findUnique({
-          where: { id: conversation.blockedById },
-          select: { firstName: true, lastName: true },
-        });
-
-        if (blocker) {
-          blockerName = `${blocker.firstName} ${blocker.lastName}`;
-        }
+            lang,
+          ),
+        );
       }
-
-      throw new ForbiddenException(`blocked by ${blockerName}.`);
+      const blockerMsg = await this.translationService.translate(
+        'This conversation is blocked',
+        lang,
+      );
+      throw new ForbiddenException(blockerMsg);
     }
+
     try {
       const message = await this.prisma.message.create({
-        data: {
-          conversationId,
-          senderId,
-          text,
-          fileUrl,
-          fileType,
-        },
+        data: { conversationId, senderId, text, fileUrl, fileType },
         include: {
           sender: {
             select: { firstName: true, lastName: true, profilePicture: true },
@@ -146,9 +166,9 @@ export class ChatService {
 
       return { success: true, message };
     } catch (error) {
-      if (error instanceof HttpException) throw error;
-      console.error('sendMessage Error:', error);
-      throw new InternalServerErrorException('Failed to send message');
+      throw new InternalServerErrorException(
+        await this.translationService.translate('Failed to send message', lang),
+      );
     }
   }
 
@@ -174,11 +194,8 @@ export class ChatService {
         },
         orderBy: { updatedAt: 'desc' },
       });
-
       return { success: true, conversations };
     } catch (error) {
-      if (error instanceof HttpException) throw error;
-      console.error('getMyConversations Error:', error);
       throw new InternalServerErrorException('Could not fetch conversations');
     }
   }
@@ -199,71 +216,17 @@ export class ChatService {
           },
         },
       });
-
       return { success: true, messages };
     } catch (error) {
-      if (error instanceof HttpException) throw error;
-      console.error('getMessages Error:', error);
       throw new InternalServerErrorException('Could not fetch messages');
     }
   }
 
-  async blockConversation(conversationId: string, userId: string) {
-    try {
-      const conversation = await this.prisma.conversation.findUnique({
-        where: { id: conversationId },
-        include: { participants: true },
-      });
-
-      if (!conversation) throw new NotFoundException('Conversation not found');
-
-      // Check membership
-      const isParticipant = conversation.participants.some(
-        (p) => p.userId === userId,
-      );
-      if (!isParticipant)
-        throw new ForbiddenException('This is not your conversession!');
-
-      return await this.prisma.conversation.update({
-        where: { id: conversationId },
-        data: {
-          isBlocked: true,
-          blockedById: userId,
-        },
-      });
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-      console.error('blockConversation Error:', error);
-      throw new InternalServerErrorException('Eorror In blocking');
-    }
-  }
-
-  // 2. Unblock Conversation
-  async unblockConversation(conversationId: string, userId: string) {
-    try {
-      const conversation = await this.prisma.conversation.findUnique({
-        where: { id: conversationId },
-      });
-
-      if (!conversation) throw new NotFoundException('Conversation Not found');
-
-      // Only the person who blocked can unblock
-      if (conversation.blockedById !== userId) {
-        throw new ForbiddenException('No Blocking in your side!');
-      }
-
-      return await this.prisma.conversation.update({
-        where: { id: conversationId },
-        data: { isBlocked: false, blockedById: null },
-      });
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-      throw new InternalServerErrorException('Unblock failed');
-    }
-  }
-
-  // 3. Delete Entire Conversation (Cascade delete)
-  async deleteConversation(conversationId: string, userId: string) {
+  async blockConversation(
+    conversationId: string,
+    userId: string,
+    lang: string = 'en',
+  ) {
     try {
       const conversation = await this.prisma.conversation.findUnique({
         where: { id: conversationId },
@@ -272,29 +235,118 @@ export class ChatService {
 
       if (!conversation)
         throw new NotFoundException(
-          'Conversation already deleted or not found!',
+          await this.translationService.translate(
+            'Conversation not found',
+            lang,
+          ),
         );
 
-      // Check membership
       const isParticipant = conversation.participants.some(
         (p) => p.userId === userId,
       );
       if (!isParticipant)
-        throw new ForbiddenException("You can't delete this conversation!");
+        throw new ForbiddenException(
+          await this.translationService.translate('Access denied', lang),
+        );
 
-      // Delete conversation (Messages & Participants delete hobe automatically)
-      await this.prisma.conversation.delete({
+      return await this.prisma.conversation.update({
+        where: { id: conversationId },
+        data: { isBlocked: true, blockedById: userId },
+      });
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new InternalServerErrorException(
+        await this.translationService.translate('Error In blocking', lang),
+      );
+    }
+  }
+
+  async unblockConversation(
+    conversationId: string,
+    userId: string,
+    lang: string = 'en',
+  ) {
+    try {
+      const conversation = await this.prisma.conversation.findUnique({
         where: { id: conversationId },
       });
 
+      if (!conversation)
+        throw new NotFoundException(
+          await this.translationService.translate(
+            'Conversation not found',
+            lang,
+          ),
+        );
+
+      if (conversation.blockedById !== userId) {
+        throw new ForbiddenException(
+          await this.translationService.translate(
+            'No Blocking in your side!',
+            lang,
+          ),
+        );
+      }
+
+      return await this.prisma.conversation.update({
+        where: { id: conversationId },
+        data: { isBlocked: false, blockedById: null },
+      });
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new InternalServerErrorException(
+        await this.translationService.translate('Unblock failed', lang),
+      );
+    }
+  }
+
+  async deleteConversation(
+    conversationId: string,
+    userId: string,
+    lang: string = 'en',
+  ) {
+    try {
+      const conversation = await this.prisma.conversation.findUnique({
+        where: { id: conversationId },
+        include: { participants: true },
+      });
+
+      if (!conversation)
+        throw new NotFoundException(
+          await this.translationService.translate(
+            'Conversation not found',
+            lang,
+          ),
+        );
+
+      const isParticipant = conversation.participants.some(
+        (p) => p.userId === userId,
+      );
+      if (!isParticipant)
+        throw new ForbiddenException(
+          await this.translationService.translate(
+            "You can't delete this conversation!",
+            lang,
+          ),
+        );
+
+      await this.prisma.conversation.delete({ where: { id: conversationId } });
+
       return {
         success: true,
-        message: 'Conversation Deleted successfully',
+        message: await this.translationService.translate(
+          'Conversation Deleted successfully',
+          lang,
+        ),
       };
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      console.error('deleteConversation Error:', error);
-      throw new InternalServerErrorException('Delete Coversation failed!');
+      throw new InternalServerErrorException(
+        await this.translationService.translate(
+          'Delete Coversation failed!',
+          lang,
+        ),
+      );
     }
   }
 }

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 // /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 // /* eslint-disable @typescript-eslint/no-unsafe-argument */
@@ -40,8 +42,6 @@
 // }
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   Controller,
   Post,
@@ -64,7 +64,6 @@ export class StripeWebhookController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Handle Stripe Webhook events for Subscriptions' })
   @ApiResponse({ status: 200, description: 'Webhook received and processed' })
-  @ApiResponse({ status: 400, description: 'Invalid signature or body' })
   async handle(
     @Req() req: Request,
     @Headers('stripe-signature') signature: string,
@@ -72,11 +71,12 @@ export class StripeWebhookController {
     if (!signature) {
       throw new BadRequestException('Missing Stripe signature');
     }
+
     const rawBody = (req as any).rawBody;
 
     if (!rawBody) {
       throw new BadRequestException(
-        'Raw body missing. Ensure body-parser is configured to keep raw body for this route.',
+        'Raw body missing. Ensure body-parser is configured to keep raw body.',
       );
     }
 

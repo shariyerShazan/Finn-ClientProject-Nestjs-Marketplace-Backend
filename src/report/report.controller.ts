@@ -17,7 +17,7 @@ import {
   ApiBearerAuth,
   ApiOperation,
   ApiTags,
-  ApiResponse,
+  // ApiResponse,
   ApiParam,
   ApiQuery,
 } from '@nestjs/swagger';
@@ -37,17 +37,18 @@ export class ReportController {
   @Post(':adId')
   @ApiOperation({ summary: 'Report an ad (User)' })
   @ApiParam({ name: 'adId', description: 'The ID of the Ad to report' })
-  @ApiResponse({ status: 201, description: 'Report submitted successfully' })
-  @ApiResponse({
-    status: 400,
-    description: 'Cannot report own ad or already reported',
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
   })
   async reportAd(
     @Param('adId') adId: string,
     @Body() dto: CreateReportDto,
     @Req() req: any,
+    @Query('lang') lang: string = 'en',
   ) {
-    return await this.reportService.reportAd(adId, req.user.id, dto);
+    return await this.reportService.reportAd(adId, req.user.id, dto, lang);
   }
 
   // --- ADMIN SECTION: Get All Reports ---
@@ -58,7 +59,11 @@ export class ReportController {
   @ApiOperation({ summary: 'Get all reports with pagination (Admin only)' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
-  @ApiResponse({ status: 200, description: 'Return list of all reports' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
   async getAllReports(@Query() query: any) {
     return await this.reportService.getAllReports(query);
   }
@@ -69,13 +74,16 @@ export class ReportController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a single report by ID (Admin only)' })
   @ApiParam({ name: 'id', description: 'The ID of the Report' })
-  @ApiResponse({
-    status: 200,
-    description: 'Detailed report with reporter and ad info',
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
   })
-  @ApiResponse({ status: 404, description: 'Report not found' })
-  async getReportById(@Param('id') id: string) {
-    return await this.reportService.getReportById(id);
+  async getReportById(
+    @Param('id') id: string,
+    @Query('lang') lang: string = 'en',
+  ) {
+    return await this.reportService.getReportById(id, lang);
   }
 
   // --- ADMIN SECTION: Delete a Report ---
@@ -85,9 +93,16 @@ export class ReportController {
   @Delete('admin/:reportId')
   @ApiOperation({ summary: 'Delete a specific report (Admin only)' })
   @ApiParam({ name: 'reportId', description: 'The ID of the report to delete' })
-  @ApiResponse({ status: 200, description: 'Report deleted successfully' })
-  async deleteReport(@Param('reportId') reportId: string) {
-    return await this.reportService.deleteReport(reportId);
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async deleteReport(
+    @Param('reportId') reportId: string,
+    @Query('lang') lang: string = 'en',
+  ) {
+    return await this.reportService.deleteReport(reportId, lang);
   }
 
   @ApiBearerAuth()
@@ -96,9 +111,16 @@ export class ReportController {
   @Roles('ADMIN')
   @ApiOperation({ summary: 'Mark a report as resolved (Admin)' })
   @ApiParam({ name: 'id', description: 'The ID of the report to resolve' })
-  @ApiResponse({ status: 200, description: 'Status changed to RESOLVED' })
-  async resolveReport(@Param('id') id: string) {
-    return await this.reportService.resolveReport(id);
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async resolveReport(
+    @Param('id') id: string,
+    @Query('lang') lang: string = 'en',
+  ) {
+    return await this.reportService.resolveReport(id, lang);
   }
 
   @ApiBearerAuth()
@@ -107,14 +129,16 @@ export class ReportController {
   @Roles('ADMIN')
   @ApiOperation({ summary: 'Suspend a seller/auth account via Ad ID (Admin)' })
   @ApiParam({ name: 'adId', description: 'The ID of the reported Ad' })
-  @ApiResponse({
-    status: 201,
-    description: 'Seller account suspended successfully',
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
   })
   async suspendAuth(
     @Param('adId') adId: string,
     @Body('reason') reason: string,
+    @Query('lang') lang: string = 'en',
   ) {
-    return await this.reportService.suspendReportedAuth(adId, reason);
+    return await this.reportService.suspendReportedAuth(adId, reason, lang);
   }
 }

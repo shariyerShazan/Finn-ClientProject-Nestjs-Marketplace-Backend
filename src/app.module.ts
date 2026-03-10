@@ -24,6 +24,8 @@ import { StripeModule } from './stripe/stripe.module';
 // import { SellerBankModule } from './seller-bank/seller-bank.module';
 import { ReportModule } from './report/report.module';
 import { SubscriptionModule } from './subscription/subscription.module';
+import { TranslationService } from './translation/translation.service';
+import { TranslationModule } from './translation/translation.module';
 
 @Module({
   imports: [
@@ -47,9 +49,16 @@ import { SubscriptionModule } from './subscription/subscription.module';
     PaymentModule,
     ReportModule,
     SubscriptionModule,
+    TranslationModule,
     // SellerBankModule,
   ],
   controllers: [AppController],
-  providers: [AppService, SeedService, JwtStrategy, PrismaService],
+  providers: [
+    AppService,
+    SeedService,
+    JwtStrategy,
+    PrismaService,
+    TranslationService,
+  ],
 })
 export class AppModule {}

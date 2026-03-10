@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -19,24 +20,27 @@ import {
 } from 'src/category/dto/categoryCrud.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { TranslationService } from 'src/translation/translation.service';
 
 @Injectable()
 export class CategoryService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly cloudinary: CloudinaryService,
+    private readonly translationService: TranslationService,
   ) {}
+
+  // --- Category Methods ---
 
   async getAllCategories(
     page: number = 1,
     limit: number = 10,
     search?: string,
+    lang: string = 'en',
   ) {
     try {
       const skip = (page - 1) * limit;
 
-      // Search filters তৈরি করা
-      // এখানে Slug অথবা Name যেকোনো একটি মিললে ডাটা আসবে
       const where: any = search
         ? {
             OR: [
@@ -45,6 +49,7 @@ export class CategoryService {
             ],
           }
         : {};
+
       const [data, total] = await Promise.all([
         this.prisma.category.findMany({
           where,
@@ -58,9 +63,16 @@ export class CategoryService {
         this.prisma.category.count({ where }),
       ]);
 
+      // Translate category names and nested subcategory names
+      const translatedData = await this.translationService.translateData(
+        data,
+        ['name'],
+        lang,
+      );
+
       return {
         success: true,
-        data,
+        data: translatedData,
         meta: {
           total,
           page: Number(page),
@@ -70,14 +82,15 @@ export class CategoryService {
       };
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      console.error('GetAllCategories Error:', error);
-      throw new InternalServerErrorException(
+      const errorMsg = await this.translationService.translate(
         'Something went wrong while fetching categories',
+        lang,
       );
+      throw new InternalServerErrorException(errorMsg);
     }
   }
 
-  async getSingleCategory(id: string) {
+  async getSingleCategory(id: string, lang: string = 'en') {
     try {
       const category = await this.prisma.category.findUnique({
         where: { id },
@@ -85,49 +98,62 @@ export class CategoryService {
       });
 
       if (!category) {
-        throw new NotFoundException('Category not found');
+        const msg = await this.translationService.translate(
+          'Category not found',
+          lang,
+        );
+        throw new NotFoundException(msg);
       }
 
-      return category;
+      return await this.translationService.translateData(
+        category,
+        ['name'],
+        lang,
+      );
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      console.error('GetSingleCategory Error:', error);
-      throw new InternalServerErrorException(
+      const errorMsg = await this.translationService.translate(
         'Something went wrong while fetching category',
+        lang,
       );
+      throw new InternalServerErrorException(errorMsg);
     }
   }
 
-  async createCategory(dto: CreateCategoryDto, file?: Express.Multer.File) {
+  async createCategory(
+    dto: CreateCategoryDto,
+    file?: Express.Multer.File,
+    lang: string = 'en',
+  ) {
     try {
       const existingCategory = await this.prisma.category.findFirst({
         where: { slug: dto.slug },
       });
 
       if (existingCategory) {
-        throw new ConflictException('Category slug already exists');
+        const msg = await this.translationService.translate(
+          'Category slug already exists',
+          lang,
+        );
+        throw new ConflictException(msg);
       }
 
-      let imageUrl = dto.image; // Jodi link thake
-
-      // Jodi file ashe, tobe upload koro
+      let imageUrl = dto.image;
       if (file) {
         const uploadResult = await this.cloudinary.uploadImages([file]);
         imageUrl = uploadResult[0];
       }
 
       return await this.prisma.category.create({
-        data: {
-          ...dto,
-          image: imageUrl,
-        },
+        data: { ...dto, image: imageUrl },
       });
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      console.error('CreateCategory Error:', error);
-      throw new InternalServerErrorException(
+      const errorMsg = await this.translationService.translate(
         'Something went wrong while creating category',
+        lang,
       );
+      throw new InternalServerErrorException(errorMsg);
     }
   }
 
@@ -135,80 +161,108 @@ export class CategoryService {
     id: string,
     dto: UpdateCategoryDto,
     file?: Express.Multer.File,
+    lang: string = 'en',
   ) {
     try {
       const category = await this.prisma.category.findUnique({ where: { id } });
-      if (!category) throw new NotFoundException('Category not found');
+      if (!category) {
+        const msg = await this.translationService.translate(
+          'Category not found',
+          lang,
+        );
+        throw new NotFoundException(msg);
+      }
 
-      // 1. Handle Slug Logic
       if (dto.slug && dto.slug !== category.slug) {
         const slugExists = await this.prisma.category.findFirst({
           where: { slug: dto.slug },
         });
-        if (slugExists)
-          throw new ConflictException('Category slug already exists');
+        if (slugExists) {
+          const msg = await this.translationService.translate(
+            'Category slug already exists',
+            lang,
+          );
+          throw new ConflictException(msg);
+        }
       }
 
-      // 2. Handle Image Logic correctly
-      let imageUrl = category.image; // Keep old image by default
+      let imageUrl = category.image;
       if (file) {
         const uploadResult = await this.cloudinary.uploadImages([file]);
         imageUrl = uploadResult[0];
       } else if (dto.image) {
-        imageUrl = dto.image; // If a URL was passed manually
+        imageUrl = dto.image;
       }
 
-      // 3. Clean the DTO to prevent accidental overwrites
-      // Remove the image from DTO so it doesn't conflict with our imageUrl variable
       const { image, ...updateData } = dto;
 
       return await this.prisma.category.update({
         where: { id },
-        data: {
-          ...updateData,
-          image: imageUrl,
-        },
+        data: { ...updateData, image: imageUrl },
       });
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      throw new InternalServerErrorException('Update failed');
+      const errorMsg = await this.translationService.translate(
+        'Update failed',
+        lang,
+      );
+      throw new InternalServerErrorException(errorMsg);
     }
   }
 
-  async deleteCategory(id: string) {
+  async deleteCategory(id: string, lang: string = 'en') {
     try {
-      const category = await this.prisma.category.findUnique({
-        where: { id },
-      });
-
+      const category = await this.prisma.category.findUnique({ where: { id } });
       if (!category) {
-        throw new NotFoundException('Category not found');
+        const msg = await this.translationService.translate(
+          'Category not found',
+          lang,
+        );
+        throw new NotFoundException(msg);
       }
 
-      return await this.prisma.category.delete({
-        where: { id },
-      });
+      await this.prisma.category.delete({ where: { id } });
+      return {
+        message: await this.translationService.translate(
+          'Category deleted successfully',
+          lang,
+        ),
+      };
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      console.error('DeleteCategory Error:', error);
-      throw new InternalServerErrorException(
+      const errorMsg = await this.translationService.translate(
         'Something went wrong while deleting category',
+        lang,
       );
+      throw new InternalServerErrorException(errorMsg);
     }
   }
 
-  async createSubCategory(dto: CreateSubCategoryDto) {
+  // --- Sub-Category Methods ---
+
+  async createSubCategory(dto: CreateSubCategoryDto, lang: string = 'en') {
     try {
       const category = await this.prisma.category.findUnique({
         where: { id: dto.categoryId },
       });
-      if (!category) throw new BadRequestException('Invalid categoryId');
+      if (!category) {
+        const msg = await this.translationService.translate(
+          'Invalid categoryId',
+          lang,
+        );
+        throw new BadRequestException(msg);
+      }
 
       const existingSubCategory = await this.prisma.subCategory.findFirst({
         where: { slug: dto.slug },
       });
-      if (existingSubCategory)
-        throw new ConflictException('Sub-category slug already exists');
+      if (existingSubCategory) {
+        const msg = await this.translationService.translate(
+          'Sub-category slug already exists',
+          lang,
+        );
+        throw new ConflictException(msg);
+      }
 
       if (dto.specFields && Array.isArray(dto.specFields)) {
         for (const field of dto.specFields) {
@@ -216,9 +270,11 @@ export class CategoryService {
             field.type === 'select' &&
             (!field.options || field.options.length === 0)
           ) {
-            throw new BadRequestException(
+            const msg = await this.translationService.translate(
               `Field "${field.label}" is a select type but has no options.`,
+              lang,
             );
+            throw new BadRequestException(msg);
           }
         }
       }
@@ -235,56 +291,67 @@ export class CategoryService {
       });
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      console.error('CreateSubCategory Error:', error);
-      throw new InternalServerErrorException('Something went wrong');
+      const errorMsg = await this.translationService.translate(
+        'Something went wrong',
+        lang,
+      );
+      throw new InternalServerErrorException(errorMsg);
     }
   }
 
-  async updateSubCategory(id: string, dto: UpdateSubCategoryDto) {
+  async updateSubCategory(
+    id: string,
+    dto: UpdateSubCategoryDto,
+    lang: string = 'en',
+  ) {
     try {
       const subCategory = await this.prisma.subCategory.findUnique({
         where: { id },
       });
-      if (!subCategory) throw new NotFoundException('Sub-category not found');
+      if (!subCategory) {
+        const msg = await this.translationService.translate(
+          'Sub-category not found',
+          lang,
+        );
+        throw new NotFoundException(msg);
+      }
 
-      // Check slug uniqueness if being updated
       if (dto.slug && dto.slug !== subCategory.slug) {
         const slugExists = await this.prisma.subCategory.findFirst({
           where: { slug: dto.slug },
         });
-        if (slugExists)
-          throw new ConflictException('Sub-category slug already exists');
+        if (slugExists) {
+          const msg = await this.translationService.translate(
+            'Sub-category slug already exists',
+            lang,
+          );
+          throw new ConflictException(msg);
+        }
       }
 
-      // Parse specFields if string, validate if provided
       let finalSpecFields: any = undefined;
       if (dto.specFields) {
-        if (typeof dto.specFields === 'string') {
-          try {
-            finalSpecFields = JSON.parse(dto.specFields);
-          } catch (e) {
-            throw new BadRequestException('specFields is not valid JSON');
-          }
-        } else {
-          finalSpecFields = dto.specFields;
-        }
+        finalSpecFields =
+          typeof dto.specFields === 'string'
+            ? JSON.parse(dto.specFields)
+            : dto.specFields;
 
-        // Validate select fields have options
         if (Array.isArray(finalSpecFields)) {
           for (const field of finalSpecFields) {
             if (
               field.type === 'select' &&
               (!field.options || field.options.length === 0)
             ) {
-              throw new BadRequestException(
+              const msg = await this.translationService.translate(
                 `Field "${field.label}" is a select type but has no options.`,
+                lang,
               );
+              throw new BadRequestException(msg);
             }
           }
         }
       }
 
-      // Build updateData dynamically: only include fields that are explicitly provided
       const updateData: any = {};
       if (dto.name !== undefined) updateData.name = dto.name;
       if (dto.slug !== undefined) updateData.slug = dto.slug;
@@ -298,60 +365,89 @@ export class CategoryService {
       });
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      console.error('UpdateSubCategory Error:', error);
-      throw new InternalServerErrorException('Failed to update sub-category');
+      const errorMsg = await this.translationService.translate(
+        'Failed to update sub-category',
+        lang,
+      );
+      throw new InternalServerErrorException(errorMsg);
     }
   }
 
-  async deleteSubCategory(id: string) {
+  async deleteSubCategory(id: string, lang: string = 'en') {
     try {
       const subCategory = await this.prisma.subCategory.findUnique({
         where: { id },
       });
-
       if (!subCategory) {
-        throw new NotFoundException('Sub-category not found');
+        const msg = await this.translationService.translate(
+          'Sub-category not found',
+          lang,
+        );
+        throw new NotFoundException(msg);
       }
 
-      return await this.prisma.subCategory.delete({
-        where: { id },
-      });
+      await this.prisma.subCategory.delete({ where: { id } });
+      return {
+        message: await this.translationService.translate(
+          'Sub-category deleted successfully',
+          lang,
+        ),
+      };
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      console.error('DeleteSubCategory Error:', error);
-      throw new InternalServerErrorException(
+      const errorMsg = await this.translationService.translate(
         'Something went wrong while deleting sub-category',
+        lang,
       );
+      throw new InternalServerErrorException(errorMsg);
     }
   }
 
-  // Service file-er ei method-ta replace korun:
-  async getAllSubCategories(page: number = 1, limit: number = 10) {
-    const skip = (page - 1) * limit;
+  async getAllSubCategories(
+    page: number = 1,
+    limit: number = 10,
+    lang: string = 'en',
+  ) {
+    try {
+      const skip = (page - 1) * limit;
 
-    const [data, total] = await Promise.all([
-      this.prisma.subCategory.findMany({
-        skip,
-        take: limit,
-        include: {
-          category: { select: { id: true, name: true, slug: true } },
+      const [data, total] = await Promise.all([
+        this.prisma.subCategory.findMany({
+          skip,
+          take: Number(limit),
+          include: {
+            category: { select: { id: true, name: true, slug: true } },
+          },
+        }),
+        this.prisma.subCategory.count(),
+      ]);
+
+      const translatedData = await this.translationService.translateData(
+        data,
+        ['name'],
+        lang,
+      );
+
+      return {
+        success: true,
+        data: translatedData,
+        meta: {
+          total,
+          page: Number(page),
+          limit: Number(limit),
+          totalPage: Math.ceil(total / limit),
         },
-      }),
-      this.prisma.subCategory.count(),
-    ]);
-
-    return {
-      data,
-      meta: {
-        total,
-        page,
-        limit,
-        totalPage: Math.ceil(total / limit),
-      },
-    };
+      };
+    } catch (error) {
+      const errorMsg = await this.translationService.translate(
+        'Failed to fetch sub-categories',
+        lang,
+      );
+      throw new InternalServerErrorException(errorMsg);
+    }
   }
 
-  async getSingleSubCategory(id: string) {
+  async getSingleSubCategory(id: string, lang: string = 'en') {
     try {
       const subCategory = await this.prisma.subCategory.findUnique({
         where: { id },
@@ -362,16 +458,25 @@ export class CategoryService {
       });
 
       if (!subCategory) {
-        throw new NotFoundException('Sub-category not found');
+        const msg = await this.translationService.translate(
+          'Sub-category not found',
+          lang,
+        );
+        throw new NotFoundException(msg);
       }
 
-      return subCategory;
+      return await this.translationService.translateData(
+        subCategory,
+        ['name'],
+        lang,
+      );
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      console.error('GetSingleSubCategory Error:', error);
-      throw new InternalServerErrorException(
+      const errorMsg = await this.translationService.translate(
         'Failed to fetch sub-category details',
+        lang,
       );
+      throw new InternalServerErrorException(errorMsg);
     }
   }
 }

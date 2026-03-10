@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
-  // BadRequestException,
   ConflictException,
   ForbiddenException,
   HttpException,
@@ -13,6 +13,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateProfileDto } from './dto/UpdateProfileDto';
 import Stripe from 'stripe';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { TranslationService } from 'src/translation/translation.service';
 
 @Injectable()
 export class UserService {
@@ -20,10 +21,15 @@ export class UserService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly cloudinary: CloudinaryService,
+    private readonly translationService: TranslationService,
   ) {}
 
   // --- SELLER PROFILE CREATION ---
-  async createSellerProfile(userId: string, sellerDto: CreateSellerProfileDto) {
+  async createSellerProfile(
+    userId: string,
+    sellerDto: CreateSellerProfileDto,
+    lang: string = 'en',
+  ) {
     try {
       const user = await this.prisma.auth.findUnique({
         where: { id: userId },
@@ -31,18 +37,26 @@ export class UserService {
       });
 
       if (!user) {
-        throw new NotFoundException('User not found');
+        throw new NotFoundException(
+          await this.translationService.translate('User not found', lang),
+        );
       }
 
       if (user.role !== 'SELLER') {
         throw new ForbiddenException(
-          'Only users with SELLER role can create a profile',
+          await this.translationService.translate(
+            'Only users with SELLER role can create a profile',
+            lang,
+          ),
         );
       }
 
       if (user.sellerProfile) {
         throw new ConflictException(
-          'Seller profile already exists for this user',
+          await this.translationService.translate(
+            'Seller profile already exists for this user',
+            lang,
+          ),
         );
       }
       const profile = await this.prisma.sellerProfile.create({
@@ -60,26 +74,28 @@ export class UserService {
 
       return {
         success: true,
-        message:
+        message: await this.translationService.translate(
           'Your seller profile has been created successfully! Please purchase a subscription plan to start posting ads.',
+          lang,
+        ),
         data: profile,
       };
     } catch (error) {
-      console.error('Create Seller Profile Error:', error);
-      if (
-        error instanceof NotFoundException ||
-        error instanceof ForbiddenException ||
-        error instanceof ConflictException
-      ) {
-        throw error;
-      }
-      throw new InternalServerErrorException('Failed to create seller profile');
+      if (error instanceof HttpException) throw error;
+      throw new InternalServerErrorException(
+        await this.translationService.translate(
+          'Failed to create seller profile',
+          lang,
+        ),
+      );
     }
   }
+
   async updateProfile(
     userId: string,
     updateData: UpdateProfileDto,
     file?: Express.Multer.File,
+    lang: string = 'en',
   ) {
     try {
       const user = await this.prisma.auth.findUnique({
@@ -87,7 +103,10 @@ export class UserService {
         include: { sellerProfile: true },
       });
 
-      if (!user) throw new NotFoundException('User not found');
+      if (!user)
+        throw new NotFoundException(
+          await this.translationService.translate('User not found', lang),
+        );
 
       let profileImageUrl = user.profilePicture;
       if (file) {
@@ -112,7 +131,6 @@ export class UserService {
         updateData.sellerData
       ) {
         const sData = updateData.sellerData;
-
         await this.prisma.sellerProfile.update({
           where: { authId: userId },
           data: {
@@ -130,14 +148,19 @@ export class UserService {
 
       return {
         success: true,
-        message: 'Profile updated successfully',
+        message: await this.translationService.translate(
+          'Profile updated successfully',
+          lang,
+        ),
         data: updatedAuth,
       };
     } catch (error) {
-      console.error('Update Error:', error);
       if (error instanceof HttpException) throw error;
       throw new InternalServerErrorException(
-        'Profile update failed due to a server error',
+        await this.translationService.translate(
+          'Profile update failed due to a server error',
+          lang,
+        ),
       );
     }
   }
@@ -158,9 +181,9 @@ export class UserService {
   // --- GET MY ADS (SELLER) ---
   async getMyAds(
     userId: string,
-    query: { page?: number; limit?: number; search?: string },
+    query: { page?: number; limit?: number; search?: string; lang?: string },
   ) {
-    const { page = 1, limit = 10, search } = query;
+    const { page = 1, limit = 10, search, lang = 'en' } = query;
     const skip = (Number(page) - 1) * Number(limit);
 
     const where: any = {
@@ -181,34 +204,37 @@ export class UserService {
         take: Number(limit),
         include: {
           category: { select: { name: true } },
-          // Image gulo include kora holo jate frontend-e gallery dekha jay
-          images: {
-            select: {
-              url: true,
-            },
-          },
+          images: { select: { url: true } },
           _count: { select: { bids: true } },
         },
         orderBy: { createdAt: 'desc' },
       }),
     ]);
 
+    const translatedAds = await Promise.all(
+      ads.map((ad) =>
+        this.translationService.translateData(
+          ad,
+          ['title', 'description'],
+          lang,
+        ),
+      ),
+    );
+
     return {
       success: true,
       meta: { total, page, lastPage: Math.ceil(total / limit) },
-      data: ads,
+      data: translatedAds,
     };
   }
 
   // --- GET MY EARNINGS (SELLER) ---
   async getMyEarnings(
     userId: string,
-    query: { page?: number; limit?: number },
+    query: { page?: number; limit?: number; lang?: string },
   ) {
-    const page = Number(query.page) || 1;
-    const limit = Number(query.limit) || 10;
-    const skip = (page - 1) * limit;
-
+    const { page = 1, limit = 10, lang = 'en' } = query;
+    const skip = (Number(page) - 1) * Number(limit);
     const where = { ad: { sellerId: userId }, status: 'COMPLETED' as any };
 
     const [total, earnings] = await Promise.all([
@@ -216,7 +242,7 @@ export class UserService {
       this.prisma.payment.findMany({
         where,
         skip,
-        take: limit,
+        take: Number(limit),
         select: {
           id: true,
           stripeId: true,
@@ -251,26 +277,34 @@ export class UserService {
       }),
     ]);
 
+    const translatedEarnings = await Promise.all(
+      earnings.map(async (e) => ({
+        ...e,
+        ad: e.ad
+          ? await this.translationService.translateData(e.ad, ['title'], lang)
+          : null,
+      })),
+    );
+
     return {
       success: true,
       meta: {
         total,
         page,
         limit,
-        totalPages: Math.ceil(total / limit),
+        totalPages: Math.ceil(total / Number(limit)),
       },
-      data: earnings,
+      data: translatedEarnings,
     };
   }
+
   // --- GET MY PURCHASES (BUYER) ---
   async getMyPurchases(
     userId: string,
-    query: { page?: number; limit?: number },
+    query: { page?: number; limit?: number; lang?: string },
   ) {
-    const page = Number(query.page) || 1;
-    const limit = Number(query.limit) || 10;
-    const skip = (page - 1) * limit;
-
+    const { page = 1, limit = 10, lang = 'en' } = query;
+    const skip = (Number(page) - 1) * Number(limit);
     const where = { buyerId: userId, status: 'COMPLETED' as any };
 
     const [total, purchases] = await Promise.all([
@@ -278,7 +312,7 @@ export class UserService {
       this.prisma.payment.findMany({
         where,
         skip,
-        take: limit,
+        take: Number(limit),
         select: {
           id: true,
           stripeId: true,
@@ -310,28 +344,55 @@ export class UserService {
       }),
     ]);
 
+    const translatedPurchases = await Promise.all(
+      purchases.map(async (p) => ({
+        ...p,
+        ad: p.ad
+          ? await this.translationService.translateData(
+              p.ad,
+              ['title', 'description'],
+              lang,
+            )
+          : null,
+      })),
+    );
+
     return {
       success: true,
       meta: {
         total,
         page,
         limit,
-        totalPages: Math.ceil(total / limit),
+        totalPages: Math.ceil(total / Number(limit)),
       },
-      data: purchases,
+      data: translatedPurchases,
     };
   }
-  // --- SINGLE ITEM DETAILS ---
-  async getSingleMyAd(userId: string, adId: string) {
+
+  async getSingleMyAd(userId: string, adId: string, lang: string = 'en') {
     const ad = await this.prisma.ad.findFirst({
       where: { id: adId, sellerId: userId },
       include: { images: true, bids: true, category: true },
     });
-    if (!ad) throw new NotFoundException('Ad not found');
-    return { success: true, data: ad };
+    if (!ad)
+      throw new NotFoundException(
+        await this.translationService.translate('Ad not found', lang),
+      );
+    return {
+      success: true,
+      data: await this.translationService.translateData(
+        ad,
+        ['title', 'description'],
+        lang,
+      ),
+    };
   }
 
-  async getSinglePayment(userId: string, paymentId: string) {
+  async getSinglePayment(
+    userId: string,
+    paymentId: string,
+    lang: string = 'en',
+  ) {
     const payment = await this.prisma.payment.findUnique({
       where: { id: paymentId },
       include: {
@@ -364,59 +425,53 @@ export class UserService {
       !payment ||
       (payment.buyerId !== userId && payment.ad.sellerId !== userId)
     ) {
-      throw new NotFoundException('Payment not found or access denied');
+      throw new NotFoundException(
+        await this.translationService.translate(
+          'Payment not found or access denied',
+          lang,
+        ),
+      );
     }
 
     const isSeller = payment.ad.sellerId === userId;
-
-    const responseData = {
-      id: payment.id,
-      stripeId: payment.stripeId,
-      status: payment.status,
-      createdAt: payment.createdAt,
-      ad: payment.ad,
-      totalAmount: payment.totalAmount,
-      ...(isSeller && {
-        adminFee: payment.adminFee,
-        sellerAmount: payment.sellerAmount,
-        buyer: payment.buyer,
-      }),
-    };
+    payment.ad = await this.translationService.translateData(
+      payment.ad,
+      ['title'],
+      lang,
+    );
 
     return {
       success: true,
       role: isSeller ? 'SELLER' : 'BUYER',
-      data: responseData,
+      data: {
+        id: payment.id,
+        stripeId: payment.stripeId,
+        status: payment.status,
+        createdAt: payment.createdAt,
+        ad: payment.ad,
+        totalAmount: payment.totalAmount,
+        ...(isSeller && {
+          adminFee: payment.adminFee,
+          sellerAmount: payment.sellerAmount,
+          buyer: payment.buyer,
+        }),
+      },
     };
   }
 
-  async getSellerDashboardStats(sellerId: string) {
+  async getSellerDashboardStats(sellerId: string, lang: string = 'en') {
     try {
       const [totalAds, soldItems, totalViewsData, totalIncomeData] =
         await Promise.all([
-          this.prisma.ad.count({
-            where: { sellerId },
-          }),
-          this.prisma.ad.count({
-            where: {
-              sellerId,
-              isSold: true,
-            },
-          }),
-
+          this.prisma.ad.count({ where: { sellerId } }),
+          this.prisma.ad.count({ where: { sellerId, isSold: true } }),
           this.prisma.ad.findMany({
             where: { sellerId },
             select: { viewerIds: true },
           }),
-
           this.prisma.payment.aggregate({
-            where: {
-              ad: { sellerId },
-              status: 'COMPLETED',
-            },
-            _sum: {
-              sellerAmount: true,
-            },
+            where: { ad: { sellerId }, status: 'COMPLETED' },
+            _sum: { sellerAmount: true },
           }),
         ]);
 
@@ -434,15 +489,21 @@ export class UserService {
           totalAdsViewed,
         },
       };
-    } catch (error: any) {
-      console.error('DASHBOARD_STATS_ERROR:', error);
-      throw new InternalServerErrorException('Failed to fetch dashboard stats');
+    } catch (error) {
+      throw new InternalServerErrorException(
+        await this.translationService.translate(
+          'Failed to fetch dashboard stats',
+          lang,
+        ),
+      );
     }
   }
 
-  async getSellerRecentAds(userId: string, query: { search?: string }) {
-    const { search } = query;
-
+  async getSellerRecentAds(
+    userId: string,
+    query: { search?: string; lang?: string },
+  ) {
+    const { search, lang = 'en' } = query;
     const where: any = {
       sellerId: userId,
       ...(search && {
@@ -458,41 +519,49 @@ export class UserService {
       take: 10,
       include: {
         category: { select: { name: true } },
-        images: {
-          select: {
-            url: true,
-          },
-          take: 1,
-        },
+        images: { select: { url: true }, take: 1 },
         _count: { select: { bids: true } },
       },
       orderBy: { createdAt: 'desc' },
     });
 
-    return {
-      success: true,
-      data: ads,
-    };
+    const translatedAds = await Promise.all(
+      ads.map((ad) =>
+        this.translationService.translateData(ad, ['title'], lang),
+      ),
+    );
+
+    return { success: true, data: translatedAds };
   }
 
-  async getMySubscriptions(userId: string) {
+  async getMySubscriptions(userId: string, lang: string = 'en') {
     try {
       const subscriptions = await this.prisma.subscription.findMany({
         where: { sellerId: userId },
-        include: {
-          plan: true,
-        },
+        include: { plan: true },
         orderBy: { createdAt: 'desc' },
       });
 
-      return {
-        success: true,
-        data: subscriptions,
-      };
+      const translatedSubs = await Promise.all(
+        subscriptions.map(async (sub) => ({
+          ...sub,
+          plan: sub.plan
+            ? await this.translationService.translateData(
+                sub.plan,
+                ['name'],
+                lang,
+              )
+            : null,
+        })),
+      );
+
+      return { success: true, data: translatedSubs };
     } catch (error) {
-      console.log(error);
       throw new InternalServerErrorException(
-        'Failed to fetch your subscription history',
+        await this.translationService.translate(
+          'Failed to fetch your subscription history',
+          lang,
+        ),
       );
     }
   }

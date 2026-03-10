@@ -23,7 +23,6 @@ import { AddService } from './add.service';
 import {
   ApiTags,
   ApiOperation,
-  //   ApiResponse,
   ApiBearerAuth,
   ApiConsumes,
   ApiQuery,
@@ -34,8 +33,6 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { SellerGuard } from 'src/auth/guards/seller.guard';
 import { SubscriptionGuard } from 'src/auth/guards/subscription.guard';
-// import { SellerBankGuard } from 'src/auth/guards/seller-bank.guard';
-// import { SellerBankGuard } from 'src/auth/guards/seller-bank.guard';
 
 @ApiTags('Seller Ads Management')
 @Controller('ads')
@@ -43,7 +40,7 @@ export class AddController {
   constructor(private readonly addService: AddService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all ads with filters' })
+  @ApiOperation({ summary: 'Get all ads with filters and translation' })
   @ApiQuery({
     name: 'page',
     required: false,
@@ -67,13 +64,25 @@ export class AddController {
     required: false,
     type: String,
     enum: ['true', 'false'],
-    description: 'Filter by sold status',
   })
   @ApiQuery({
-    name: 'sortByPrice',
+    name: 'categoryId',
     required: false,
-    enum: ['asc', 'desc'],
-    description: 'Sort by price',
+    type: String,
+    description: 'Filter by Category ID',
+  }) // Required False
+  @ApiQuery({
+    name: 'subCategoryId',
+    required: false,
+    type: String,
+    description: 'Filter by Sub-Category ID',
+  }) // Required False
+  @ApiQuery({ name: 'sortByPrice', required: false, enum: ['asc', 'desc'] })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+    description: 'Language code',
   })
   async findAll(
     @Query('page') page?: number,
@@ -83,6 +92,7 @@ export class AddController {
     @Query('sortByPrice') sortByPrice?: 'asc' | 'desc',
     @Query('categoryId') categoryId?: string,
     @Query('subCategoryId') subCategoryId?: string,
+    @Query('lang') lang: string = 'en',
   ) {
     return await this.addService.getAllAds({
       page,
@@ -92,36 +102,46 @@ export class AddController {
       sortByPrice,
       categoryId,
       subCategoryId,
+      lang, // সার্ভিস-এ পাস করা হলো
     });
   }
 
   @Get(':adId')
-  @ApiOperation({ summary: 'Get a single ad by ID' })
-  async getAdById(@Param('adId') adId: string) {
-    return await this.addService.getAdById(adId);
+  @ApiOperation({ summary: 'Get a single ad by ID with translation' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async getAdById(
+    @Param('adId') adId: string,
+    @Query('lang') lang: string = 'en',
+  ) {
+    return await this.addService.getAdById(adId, lang);
   }
 
   @Get('seller/:sellerId')
   @ApiOperation({ summary: 'Get all ads of a specific seller' })
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiQuery({ name: 'isSold', required: false, enum: ['true', 'false'] })
   @ApiQuery({
-    name: 'isSold',
+    name: 'lang',
     required: false,
-    type: String,
-    enum: ['true', 'false'],
-    description: 'Filter by sold status',
+    enum: ['en', 'no', 'se', 'dk', 'is'],
   })
   async getAdsBySeller(
     @Param('sellerId') sellerId: string,
     @Query('page') page?: number,
     @Query('limit') limit?: number,
     @Query('isSold') isSold?: string,
+    @Query('lang') lang: string = 'en',
   ) {
     return await this.addService.getAdsBySellerId(sellerId, {
       page,
       limit,
       isSold,
+      lang,
     });
   }
 
@@ -133,15 +153,19 @@ export class AddController {
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FilesInterceptor('images', 10))
   @ApiOperation({ summary: 'Create a new ad with images' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
   async createAd(
     @Body() createAdDto: CreateAdDto,
     @UploadedFiles() files: Express.Multer.File[],
     @Req() req: any,
+    @Query('lang') lang: string = 'en',
   ) {
-    console.log(createAdDto);
-    console.log(files);
     const sellerId = req.user?.id;
-    return await this.addService.createAd(sellerId, createAdDto, files);
+    return await this.addService.createAd(sellerId, createAdDto, files, lang);
   }
 
   @ApiBearerAuth()
@@ -152,14 +176,26 @@ export class AddController {
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FilesInterceptor('images', 10))
   @ApiOperation({ summary: 'Update an existing ad' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
   async updateAd(
     @Param('adId') adId: string,
     @Body() updateAdDto: UpdateAddDto,
     @UploadedFiles() files: Express.Multer.File[],
     @Req() req: any,
+    @Query('lang') lang: string = 'en',
   ) {
     const sellerId = req.user?.id;
-    return await this.addService.updateAd(adId, sellerId, updateAdDto, files);
+    return await this.addService.updateAd(
+      adId,
+      sellerId,
+      updateAdDto,
+      files,
+      lang,
+    );
   }
 
   @ApiBearerAuth()
@@ -168,9 +204,18 @@ export class AddController {
   @Delete(':adId')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Delete an ad' })
-  async deleteAd(@Param('adId') adId: string, @Req() req: any) {
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async deleteAd(
+    @Param('adId') adId: string,
+    @Req() req: any,
+    @Query('lang') lang: string = 'en',
+  ) {
     const sellerId = req.user?.id;
-    return await this.addService.deleteAd(adId, sellerId);
+    return await this.addService.deleteAd(adId, sellerId, lang);
   }
 
   @ApiBearerAuth()
@@ -178,20 +223,51 @@ export class AddController {
   @Roles('SELLER')
   @Patch(':adId/toggle-sold')
   @ApiOperation({ summary: 'Toggle Ad sold status (true/false)' })
-  async toggleSold(@Param('adId') adId: string, @Req() req: any) {
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async toggleSold(
+    @Param('adId') adId: string,
+    @Req() req: any,
+    @Query('lang') lang: string = 'en',
+  ) {
     const sellerId = req.user?.id;
-    return await this.addService.toggleSoldStatus(adId, sellerId);
+    return await this.addService.toggleSoldStatus(adId, sellerId, lang);
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Post(':adId/view')
-  async viewAd(@Param('adId') adId: string, @Req() req: any) {
-    return await this.addService.recordView(adId, req.user.id);
+  @ApiOperation({ summary: 'Record a view for an ad' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async viewAd(
+    @Param('adId') adId: string,
+    @Req() req: any,
+    @Query('lang') lang: string = 'en',
+  ) {
+    return await this.addService.recordView(adId, req.user.id, lang);
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get(':adId/viewers')
-  async getAdViewers(@Param('adId') adId: string, @Req() req: any) {
-    return await this.addService.getAdViewers(adId, req.user.id);
+  @ApiOperation({ summary: 'Get list of viewers (Seller only)' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async getAdViewers(
+    @Param('adId') adId: string,
+    @Req() req: any,
+    @Query('lang') lang: string = 'en',
+  ) {
+    return await this.addService.getAdViewers(adId, req.user.id, lang);
   }
 }

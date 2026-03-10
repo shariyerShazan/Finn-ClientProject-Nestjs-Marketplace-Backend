@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
   ApiTags,
   ApiOperation,
-  // ApiParam,
   ApiBearerAuth,
   ApiConsumes,
+  ApiQuery,
+  ApiParam,
 } from '@nestjs/swagger';
 import { CategoryService } from './category.service';
 import {
@@ -36,17 +38,27 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  // --- SUB-CATEGORY ROUTES (Must be before general dynamic routes) ---
+  // --- SUB-CATEGORY ROUTES ---
 
   @Get('sub-categories')
   @ApiOperation({ summary: 'Get all sub-categories' })
+  @ApiQuery({ name: 'page', required: false, example: '1' })
+  @ApiQuery({ name: 'limit', required: false, example: '10' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+    description: 'Language preference',
+  })
   async getAllSubCategories(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+    @Query('lang') lang: string = 'en',
   ) {
     return await this.categoryService.getAllSubCategories(
-      page ? parseInt(page) : 1,
-      limit ? parseInt(limit) : 10,
+      Number(page),
+      Number(limit),
+      lang,
     );
   }
 
@@ -55,8 +67,16 @@ export class CategoryController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @ApiOperation({ summary: 'Create a new sub-category' })
-  async createSub(@Body() dto: CreateSubCategoryDto) {
-    return await this.categoryService.createSubCategory(dto);
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async createSub(
+    @Body() dto: CreateSubCategoryDto,
+    @Query('lang') lang: string = 'en',
+  ) {
+    return await this.categoryService.createSubCategory(dto, lang);
   }
 
   @Patch('sub/:subCategoryId')
@@ -64,38 +84,90 @@ export class CategoryController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @ApiOperation({ summary: 'Update a sub-category' })
+  @ApiParam({ name: 'subCategoryId', description: 'ID of the sub-category' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
   async updateSub(
     @Param('subCategoryId') id: string,
     @Body() dto: UpdateSubCategoryDto,
+    @Query('lang') lang: string = 'en',
   ) {
-    return await this.categoryService.updateSubCategory(id, dto);
+    return await this.categoryService.updateSubCategory(id, dto, lang);
   }
 
   @Delete('sub/:subCategoryId')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
-  async removeSub(@Param('subCategoryId') id: string) {
-    return await this.categoryService.deleteSubCategory(id);
+  @ApiOperation({ summary: 'Delete a sub-category' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async removeSub(
+    @Param('subCategoryId') id: string,
+    @Query('lang') lang: string = 'en',
+  ) {
+    return await this.categoryService.deleteSubCategory(id, lang);
   }
 
   @Get('sub-categories/:id')
-  async getSingleSubCategory(@Param('id', new ParseUUIDPipe()) id: string) {
-    return await this.categoryService.getSingleSubCategory(id);
+  @ApiOperation({ summary: 'Get single sub-category details' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async getSingleSubCategory(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Query('lang') lang: string = 'en',
+  ) {
+    return await this.categoryService.getSingleSubCategory(id, lang);
   }
 
   // --- GENERAL CATEGORY ROUTES ---
 
   @Get()
+  @ApiOperation({ summary: 'Get all categories with translation' })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: String,
+    description: 'Default is 1',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: String,
+    description: 'Default is 10',
+  })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    description: 'Search by name or slug',
+  })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+    description: 'Language code',
+  })
   async getAll(
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
     @Query('search') search?: string,
+    @Query('lang') lang: string = 'en',
   ) {
     return this.categoryService.getAllCategories(
       Number(page),
       Number(limit),
       search,
+      lang,
     );
   }
 
@@ -104,12 +176,19 @@ export class CategoryController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
+  @ApiOperation({ summary: 'Create a new category' })
   @UseInterceptors(FileInterceptor('image'))
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
   async createCat(
     @Body() dto: CreateCategoryDto,
     @UploadedFile() file: Express.Multer.File,
+    @Query('lang') lang: string = 'en',
   ) {
-    return await this.categoryService.createCategory(dto, file);
+    return await this.categoryService.createCategory(dto, file, lang);
   }
 
   @Patch(':categoryId')
@@ -117,25 +196,50 @@ export class CategoryController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
+  @ApiOperation({ summary: 'Update a category' })
   @UseInterceptors(FileInterceptor('image'))
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
   async updateCat(
     @Param('categoryId') id: string,
     @Body() dto: UpdateCategoryDto,
     @UploadedFile() file: Express.Multer.File,
+    @Query('lang') lang: string = 'en',
   ) {
-    return await this.categoryService.updateCategory(id, dto, file);
+    return await this.categoryService.updateCategory(id, dto, file, lang);
   }
 
   @Delete(':categoryId')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
-  async removeCat(@Param('categoryId') id: string) {
-    return await this.categoryService.deleteCategory(id);
+  @ApiOperation({ summary: 'Delete a category' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async removeCat(
+    @Param('categoryId') id: string,
+    @Query('lang') lang: string = 'en',
+  ) {
+    return await this.categoryService.deleteCategory(id, lang);
   }
 
   @Get(':categoryId')
-  async findOne(@Param('categoryId') id: string) {
-    return await this.categoryService.getSingleCategory(id);
+  @ApiOperation({ summary: 'Get single category details' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async findOne(
+    @Param('categoryId') id: string,
+    @Query('lang') lang: string = 'en',
+  ) {
+    return await this.categoryService.getSingleCategory(id, lang);
   }
 }

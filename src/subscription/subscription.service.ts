@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 
 import {
   Injectable,
@@ -13,73 +11,120 @@ import {
   CreateSubscriptionPlanDto,
   UpdateSubscriptionPlanDto,
 } from './dto/subscription-plan.dto';
+import { TranslationService } from 'src/translation/translation.service';
 
 @Injectable()
 export class SubscriptionService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly translationService: TranslationService,
+  ) {}
 
   // ১. Create Plan (Admin Only)
-  async createPlan(dto: CreateSubscriptionPlanDto) {
+  async createPlan(dto: CreateSubscriptionPlanDto, lang: string = 'en') {
     try {
       const plan = await this.prisma.subscriptionPlan.create({
         data: dto,
       });
       return {
         success: true,
-        message: 'Subscription plan created successfully',
+        message: await this.translationService.translate(
+          'Subscription plan created successfully',
+          lang,
+        ),
         data: plan,
       };
     } catch (error) {
       console.error(error);
       throw new InternalServerErrorException(
-        'Failed to create subscription plan',
+        await this.translationService.translate(
+          'Failed to create subscription plan',
+          lang,
+        ),
       );
     }
   }
 
   // ২. Get All Plans (For both Admin & Seller)
-  async getAllPlans() {
+  async getAllPlans(lang: string = 'en') {
     try {
       const plans = await this.prisma.subscriptionPlan.findMany({
         where: { isActive: true },
         orderBy: { price: 'asc' },
       });
+
+      // ডাইনামিক ডাটা (নাম এবং ডেসক্রিপশন) ট্রান্সলেট করা হচ্ছে
+      const translatedPlans = await Promise.all(
+        plans.map((plan) =>
+          this.translationService.translateData(
+            plan,
+            ['name', 'description'],
+            lang,
+          ),
+        ),
+      );
+
       return {
         success: true,
-        data: plans,
+        data: translatedPlans,
       };
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException('Error fetching plans');
+      throw new InternalServerErrorException(
+        await this.translationService.translate('Error fetching plans', lang),
+      );
     }
   }
 
   // ৩. Get Single Plan
-  async getSinglePlan(id: string) {
+  async getSinglePlan(id: string, lang: string = 'en') {
     try {
       const plan = await this.prisma.subscriptionPlan.findUnique({
         where: { id },
       });
 
-      if (!plan) throw new NotFoundException('Plan not found');
+      if (!plan) {
+        throw new NotFoundException(
+          await this.translationService.translate('Plan not found', lang),
+        );
+      }
+
+      const translatedPlan = await this.translationService.translateData(
+        plan,
+        ['name', 'description'],
+        lang,
+      );
 
       return {
         success: true,
-        data: plan,
+        data: translatedPlan,
       };
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      throw new InternalServerErrorException('Error fetching plan details');
+      throw new InternalServerErrorException(
+        await this.translationService.translate(
+          'Error fetching plan details',
+          lang,
+        ),
+      );
     }
   }
 
   // ৪. Update Plan
-  async updatePlan(id: string, dto: UpdateSubscriptionPlanDto) {
+  async updatePlan(
+    id: string,
+    dto: UpdateSubscriptionPlanDto,
+    lang: string = 'en',
+  ) {
     try {
       const plan = await this.prisma.subscriptionPlan.findUnique({
         where: { id },
       });
-      if (!plan) throw new NotFoundException('Plan not found');
+      if (!plan) {
+        throw new NotFoundException(
+          await this.translationService.translate('Plan not found', lang),
+        );
+      }
 
       const updatedPlan = await this.prisma.subscriptionPlan.update({
         where: { id },
@@ -88,32 +133,49 @@ export class SubscriptionService {
 
       return {
         success: true,
-        message: 'Plan updated successfully',
+        message: await this.translationService.translate(
+          'Plan updated successfully',
+          lang,
+        ),
         data: updatedPlan,
       };
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      throw new InternalServerErrorException('Update failed');
+      throw new InternalServerErrorException(
+        await this.translationService.translate('Update failed', lang),
+      );
     }
   }
 
-  // ৫. Delete Plan (Soft Delete recommended but here is Hard Delete)
-  async deletePlan(id: string) {
+  // ৫. Delete Plan
+  async deletePlan(id: string, lang: string = 'en') {
     try {
       const plan = await this.prisma.subscriptionPlan.findUnique({
         where: { id },
       });
-      if (!plan) throw new NotFoundException('Plan not found');
+      if (!plan) {
+        throw new NotFoundException(
+          await this.translationService.translate('Plan not found', lang),
+        );
+      }
 
       await this.prisma.subscriptionPlan.delete({ where: { id } });
 
       return {
         success: true,
-        message: 'Plan deleted successfully',
+        message: await this.translationService.translate(
+          'Plan deleted successfully',
+          lang,
+        ),
       };
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      throw new InternalServerErrorException('Delete operation failed');
+      throw new InternalServerErrorException(
+        await this.translationService.translate(
+          'Delete operation failed',
+          lang,
+        ),
+      );
     }
   }
 }
