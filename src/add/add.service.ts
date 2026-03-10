@@ -16,12 +16,14 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAdDto, UpdateAddDto } from './dto/CreateAdDto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { TranslationService } from 'src/translation/translation.service';
 
 @Injectable()
 export class AddService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly cloudinary: CloudinaryService,
+    private readonly translationService: TranslationService, // ইনজেক্ট করা হলো
   ) {}
 
   private transformAdData(ad: any) {
@@ -29,11 +31,11 @@ export class AddService {
 
     // Seller Info Filter
     const sellerInfo = {
-      id: seller.id,
-      nickName: seller.nickName,
-      profilePicture: seller.profilePicture,
-      email: ad.allowEmail ? seller.email : 'Private',
-      phone: ad.allowPhone ? seller.phone : 'Private',
+      id: seller?.id,
+      nickName: seller?.nickName,
+      profilePicture: seller?.profilePicture,
+      email: ad.allowEmail ? seller?.email : 'Private',
+      phone: ad.allowPhone ? seller?.phone : 'Private',
     };
 
     // Address Privacy Filter
@@ -56,16 +58,22 @@ export class AddService {
   private async validateSpecifications(
     subCategoryId: string,
     specifications: any,
+    lang: string,
     isUpdate = false,
   ) {
     const subCategory = await this.prisma.subCategory.findUnique({
       where: { id: subCategoryId },
     });
 
-    if (!subCategory) throw new NotFoundException('Sub-category not found');
+    if (!subCategory) {
+      const msg = await this.translationService.translate(
+        'Sub-category not found',
+        lang,
+      );
+      throw new NotFoundException(msg);
+    }
 
     const adminSpecs = (subCategory.specFields as any[]) || [];
-    // Ensure we are working with an object
     const sellerSpecs =
       typeof specifications === 'string'
         ? JSON.parse(specifications)
@@ -79,7 +87,11 @@ export class AddService {
           !isUpdate &&
           (value === undefined || value === null || value === '')
         ) {
-          throw new BadRequestException(`Field "${field.label}" is required.`);
+          const msg = await this.translationService.translate(
+            `Field "${field.label}" is required.`,
+            lang,
+          );
+          throw new BadRequestException(msg);
         }
       }
       if (value !== undefined) validatedData[field.key] = value;
@@ -87,10 +99,17 @@ export class AddService {
     return validatedData;
   }
 
-  async createAd(sellerId: string, createAdDto: CreateAdDto, files: any) {
+  async createAd(
+    sellerId: string,
+    createAdDto: CreateAdDto,
+    files: any,
+    lang: string = 'en',
+  ) {
     try {
       if (!files || files.length === 0) {
-        throw new BadRequestException('Images are required');
+        throw new BadRequestException(
+          await this.translationService.translate('Images are required', lang),
+        );
       }
 
       const subscription = await this.prisma.subscription.findUnique({
@@ -98,17 +117,19 @@ export class AddService {
       });
 
       if (!subscription || subscription.status !== 'ACTIVE') {
-        throw new BadRequestException('No active subscription plan found.');
+        throw new BadRequestException(
+          await this.translationService.translate(
+            'No active subscription plan found.',
+            lang,
+          ),
+        );
       }
 
       if (subscription.usedAdIds.length >= subscription.totalLimit) {
-        throw new BadRequestException('Ad limit reached.');
+        throw new BadRequestException(
+          await this.translationService.translate('Ad limit reached.', lang),
+        );
       }
-
-      // --- String to Boolean Conversion Logic ---
-      const showAddress = createAdDto.showAddress === 'true';
-      const allowPhone = createAdDto.allowPhone === 'true';
-      const allowEmail = createAdDto.allowEmail === 'true';
 
       const price = Number(createAdDto.price);
       const lat = createAdDto.latitude ? Number(createAdDto.latitude) : null;
@@ -119,13 +140,19 @@ export class AddService {
         try {
           specs = JSON.parse(specs);
         } catch (e) {
-          throw new BadRequestException('Invalid JSON in specifications');
+          throw new BadRequestException(
+            await this.translationService.translate(
+              'Invalid JSON in specifications',
+              lang,
+            ),
+          );
         }
       }
 
       const validatedSpecs = await this.validateSpecifications(
         createAdDto.subCategoryId,
         specs,
+        lang,
       );
 
       const imageUrls = await this.cloudinary.uploadImages(files);
@@ -144,9 +171,9 @@ export class AddService {
             country: createAdDto.country,
             latitude: lat,
             longitude: lng,
-            showAddress, // এখানে এখন পিওর বুলিয়ান যাবে
-            allowPhone, // এখানে এখন পিওর বুলিয়ান যাবে
-            allowEmail, // এখানে এখন পিওর বুলিয়ান যাবে
+            showAddress: createAdDto.showAddress === 'true',
+            allowPhone: createAdDto.allowPhone === 'true',
+            allowEmail: createAdDto.allowEmail === 'true',
             categoryId: createAdDto.categoryId,
             subCategoryId: createAdDto.subCategoryId,
             specifications: validatedSpecs,
@@ -162,11 +189,7 @@ export class AddService {
 
         await tx.subscription.update({
           where: { sellerId },
-          data: {
-            usedAdIds: {
-              push: newAd.id,
-            },
-          },
+          data: { usedAdIds: { push: newAd.id } },
         });
 
         return newAd;
@@ -175,10 +198,12 @@ export class AddService {
       return {
         newAdd: result,
         success: true,
-        message: 'Ad created successfully',
+        message: await this.translationService.translate(
+          'Ad created successfully',
+          lang,
+        ),
       };
     } catch (error) {
-      console.error('CREATE_AD_ERROR:', error);
       if (error instanceof HttpException) throw error;
       throw new InternalServerErrorException(error.message);
     }
@@ -189,46 +214,48 @@ export class AddService {
     sellerId: string,
     updateAdDto: UpdateAddDto,
     files?: Express.Multer.File[],
+    lang: string = 'en',
   ) {
     try {
       const existingAd = await this.prisma.ad.findUnique({
         where: { id: adId },
-        include: { images: true }, // ইমেজগুলো আগে থেকেই ইনক্লুড করুন
+        include: { images: true },
       });
 
-      if (!existingAd) throw new NotFoundException('Ad not found');
+      if (!existingAd)
+        throw new NotFoundException(
+          await this.translationService.translate('Ad not found', lang),
+        );
       if (existingAd.sellerId !== sellerId)
-        throw new ForbiddenException('Not authorized');
+        throw new ForbiddenException(
+          await this.translationService.translate('Not authorized', lang),
+        );
 
-      // --- ১. ইমেজ ডিলিট করার লজিক ---
       let imagesRemainingCount = existingAd.images.length;
-
       if (updateAdDto.imagesToDelete) {
         const idsToDelete = Array.isArray(updateAdDto.imagesToDelete)
           ? updateAdDto.imagesToDelete
           : (updateAdDto.imagesToDelete as string).split(',');
-
         imagesRemainingCount -= idsToDelete.length;
-
         await this.prisma.adImage.deleteMany({
           where: { id: { in: idsToDelete }, adId },
         });
       }
 
-      // --- ২. নতুন ইমেজ আপলোড এবং চেক ---
       const newImageCount = files?.length || 0;
       if (imagesRemainingCount + newImageCount === 0) {
         throw new BadRequestException(
-          'At least one image is required for an ad.',
+          await this.translationService.translate(
+            'At least one image is required for an ad.',
+            lang,
+          ),
         );
       }
 
       let newImageUrls: string[] = [];
-      if (newImageCount > 0) {
+      if (newImageCount > 0)
         newImageUrls = await this.cloudinary.uploadImages(files as any);
-      }
 
-      // --- ৩. স্পেসিফিকেশন হ্যান্ডলিং (Parse JSON if string) ---
       let finalSpecs: any = undefined;
       if (updateAdDto.specifications) {
         let specs = updateAdDto.specifications;
@@ -236,19 +263,23 @@ export class AddService {
           try {
             specs = JSON.parse(specs);
           } catch (e) {
-            throw new BadRequestException('Invalid specifications JSON');
+            throw new BadRequestException(
+              await this.translationService.translate(
+                'Invalid specifications JSON',
+                lang,
+              ),
+            );
           }
         }
         finalSpecs = await this.validateSpecifications(
           updateAdDto.subCategoryId || existingAd.subCategoryId,
           specs,
+          lang,
           true,
         );
       }
 
-      // --- ৪. ডাটাবেজ আপডেট ---
       const { imagesToDelete, specifications, ...rest } = updateAdDto;
-
       const updatedAd = await this.prisma.ad.update({
         where: { id: adId },
         data: {
@@ -283,14 +314,18 @@ export class AddService {
       });
 
       return {
-        message: 'Ad updated successfully',
+        message: await this.translationService.translate(
+          'Ad updated successfully',
+          lang,
+        ),
         success: true,
         data: updatedAd,
       };
     } catch (error) {
-      console.error('UPDATE_ERROR:', error);
       if (error instanceof HttpException) throw error;
-      throw new InternalServerErrorException(error.message || 'Update failed');
+      throw new InternalServerErrorException(
+        await this.translationService.translate('Update failed', lang),
+      );
     }
   }
 
@@ -304,21 +339,18 @@ export class AddService {
         categoryId,
         subCategoryId,
         sortByPrice,
+        lang = 'en',
       } = query;
-
       const skip = (Number(page) - 1) * Number(limit);
-
       const where: any = {};
 
-      if (isSold !== undefined && isSold !== '') {
+      if (isSold !== undefined && isSold !== '')
         where.isSold = isSold === 'true';
-      }
 
       if (search && search.trim() !== '') {
         where.OR = [
           { title: { contains: search, mode: 'insensitive' } },
           { category: { name: { contains: search, mode: 'insensitive' } } },
-          { category: { slug: { contains: search, mode: 'insensitive' } } },
         ];
       }
 
@@ -327,18 +359,15 @@ export class AddService {
         categoryId !== 'all' &&
         categoryId !== 'undefined' &&
         categoryId !== ''
-      ) {
+      )
         where.categoryId = categoryId;
-      }
-      console.log(categoryId);
       if (
         subCategoryId &&
         subCategoryId !== 'all' &&
         subCategoryId !== 'undefined' &&
         subCategoryId !== ''
-      ) {
+      )
         where.subCategoryId = subCategoryId;
-      }
 
       const orderBy: any = sortByPrice
         ? { price: sortByPrice as 'asc' | 'desc' }
@@ -348,18 +377,19 @@ export class AddService {
         this.prisma.ad.count({ where }),
         this.prisma.ad.findMany({
           where,
-          include: {
-            images: true,
-            category: true,
-            seller: true,
-          },
+          include: { images: true, category: true, seller: true },
           orderBy,
           skip,
           take: Number(limit),
         }),
       ]);
 
-      const totalPage = Math.ceil(total / Number(limit));
+      // ট্রান্সলেশন: টাইটেল এবং ডেসক্রিপশন
+      const translatedAds = await this.translationService.translateData(
+        ads,
+        ['title', 'description'],
+        lang,
+      );
 
       return {
         success: true,
@@ -367,58 +397,61 @@ export class AddService {
           total,
           page: Number(page),
           limit: Number(limit),
-          totalPage,
+          totalPage: Math.ceil(total / Number(limit)),
         },
-        data: ads.map((ad) => this.transformAdData(ad)),
+        data: translatedAds.map((ad) => this.transformAdData(ad)),
       };
     } catch (error: any) {
-      console.error('Error fetching ads:', error);
       throw new InternalServerErrorException(error.message);
     }
   }
 
-  async deleteAd(adId: string, sellerId: string) {
+  async deleteAd(adId: string, sellerId: string, lang: string = 'en') {
     try {
       const existingAd = await this.prisma.ad.findUnique({
         where: { id: adId },
       });
-
-      if (!existingAd) throw new NotFoundException('Ad not found');
+      if (!existingAd)
+        throw new NotFoundException(
+          await this.translationService.translate('Ad not found', lang),
+        );
       if (existingAd.sellerId !== sellerId)
-        throw new ForbiddenException('Not authorized');
+        throw new ForbiddenException(
+          await this.translationService.translate('Not authorized', lang),
+        );
 
       await this.prisma.$transaction(async (tx) => {
         await tx.ad.delete({ where: { id: adId } });
         const subscription = await tx.subscription.findUnique({
           where: { sellerId },
         });
-
         if (subscription) {
           const updatedUsedAdIds = subscription.usedAdIds.filter(
             (id) => id !== adId,
           );
-
           await tx.subscription.update({
             where: { sellerId },
-            data: {
-              usedAdIds: updatedUsedAdIds,
-            },
+            data: { usedAdIds: updatedUsedAdIds },
           });
         }
       });
 
       return {
-        message: 'Ad deleted successfully and slot freed',
+        message: await this.translationService.translate(
+          'Ad deleted successfully and slot freed',
+          lang,
+        ),
         success: true,
       };
     } catch (error: any) {
       if (error instanceof HttpException) throw error;
-      throw new InternalServerErrorException('Delete failed: ' + error.message);
+      throw new InternalServerErrorException(
+        await this.translationService.translate('Delete failed', lang),
+      );
     }
   }
 
-  // --- GET SINGLE AD ---
-  async getAdById(id: string) {
+  async getAdById(id: string, lang: string = 'en') {
     try {
       const ad = await this.prisma.ad.findUnique({
         where: { id },
@@ -436,61 +469,179 @@ export class AddService {
               sellerProfile: true,
             },
           },
-          buyer: {
-            select: {
-              nickName: true,
-            },
-          },
+          buyer: { select: { nickName: true } },
           comments: {
-            where: { parentId: null }, // শুধুমাত্র মেইন কমেন্টগুলো আসবে
+            where: { parentId: null },
             include: {
               user: {
-                select: {
-                  id: true,
-                  firstName: true,
-                  lastName: true,
-                  profilePicture: true,
-                },
+                select: { id: true, firstName: true, profilePicture: true },
               },
               replies: {
                 include: {
                   user: {
-                    select: {
-                      id: true,
-                      firstName: true,
-                      lastName: true,
-                      profilePicture: true,
-                    },
+                    select: { id: true, firstName: true, profilePicture: true },
                   },
                 },
-                orderBy: { createdAt: 'asc' }, // রিপ্লাইগুলো পুরনো থেকে নতুন ক্রমে
               },
             },
-            orderBy: { createdAt: 'desc' }, // কমেন্টগুলো নতুন থেকে পুরনো ক্রমে
+            orderBy: { createdAt: 'desc' },
           },
         },
       });
 
-      if (!ad) {
-        throw new NotFoundException('Ad not found or might have been deleted');
-      }
+      if (!ad)
+        throw new NotFoundException(
+          await this.translationService.translate(
+            'Ad not found or might have been deleted',
+            lang,
+          ),
+        );
+
+      const translatedAd = await this.translationService.translateData(
+        ad,
+        ['title', 'description'],
+        lang,
+      );
 
       return {
         success: true,
-        data: this.transformAdData(ad),
+        data: this.transformAdData(translatedAd),
       };
     } catch (error: any) {
       if (error instanceof HttpException) throw error;
-      console.error(`[GetAdById Error]: ${error.message}`);
       throw new InternalServerErrorException(
-        'An unexpected error occurred while fetching the ad',
+        await this.translationService.translate(
+          'An unexpected error occurred',
+          lang,
+        ),
       );
     }
   }
 
+  async toggleSoldStatus(adId: string, sellerId: string, lang: string = 'en') {
+    const ad = await this.prisma.ad.findUnique({
+      where: { id: adId },
+      select: { id: true, sellerId: true, isSold: true },
+    });
+
+    if (!ad)
+      throw new NotFoundException(
+        await this.translationService.translate('Ad not found', lang),
+      );
+    if (ad.sellerId !== sellerId)
+      throw new ForbiddenException(
+        await this.translationService.translate('Not authorized', lang),
+      );
+
+    const updatedAd = await this.prisma.ad.update({
+      where: { id: adId },
+      data: { isSold: !ad.isSold },
+    });
+
+    const successMsg = updatedAd.isSold
+      ? 'Your item has been marked as Sold.'
+      : 'Your item is now marked as Available.';
+
+    return {
+      success: true,
+      message: await this.translationService.translate(successMsg, lang),
+      data: { id: updatedAd.id, isSold: updatedAd.isSold },
+    };
+  }
+
+  // --- RECORD VIEW (ট্রান্সলেশন সহ) ---
+  async recordView(adId: string, userId: string, lang: string = 'en') {
+    try {
+      const ad = await this.prisma.ad.findUnique({
+        where: { id: adId },
+        select: { viewerIds: true },
+      });
+
+      if (!ad) {
+        throw new NotFoundException(
+          await this.translationService.translate('Ad not found', lang),
+        );
+      }
+
+      if (!ad.viewerIds.includes(userId)) {
+        await this.prisma.ad.update({
+          where: { id: adId },
+          data: {
+            viewerIds: {
+              push: userId,
+            },
+          },
+        });
+      }
+
+      return {
+        success: true,
+        message: await this.translationService.translate('View recorded', lang),
+      };
+    } catch (error: any) {
+      if (error instanceof HttpException) throw error;
+      throw new InternalServerErrorException(
+        await this.translationService.translate(
+          error.message || 'Failed to record view',
+          lang,
+        ),
+      );
+    }
+  }
+
+  // --- GET AD VIEWERS (সেলার চেক এবং ট্রান্সলেশন সহ) ---
+  async getAdViewers(adId: string, sellerId: string, lang: string = 'en') {
+    try {
+      const ad = await this.prisma.ad.findUnique({
+        where: { id: adId },
+        select: { sellerId: true, viewerIds: true },
+      });
+
+      if (!ad) {
+        throw new NotFoundException(
+          await this.translationService.translate('Ad not found', lang),
+        );
+      }
+
+      if (ad.sellerId !== sellerId) {
+        throw new ForbiddenException(
+          await this.translationService.translate(
+            'You are not the owner of this ad',
+            lang,
+          ),
+        );
+      }
+
+      const viewers = await this.prisma.auth.findMany({
+        where: { id: { in: ad.viewerIds } },
+        select: {
+          id: true,
+          nickName: true,
+          profilePicture: true,
+          lastLogin: true,
+        },
+      });
+
+      return {
+        success: true,
+        totalViews: ad.viewerIds.length,
+        data: viewers,
+      };
+    } catch (error: any) {
+      if (error instanceof HttpException) throw error;
+      throw new InternalServerErrorException(
+        await this.translationService.translate(
+          error.message || 'Failed to fetch viewers',
+          lang,
+        ),
+      );
+    }
+  }
+
+  // --- GET ADS BY SELLER ID (লিস্ট ট্রান্সলেশন সহ) ---
   async getAdsBySellerId(sellerId: string, query: any) {
     try {
-      const { page = 1, limit = 10, isSold } = query;
+      const { page = 1, limit = 10, isSold, lang = 'en' } = query;
       const skip = (Number(page) - 1) * Number(limit);
 
       const where: any = { sellerId: sellerId };
@@ -516,7 +667,12 @@ export class AddService {
         }),
       ]);
 
-      const totalPage = Math.ceil(total / Number(limit));
+      // টাইটেল এবং ডেসক্রিপশন ট্রান্সলেশন
+      const translatedAds = await this.translationService.translateData(
+        ads,
+        ['title', 'description'],
+        lang,
+      );
 
       return {
         success: true,
@@ -524,109 +680,13 @@ export class AddService {
           total,
           page: Number(page),
           limit: Number(limit),
-          totalPage,
+          totalPage: Math.ceil(total / Number(limit)),
         },
-        data: ads.map((ad) => this.transformAdData(ad)),
+        data: translatedAds.map((ad) => this.transformAdData(ad)),
       };
     } catch (error: any) {
       console.error('Error fetching ads by seller:', error);
       throw new InternalServerErrorException(error.message);
-    }
-  }
-
-  async toggleSoldStatus(adId: string, sellerId: string) {
-    // ১. অ্যাডটি খুঁজে দেখা
-    const ad = await this.prisma.ad.findUnique({
-      where: { id: adId },
-      select: { id: true, sellerId: true, isSold: true },
-    });
-
-    if (!ad) throw new NotFoundException('Ad not found');
-    if (ad.sellerId !== sellerId) {
-      throw new ForbiddenException(
-        'You are not authorized to mark this ad as sold.',
-      );
-    }
-    const updatedAd = await this.prisma.ad.update({
-      where: { id: adId },
-      data: { isSold: !ad.isSold },
-    });
-
-    return {
-      success: true,
-      message: updatedAd.isSold
-        ? 'Your item has been marked as Sold.'
-        : 'Your item is now marked as Available.',
-      data: {
-        id: updatedAd.id,
-        isSold: updatedAd.isSold,
-      },
-    };
-  }
-
-  async recordView(adId: string, userId: string) {
-    try {
-      const ad = await this.prisma.ad.findUnique({
-        where: { id: adId },
-        select: { viewerIds: true },
-      });
-
-      if (!ad) throw new NotFoundException('Ad not found');
-
-      if (!ad.viewerIds.includes(userId)) {
-        await this.prisma.ad.update({
-          where: { id: adId },
-          data: {
-            viewerIds: {
-              push: userId,
-            },
-          },
-        });
-      }
-
-      return { success: true, message: 'View recorded' };
-    } catch (error: any) {
-      if (error instanceof HttpException) throw error;
-      throw new InternalServerErrorException(
-        error.message || 'Failed to record view',
-      );
-    }
-  }
-
-  async getAdViewers(adId: string, sellerId: string) {
-    try {
-      const ad = await this.prisma.ad.findUnique({
-        where: { id: adId },
-        select: { sellerId: true, viewerIds: true },
-      });
-
-      if (!ad) throw new NotFoundException('Ad not found');
-
-      if (ad.sellerId !== sellerId) {
-        throw new ForbiddenException('You are not the owner of this ad');
-      }
-
-      // Viewer details fetch kora
-      const viewers = await this.prisma.auth.findMany({
-        where: { id: { in: ad.viewerIds } },
-        select: {
-          id: true,
-          nickName: true,
-          profilePicture: true,
-          lastLogin: true,
-        },
-      });
-
-      return {
-        success: true,
-        totalViews: ad.viewerIds.length,
-        data: viewers,
-      };
-    } catch (error: any) {
-      if (error instanceof HttpException) throw error;
-      throw new InternalServerErrorException(
-        error.message || 'Failed to fetch viewers',
-      );
     }
   }
 }

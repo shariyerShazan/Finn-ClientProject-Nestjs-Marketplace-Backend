@@ -7,12 +7,14 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
-  ApiResponse,
+  // ApiResponse,
   ApiBearerAuth,
+  ApiQuery,
 } from '@nestjs/swagger';
 
 import {
@@ -22,7 +24,6 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
-// import { Role } from '@prisma/client';
 import { SubscriptionService } from './subscription.service';
 import { Role } from 'prisma/generated/prisma/enums';
 
@@ -36,44 +37,67 @@ export class SubscriptionController {
   @Roles(Role.ADMIN)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @ApiOperation({ summary: 'Create a new subscription plan (Admin Only)' })
-  @ApiResponse({ status: 201, description: 'Plan created successfully.' })
-  async create(@Body() createDto: CreateSubscriptionPlanDto) {
-    return await this.planService.createPlan(createDto);
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async create(
+    @Body() createDto: CreateSubscriptionPlanDto,
+    @Query('lang') lang: string = 'en',
+  ) {
+    return await this.planService.createPlan(createDto, lang);
   }
 
   @Get('all')
   @ApiOperation({ summary: 'Get all active subscription plans' })
-  @ApiResponse({ status: 200, description: 'Return all plans.' })
-  async findAll() {
-    return await this.planService.getAllPlans();
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async findAll(@Query('lang') lang: string = 'en') {
+    return await this.planService.getAllPlans(lang);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a single plan details' })
-  @ApiResponse({ status: 200, description: 'Return plan details.' })
-  @ApiResponse({ status: 404, description: 'Plan not found.' })
-  async findOne(@Param('id') id: string) {
-    return await this.planService.getSinglePlan(id);
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async findOne(@Param('id') id: string, @Query('lang') lang: string = 'en') {
+    return await this.planService.getSinglePlan(id, lang);
   }
 
   @Patch('update/:id')
   @Roles(Role.ADMIN)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @ApiOperation({ summary: 'Update a subscription plan (Admin Only)' })
-  @ApiResponse({ status: 200, description: 'Plan updated successfully.' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
   async update(
     @Param('id') id: string,
     @Body() updateDto: UpdateSubscriptionPlanDto,
+    @Query('lang') lang: string = 'en',
   ) {
-    return await this.planService.updatePlan(id, updateDto);
+    return await this.planService.updatePlan(id, updateDto, lang);
   }
 
   @Delete('delete/:id')
   @Roles(Role.ADMIN)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @ApiOperation({ summary: 'Delete a subscription plan (Admin Only)' })
-  @ApiResponse({ status: 200, description: 'Plan deleted successfully.' })
-  async remove(@Param('id') id: string) {
-    return await this.planService.deletePlan(id);
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async remove(@Param('id') id: string, @Query('lang') lang: string = 'en') {
+    return await this.planService.deletePlan(id, lang);
   }
 }

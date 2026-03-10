@@ -32,7 +32,6 @@ import { UpdateProfileDto } from './dto/UpdateProfileDto';
 import { SellerGuard } from 'src/auth/guards/seller.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
-// import { SellerBankGuard } from 'src/auth/guards/seller-bank.guard';
 
 @ApiTags('User & Seller Dashboard')
 @ApiBearerAuth()
@@ -43,12 +42,18 @@ export class UserController {
   @Post('create-seller-profile')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('SELLER')
-  // @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateSellerProfileDto })
-  // @ApiOperation({ summary: 'Create a seller profile (Only for Sellers)' })
-  async createProfile(@Req() req: any, @Body() dto: CreateSellerProfileDto) {
-    // console.log(req.user.id, dto);
-    return await this.userService.createSellerProfile(req.user.id, dto);
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async createProfile(
+    @Req() req: any,
+    @Body() dto: CreateSellerProfileDto,
+    @Query('lang') lang: string = 'en',
+  ) {
+    return await this.userService.createSellerProfile(req.user.id, dto, lang);
   }
 
   @Patch('update-profile')
@@ -56,12 +61,23 @@ export class UserController {
   @Roles('SELLER', 'USER')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('profilePicture'))
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
   async updateProfile(
     @Req() req: any,
     @Body() updateDto: UpdateProfileDto,
     @UploadedFile() file: Express.Multer.File,
+    @Query('lang') lang: string = 'en',
   ) {
-    return await this.userService.updateProfile(req.user.id, updateDto, file);
+    return await this.userService.updateProfile(
+      req.user.id,
+      updateDto,
+      file,
+      lang,
+    );
   }
 
   @Get('me')
@@ -71,14 +87,17 @@ export class UserController {
     return await this.userService.getMe(req.user.id);
   }
 
-  // --- SELLER SECTION ---
-
   @Get('my-ads')
   @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard)
   @Roles('SELLER')
   @ApiOperation({ summary: 'Seller: Get own ads with pagination & search' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
   @ApiQuery({
     name: 'search',
     required: false,
@@ -93,11 +112,17 @@ export class UserController {
   @Roles('SELLER')
   @ApiOperation({ summary: 'Seller: Get single ad details' })
   @ApiParam({ name: 'adId', description: 'UUID of the Advertisement' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
   async getSingleMyAd(
     @Req() req: any,
     @Param('adId', new ParseUUIDPipe()) adId: string,
+    @Query('lang') lang: string = 'en',
   ) {
-    return await this.userService.getSingleMyAd(req.user.id, adId);
+    return await this.userService.getSingleMyAd(req.user.id, adId, lang);
   }
 
   @Get('my-earnings')
@@ -106,17 +131,25 @@ export class UserController {
   @ApiOperation({ summary: 'Seller: Get payments received' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
   async getMyEarnings(@Req() req: any, @Query() query: any) {
     return await this.userService.getMyEarnings(req.user.id, query);
   }
-
-  // --- BUYER SECTION ---
 
   @Get('my-purchases')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Buyer: Get own purchase history' })
   @ApiQuery({ name: 'page', required: false, example: 1 })
   @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
   async getMyPurchases(@Req() req: any, @Query() query: any) {
     return await this.userService.getMyPurchases(req.user.id, query);
   }
@@ -125,43 +158,62 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get single payment details (For Buyer or Seller)' })
   @ApiParam({ name: 'paymentId', description: 'UUID of the Payment' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
   async getSinglePayment(
     @Req() req: any,
     @Param('paymentId', new ParseUUIDPipe()) id: string,
+    @Query('lang') lang: string = 'en',
   ) {
-    return await this.userService.getSinglePayment(req.user.id, id);
+    return await this.userService.getSinglePayment(req.user.id, id, lang);
   }
-
-  // --- SELLER DASHBOARD SECTION ---
 
   @Get('seller-stats')
   @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard)
   @Roles('SELLER')
-  @ApiOperation({
-    summary:
-      'Seller: Get dashboard statistics (Total Ads, Income, Sold, Views)',
+  @ApiOperation({ summary: 'Seller: Get dashboard statistics' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
   })
-  async getSellerStats(@Req() req: any) {
-    return await this.userService.getSellerDashboardStats(req.user.id);
+  async getSellerStats(@Req() req: any, @Query('lang') lang: string = 'en') {
+    return await this.userService.getSellerDashboardStats(req.user.id, lang);
   }
 
   @Get('seller-recent-ads')
   @UseGuards(JwtAuthGuard, RolesGuard, SellerGuard)
   @Roles('SELLER')
   @ApiOperation({ summary: 'Seller: Get latest 10 ads with search' })
+  @ApiQuery({ name: 'search', required: false })
   @ApiQuery({
-    name: 'search',
+    name: 'lang',
     required: false,
-    description: 'Search recent ads by title or description',
+    enum: ['en', 'no', 'se', 'dk', 'is'],
   })
-  async getRecentAds(@Req() req: any, @Query('search') search?: string) {
-    return await this.userService.getSellerRecentAds(req.user.id, { search });
+  async getRecentAds(
+    @Req() req: any,
+    @Query('search') search?: string,
+    @Query('lang') lang: string = 'en',
+  ) {
+    return await this.userService.getSellerRecentAds(req.user.id, {
+      search,
+      lang,
+    });
   }
 
   @Get('subscription/my-history')
   @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ summary: 'Get current seller payment history' })
-  async getMyHistory(@Req() req: any) {
-    return await this.userService.getMySubscriptions(req.user.id);
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
+  async getMyHistory(@Req() req: any, @Query('lang') lang: string = 'en') {
+    return await this.userService.getMySubscriptions(req.user.id, lang);
   }
 }

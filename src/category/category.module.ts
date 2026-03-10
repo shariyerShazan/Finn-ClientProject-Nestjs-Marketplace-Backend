@@ -3,10 +3,11 @@ import { CategoryService } from './category.service';
 import { CategoryController } from './category.controller';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
+import { TranslationService } from 'src/translation/translation.service';
 
 @Module({
   imports: [CloudinaryModule],
-  providers: [CategoryService, PrismaService],
+  providers: [CategoryService, PrismaService, TranslationService],
   controllers: [CategoryController],
 })
 export class CategoryModule {}

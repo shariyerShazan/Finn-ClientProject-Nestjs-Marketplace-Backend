@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 // /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -142,12 +142,18 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import Stripe from 'stripe';
 import { PrismaService } from '../prisma/prisma.service';
+import { AllMailService } from 'src/mail/all-mail.service';
+import { TranslationService } from 'src/translation/translation.service';
 
 @Injectable()
 export class StripeWebhookService {
   private stripe: Stripe;
 
-  constructor(private readonly prisma: PrismaService) {
+  constructor(
+    private readonly prisma: PrismaService,
+    // private readonly allMailService: AllMailService,
+    private readonly translationService: TranslationService,
+  ) {
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
       apiVersion: '2024-12-18.acacia' as any,
     });
@@ -165,6 +171,7 @@ export class StripeWebhookService {
     } catch (err: any) {
       throw new BadRequestException(`Webhook Error: ${err.message}`);
     }
+
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session;
       await this.activateSubscription(session);
@@ -174,24 +181,31 @@ export class StripeWebhookService {
   }
 
   private async activateSubscription(session: Stripe.Checkout.Session) {
-    const { planId, sellerId, type } = session.metadata || {};
+    const { planId, sellerId, type, lang = 'en' } = session.metadata || {};
     if (type !== 'SUBSCRIPTION_PURCHASE' || !planId || !sellerId) return;
 
     try {
-      await this.prisma.$transaction(async (tx) => {
+      const result = await this.prisma.$transaction(async (tx) => {
         const newPlan = await tx.subscriptionPlan.findUnique({
           where: { id: planId },
         });
 
         if (!newPlan) throw new Error('Plan not found');
 
+        const seller = await tx.auth.findUnique({
+          where: { id: sellerId },
+          select: { email: true, firstName: true },
+        });
+
+        if (!seller) throw new Error('Seller not found');
+
         const currentSub = await tx.subscription.findUnique({
           where: { sellerId: sellerId },
         });
 
+        const today = new Date();
         let finalEndDate: Date;
         let finalTotalLimit: number;
-        const today = new Date();
 
         if (
           currentSub &&
@@ -200,7 +214,6 @@ export class StripeWebhookService {
         ) {
           finalEndDate = new Date(currentSub.endDate);
           finalEndDate.setDate(finalEndDate.getDate() + newPlan.durationDays);
-
           finalTotalLimit = currentSub.totalLimit + newPlan.postLimit;
         } else {
           finalEndDate = new Date();
@@ -208,7 +221,7 @@ export class StripeWebhookService {
           finalTotalLimit = newPlan.postLimit;
         }
 
-        await tx.subscription.upsert({
+        const subscription = await tx.subscription.upsert({
           where: { sellerId: sellerId },
           update: {
             planId: newPlan.id,
@@ -229,7 +242,22 @@ export class StripeWebhookService {
             transactionId: session.id,
           },
         });
+
+        return { seller, newPlan, subscription };
       });
+      if (result) {
+        const { seller, newPlan } = result;
+        const subject = await this.translationService.translate(
+          'Subscription Activated!',
+          lang,
+        );
+        const body = await this.translationService.translate(
+          `Your ${newPlan.name} plan is now active. You have ${newPlan.postLimit} post limits added.`,
+          lang,
+        );
+
+        console.log(`Sending email to ${seller.email} in ${lang} language...`);
+      }
     } catch (error) {
       console.error('Webhook Merging Error:', error);
     }

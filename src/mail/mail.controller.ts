@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   Controller,
@@ -6,14 +5,27 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { AllMailService } from './all-mail.service';
+import { TranslationService } from 'src/translation/translation.service';
+import { ApiQuery, ApiTags, ApiOperation } from '@nestjs/swagger';
 
+@ApiTags('Mail & Support')
 @Controller('mail')
 export class MailController {
-  constructor(private readonly allMailService: AllMailService) {}
+  constructor(
+    private readonly allMailService: AllMailService,
+    private readonly translationService: TranslationService,
+  ) {}
 
   @Post('contact')
+  @ApiOperation({ summary: 'Send a contact message to admin' })
+  @ApiQuery({
+    name: 'lang',
+    required: false,
+    enum: ['en', 'no', 'se', 'dk', 'is'],
+  })
   async handleContactMessage(
     @Body()
     contactData: {
@@ -22,13 +34,16 @@ export class MailController {
       subject: string;
       message: string;
     },
+    @Query('lang') lang: string = 'en',
   ) {
     const { name, email, subject, message } = contactData;
 
-    // ১. বেসিক ভ্যালিডেশন
     if (!name || !email || !subject || !message) {
       throw new HttpException(
-        'All fields are required',
+        await this.translationService.translate(
+          'All fields are required',
+          lang,
+        ),
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -40,7 +55,6 @@ export class MailController {
         throw new Error('Admin email configuration is missing in .env');
       }
 
-      // ২. AllMailService থেকে ইমেল পাঠানো
       await this.allMailService.sendContactAdminEmail(adminEmail, {
         name,
         email,
@@ -50,14 +64,18 @@ export class MailController {
 
       return {
         success: true,
-        message: 'Your message has been sent successfully to Finn support!',
+        message: await this.translationService.translate(
+          'Your message has been sent successfully to Finn support!',
+          lang,
+        ),
       };
     } catch (err: any) {
-      // ৩. এরর হ্যান্ডেলিং
       console.error('Contact Mail Error:', err.message);
-
       throw new HttpException(
-        err.message || 'Failed to send email. Please try again later.',
+        await this.translationService.translate(
+          'Failed to send email. Please try again later.',
+          lang,
+        ),
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
