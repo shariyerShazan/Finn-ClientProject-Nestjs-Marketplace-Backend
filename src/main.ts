@@ -1,21 +1,29 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser'; // Fixed import
 import * as express from 'express';
 import { ValidationPipe } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path'; // <--- এইটা মাস্ট লাগবে
 
 async function bootstrap() {
-  // 1. Webhook er rawBody dorkar tai bodyParser false thakbe
-  const app = await NestFactory.create(AppModule, { bodyParser: false });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bodyParser: false,
+  });
 
+  // ১. স্ট্যাটিক ফাইল কনফিগারেশন
+  app.useStaticAssets(join(process.cwd(), 'public'));
+
+  // ২. বডি পার্সার লজিক (Stripe Webhook এর জন্য)
   app.use(
     express.json({
       limit: '50mb',
       verify: (req: any, res, buf) => {
-        if (req.originalUrl.includes('/webhooks/stripe')) {
+        // আপনার ইউআরএল যদি '/webhooks/stripe' হয় তবেই rawBody সেট হবে
+        if (req.originalUrl === '/webhooks/stripe') {
           req.rawBody = buf;
         }
       },
@@ -23,29 +31,23 @@ async function bootstrap() {
   );
 
   app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-
-  // 4. Cookie Parser
   app.use(cookieParser());
 
-  // 5. Global Validation Pipe (Fixes Frontend 400 Errors)
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
       stopAtFirstError: true,
       whitelist: true,
-      // Frontend theke extra field ashar risk thake, tai eita false kora safe
       forbidNonWhitelisted: false,
       transformOptions: { enableImplicitConversion: true },
     }),
   );
 
-  // 6. CORS Configuration (Credentials enable kora must for cookies)
   app.enableCors({
     origin: [
       'http://localhost:3000',
       'http://localhost:5173',
-      'http://localhost:5174',
-      'http://localhost:5175',
+      'https://zen-buy.com', // আপনার ফ্রন্টএন্ড ডোমেইন
       'https://finn-frontend-flame.vercel.app',
     ],
     credentials: true,
@@ -53,7 +55,7 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type,Accept,Authorization',
   });
 
-  // 7. Swagger Configuration
+  // ৪. Swagger
   const config = new DocumentBuilder()
     .setTitle('ByBench Marketplace API')
     .setDescription('The ByBench API description')
@@ -66,7 +68,15 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
 
   const port = process.env.PORT ?? 3000;
+  // VPS এ রান করার জন্য '0.0.0.0' থাকা ভালো
   await app.listen(port, '0.0.0.0');
-  console.log(`Server is running on: http://localhost:${port}/docs`);
+  console.log(`🚀 Server is running on: http://localhost:${port}/docs`);
 }
-bootstrap();
+
+// ৫. এরর হ্যান্ডলিং সহ বুটস্ট্র্যাপ রান করা
+bootstrap().catch((err) => {
+  console.error('💥 Error during bootstrap:', err);
+});
+
+// নিচের এই ভুল 'join' ফাংশনটি ডিলিট করে দিন:
+// function join(...) { throw new Error(...) }

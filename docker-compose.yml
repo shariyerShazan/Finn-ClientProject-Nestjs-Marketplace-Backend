@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: quadir
       POSTGRES_DB: shazan
     ports:
-      - "5434:5432"
+      - "5436:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
