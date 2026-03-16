@@ -68,6 +68,7 @@ export type AdMinAggregateOutputType = {
   sellerId: string | null
   categoryId: string | null
   subCategoryId: string | null
+  isBoosted: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -98,6 +99,7 @@ export type AdMaxAggregateOutputType = {
   sellerId: string | null
   categoryId: string | null
   subCategoryId: string | null
+  isBoosted: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -130,6 +132,7 @@ export type AdCountAggregateOutputType = {
   viewerIds: number
   categoryId: number
   subCategoryId: number
+  isBoosted: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -178,6 +181,7 @@ export type AdMinAggregateInputType = {
   sellerId?: true
   categoryId?: true
   subCategoryId?: true
+  isBoosted?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -208,6 +212,7 @@ export type AdMaxAggregateInputType = {
   sellerId?: true
   categoryId?: true
   subCategoryId?: true
+  isBoosted?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -240,6 +245,7 @@ export type AdCountAggregateInputType = {
   viewerIds?: true
   categoryId?: true
   subCategoryId?: true
+  isBoosted?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -359,6 +365,7 @@ export type AdGroupByOutputType = {
   viewerIds: string[]
   categoryId: string
   subCategoryId: string
+  isBoosted: boolean
   createdAt: Date
   updatedAt: Date
   _count: AdCountAggregateOutputType | null
@@ -414,6 +421,7 @@ export type AdWhereInput = {
   viewerIds?: Prisma.StringNullableListFilter<"Ad">
   categoryId?: Prisma.StringFilter<"Ad"> | string
   subCategoryId?: Prisma.StringFilter<"Ad"> | string
+  isBoosted?: Prisma.BoolFilter<"Ad"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Ad"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Ad"> | Date | string
   buyer?: Prisma.XOR<Prisma.AuthNullableScalarRelationFilter, Prisma.AuthWhereInput> | null
@@ -423,6 +431,7 @@ export type AdWhereInput = {
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   subCategory?: Prisma.XOR<Prisma.SubCategoryScalarRelationFilter, Prisma.SubCategoryWhereInput>
   notifications?: Prisma.NotificationListRelationFilter
+  boost?: Prisma.XOR<Prisma.AdBoostNullableScalarRelationFilter, Prisma.AdBoostWhereInput> | null
   bids?: Prisma.BidListRelationFilter
   comments?: Prisma.CommentListRelationFilter
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
@@ -456,6 +465,7 @@ export type AdOrderByWithRelationInput = {
   viewerIds?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   subCategoryId?: Prisma.SortOrder
+  isBoosted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   buyer?: Prisma.AuthOrderByWithRelationInput
@@ -465,6 +475,7 @@ export type AdOrderByWithRelationInput = {
   category?: Prisma.CategoryOrderByWithRelationInput
   subCategory?: Prisma.SubCategoryOrderByWithRelationInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
+  boost?: Prisma.AdBoostOrderByWithRelationInput
   bids?: Prisma.BidOrderByRelationAggregateInput
   comments?: Prisma.CommentOrderByRelationAggregateInput
   payment?: Prisma.PaymentOrderByWithRelationInput
@@ -501,6 +512,7 @@ export type AdWhereUniqueInput = Prisma.AtLeast<{
   viewerIds?: Prisma.StringNullableListFilter<"Ad">
   categoryId?: Prisma.StringFilter<"Ad"> | string
   subCategoryId?: Prisma.StringFilter<"Ad"> | string
+  isBoosted?: Prisma.BoolFilter<"Ad"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Ad"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Ad"> | Date | string
   buyer?: Prisma.XOR<Prisma.AuthNullableScalarRelationFilter, Prisma.AuthWhereInput> | null
@@ -510,6 +522,7 @@ export type AdWhereUniqueInput = Prisma.AtLeast<{
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   subCategory?: Prisma.XOR<Prisma.SubCategoryScalarRelationFilter, Prisma.SubCategoryWhereInput>
   notifications?: Prisma.NotificationListRelationFilter
+  boost?: Prisma.XOR<Prisma.AdBoostNullableScalarRelationFilter, Prisma.AdBoostWhereInput> | null
   bids?: Prisma.BidListRelationFilter
   comments?: Prisma.CommentListRelationFilter
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
@@ -543,6 +556,7 @@ export type AdOrderByWithAggregationInput = {
   viewerIds?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   subCategoryId?: Prisma.SortOrder
+  isBoosted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.AdCountOrderByAggregateInput
@@ -583,6 +597,7 @@ export type AdScalarWhereWithAggregatesInput = {
   viewerIds?: Prisma.StringNullableListFilter<"Ad">
   categoryId?: Prisma.StringWithAggregatesFilter<"Ad"> | string
   subCategoryId?: Prisma.StringWithAggregatesFilter<"Ad"> | string
+  isBoosted?: Prisma.BoolWithAggregatesFilter<"Ad"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Ad"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Ad"> | Date | string
 }
@@ -611,6 +626,7 @@ export type AdCreateInput = {
   allowEmail?: boolean
   isSold?: boolean
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   buyer?: Prisma.AuthCreateNestedOneWithoutBoughtAdsInput
@@ -620,6 +636,7 @@ export type AdCreateInput = {
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostCreateNestedOneWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
@@ -653,11 +670,13 @@ export type AdUncheckedCreateInput = {
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
   categoryId: string
   subCategoryId: string
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostUncheckedCreateNestedOneWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
@@ -687,6 +706,7 @@ export type AdUpdateInput = {
   allowEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   buyer?: Prisma.AuthUpdateOneWithoutBoughtAdsNestedInput
@@ -696,6 +716,7 @@ export type AdUpdateInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
@@ -729,11 +750,13 @@ export type AdUncheckedUpdateInput = {
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUncheckedUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
@@ -767,6 +790,7 @@ export type AdCreateManyInput = {
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
   categoryId: string
   subCategoryId: string
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -795,6 +819,7 @@ export type AdUpdateManyMutationInput = {
   allowEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -827,6 +852,7 @@ export type AdUncheckedUpdateManyInput = {
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -877,6 +903,7 @@ export type AdCountOrderByAggregateInput = {
   viewerIds?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   subCategoryId?: Prisma.SortOrder
+  isBoosted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -915,6 +942,7 @@ export type AdMaxOrderByAggregateInput = {
   sellerId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   subCategoryId?: Prisma.SortOrder
+  isBoosted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -945,6 +973,7 @@ export type AdMinOrderByAggregateInput = {
   sellerId?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   subCategoryId?: Prisma.SortOrder
+  isBoosted?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1246,6 +1275,20 @@ export type AdUpdateOneWithoutNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AdUpdateToOneWithWhereWithoutNotificationsInput, Prisma.AdUpdateWithoutNotificationsInput>, Prisma.AdUncheckedUpdateWithoutNotificationsInput>
 }
 
+export type AdCreateNestedOneWithoutBoostInput = {
+  create?: Prisma.XOR<Prisma.AdCreateWithoutBoostInput, Prisma.AdUncheckedCreateWithoutBoostInput>
+  connectOrCreate?: Prisma.AdCreateOrConnectWithoutBoostInput
+  connect?: Prisma.AdWhereUniqueInput
+}
+
+export type AdUpdateOneRequiredWithoutBoostNestedInput = {
+  create?: Prisma.XOR<Prisma.AdCreateWithoutBoostInput, Prisma.AdUncheckedCreateWithoutBoostInput>
+  connectOrCreate?: Prisma.AdCreateOrConnectWithoutBoostInput
+  upsert?: Prisma.AdUpsertWithoutBoostInput
+  connect?: Prisma.AdWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdUpdateToOneWithWhereWithoutBoostInput, Prisma.AdUpdateWithoutBoostInput>, Prisma.AdUncheckedUpdateWithoutBoostInput>
+}
+
 export type AdCreateWithoutSellerInput = {
   id?: string
   title: string
@@ -1270,6 +1313,7 @@ export type AdCreateWithoutSellerInput = {
   allowEmail?: boolean
   isSold?: boolean
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   buyer?: Prisma.AuthCreateNestedOneWithoutBoughtAdsInput
@@ -1278,6 +1322,7 @@ export type AdCreateWithoutSellerInput = {
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostCreateNestedOneWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
@@ -1310,11 +1355,13 @@ export type AdUncheckedCreateWithoutSellerInput = {
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
   categoryId: string
   subCategoryId: string
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostUncheckedCreateNestedOneWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
@@ -1354,6 +1401,7 @@ export type AdCreateWithoutBuyerInput = {
   allowEmail?: boolean
   isSold?: boolean
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   seller: Prisma.AuthCreateNestedOneWithoutPostedAdsInput
@@ -1362,6 +1410,7 @@ export type AdCreateWithoutBuyerInput = {
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostCreateNestedOneWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
@@ -1394,11 +1443,13 @@ export type AdUncheckedCreateWithoutBuyerInput = {
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
   categoryId: string
   subCategoryId: string
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostUncheckedCreateNestedOneWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
@@ -1461,6 +1512,7 @@ export type AdScalarWhereInput = {
   viewerIds?: Prisma.StringNullableListFilter<"Ad">
   categoryId?: Prisma.StringFilter<"Ad"> | string
   subCategoryId?: Prisma.StringFilter<"Ad"> | string
+  isBoosted?: Prisma.BoolFilter<"Ad"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Ad"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Ad"> | Date | string
 }
@@ -1505,6 +1557,7 @@ export type AdCreateWithoutCategoryInput = {
   allowEmail?: boolean
   isSold?: boolean
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   buyer?: Prisma.AuthCreateNestedOneWithoutBoughtAdsInput
@@ -1513,6 +1566,7 @@ export type AdCreateWithoutCategoryInput = {
   images?: Prisma.AdImageCreateNestedManyWithoutAdInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostCreateNestedOneWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
@@ -1545,11 +1599,13 @@ export type AdUncheckedCreateWithoutCategoryInput = {
   sellerId: string
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
   subCategoryId: string
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostUncheckedCreateNestedOneWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
@@ -1605,6 +1661,7 @@ export type AdCreateWithoutSubCategoryInput = {
   allowEmail?: boolean
   isSold?: boolean
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   buyer?: Prisma.AuthCreateNestedOneWithoutBoughtAdsInput
@@ -1613,6 +1670,7 @@ export type AdCreateWithoutSubCategoryInput = {
   images?: Prisma.AdImageCreateNestedManyWithoutAdInput
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostCreateNestedOneWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
@@ -1645,11 +1703,13 @@ export type AdUncheckedCreateWithoutSubCategoryInput = {
   sellerId: string
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
   categoryId: string
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostUncheckedCreateNestedOneWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
@@ -1705,6 +1765,7 @@ export type AdCreateWithoutReportsInput = {
   allowEmail?: boolean
   isSold?: boolean
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   buyer?: Prisma.AuthCreateNestedOneWithoutBoughtAdsInput
@@ -1713,6 +1774,7 @@ export type AdCreateWithoutReportsInput = {
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostCreateNestedOneWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
@@ -1746,10 +1808,12 @@ export type AdUncheckedCreateWithoutReportsInput = {
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
   categoryId: string
   subCategoryId: string
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostUncheckedCreateNestedOneWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
@@ -1795,6 +1859,7 @@ export type AdUpdateWithoutReportsInput = {
   allowEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   buyer?: Prisma.AuthUpdateOneWithoutBoughtAdsNestedInput
@@ -1803,6 +1868,7 @@ export type AdUpdateWithoutReportsInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
@@ -1836,10 +1902,12 @@ export type AdUncheckedUpdateWithoutReportsInput = {
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUncheckedUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
@@ -1869,6 +1937,7 @@ export type AdCreateWithoutCommentsInput = {
   allowEmail?: boolean
   isSold?: boolean
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   buyer?: Prisma.AuthCreateNestedOneWithoutBoughtAdsInput
@@ -1878,6 +1947,7 @@ export type AdCreateWithoutCommentsInput = {
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostCreateNestedOneWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
 }
@@ -1910,11 +1980,13 @@ export type AdUncheckedCreateWithoutCommentsInput = {
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
   categoryId: string
   subCategoryId: string
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostUncheckedCreateNestedOneWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
 }
@@ -1959,6 +2031,7 @@ export type AdUpdateWithoutCommentsInput = {
   allowEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   buyer?: Prisma.AuthUpdateOneWithoutBoughtAdsNestedInput
@@ -1968,6 +2041,7 @@ export type AdUpdateWithoutCommentsInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
 }
@@ -2000,11 +2074,13 @@ export type AdUncheckedUpdateWithoutCommentsInput = {
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUncheckedUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
 }
@@ -2033,6 +2109,7 @@ export type AdCreateWithoutImagesInput = {
   allowEmail?: boolean
   isSold?: boolean
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   buyer?: Prisma.AuthCreateNestedOneWithoutBoughtAdsInput
@@ -2041,6 +2118,7 @@ export type AdCreateWithoutImagesInput = {
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostCreateNestedOneWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
@@ -2074,10 +2152,12 @@ export type AdUncheckedCreateWithoutImagesInput = {
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
   categoryId: string
   subCategoryId: string
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostUncheckedCreateNestedOneWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
@@ -2123,6 +2203,7 @@ export type AdUpdateWithoutImagesInput = {
   allowEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   buyer?: Prisma.AuthUpdateOneWithoutBoughtAdsNestedInput
@@ -2131,6 +2212,7 @@ export type AdUpdateWithoutImagesInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
@@ -2164,10 +2246,12 @@ export type AdUncheckedUpdateWithoutImagesInput = {
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUncheckedUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
@@ -2197,6 +2281,7 @@ export type AdCreateWithoutBidsInput = {
   allowEmail?: boolean
   isSold?: boolean
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   buyer?: Prisma.AuthCreateNestedOneWithoutBoughtAdsInput
@@ -2206,6 +2291,7 @@ export type AdCreateWithoutBidsInput = {
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostCreateNestedOneWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
 }
@@ -2238,11 +2324,13 @@ export type AdUncheckedCreateWithoutBidsInput = {
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
   categoryId: string
   subCategoryId: string
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostUncheckedCreateNestedOneWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
 }
@@ -2287,6 +2375,7 @@ export type AdUpdateWithoutBidsInput = {
   allowEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   buyer?: Prisma.AuthUpdateOneWithoutBoughtAdsNestedInput
@@ -2296,6 +2385,7 @@ export type AdUpdateWithoutBidsInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUpdateOneWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
 }
@@ -2328,11 +2418,13 @@ export type AdUncheckedUpdateWithoutBidsInput = {
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUncheckedUpdateOneWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
 }
@@ -2361,6 +2453,7 @@ export type AdCreateWithoutPaymentInput = {
   allowEmail?: boolean
   isSold?: boolean
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   buyer?: Prisma.AuthCreateNestedOneWithoutBoughtAdsInput
@@ -2370,6 +2463,7 @@ export type AdCreateWithoutPaymentInput = {
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostCreateNestedOneWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
 }
@@ -2402,11 +2496,13 @@ export type AdUncheckedCreateWithoutPaymentInput = {
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
   categoryId: string
   subCategoryId: string
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostUncheckedCreateNestedOneWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
 }
@@ -2451,6 +2547,7 @@ export type AdUpdateWithoutPaymentInput = {
   allowEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   buyer?: Prisma.AuthUpdateOneWithoutBoughtAdsNestedInput
@@ -2460,6 +2557,7 @@ export type AdUpdateWithoutPaymentInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
 }
@@ -2492,11 +2590,13 @@ export type AdUncheckedUpdateWithoutPaymentInput = {
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUncheckedUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
 }
@@ -2525,6 +2625,7 @@ export type AdCreateWithoutNotificationsInput = {
   allowEmail?: boolean
   isSold?: boolean
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   buyer?: Prisma.AuthCreateNestedOneWithoutBoughtAdsInput
@@ -2533,6 +2634,7 @@ export type AdCreateWithoutNotificationsInput = {
   images?: Prisma.AdImageCreateNestedManyWithoutAdInput
   category: Prisma.CategoryCreateNestedOneWithoutAdsInput
   subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
+  boost?: Prisma.AdBoostCreateNestedOneWithoutAdInput
   bids?: Prisma.BidCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
@@ -2566,10 +2668,12 @@ export type AdUncheckedCreateWithoutNotificationsInput = {
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
   categoryId: string
   subCategoryId: string
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
   images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
+  boost?: Prisma.AdBoostUncheckedCreateNestedOneWithoutAdInput
   bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
@@ -2615,6 +2719,7 @@ export type AdUpdateWithoutNotificationsInput = {
   allowEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   buyer?: Prisma.AuthUpdateOneWithoutBoughtAdsNestedInput
@@ -2623,6 +2728,7 @@ export type AdUpdateWithoutNotificationsInput = {
   images?: Prisma.AdImageUpdateManyWithoutAdNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
+  boost?: Prisma.AdBoostUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
@@ -2656,10 +2762,184 @@ export type AdUncheckedUpdateWithoutNotificationsInput = {
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUncheckedUpdateOneWithoutAdNestedInput
+  bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
+  payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
+}
+
+export type AdCreateWithoutBoostInput = {
+  id?: string
+  title: string
+  description: string
+  type?: $Enums.AdType
+  price?: number | null
+  basePrice?: number | null
+  releasePrice?: number | null
+  propertyFor?: $Enums.PropertyFor
+  rentalPeriod?: string | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  latitude?: number | null
+  longitude?: number | null
+  specifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  country?: string
+  state: string
+  city: string
+  zipCode?: string | null
+  showAddress?: boolean
+  allowPhone?: boolean
+  allowEmail?: boolean
+  isSold?: boolean
+  viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
+  isBoosted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  buyer?: Prisma.AuthCreateNestedOneWithoutBoughtAdsInput
+  seller: Prisma.AuthCreateNestedOneWithoutPostedAdsInput
+  reports?: Prisma.ReportCreateNestedManyWithoutAdInput
+  images?: Prisma.AdImageCreateNestedManyWithoutAdInput
+  category: Prisma.CategoryCreateNestedOneWithoutAdsInput
+  subCategory: Prisma.SubCategoryCreateNestedOneWithoutAdsInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutAdInput
+  bids?: Prisma.BidCreateNestedManyWithoutAdInput
+  comments?: Prisma.CommentCreateNestedManyWithoutAdInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutAdInput
+}
+
+export type AdUncheckedCreateWithoutBoostInput = {
+  id?: string
+  title: string
+  description: string
+  type?: $Enums.AdType
+  price?: number | null
+  basePrice?: number | null
+  releasePrice?: number | null
+  propertyFor?: $Enums.PropertyFor
+  rentalPeriod?: string | null
+  startTime?: Date | string | null
+  endTime?: Date | string | null
+  latitude?: number | null
+  longitude?: number | null
+  specifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  country?: string
+  state: string
+  city: string
+  zipCode?: string | null
+  showAddress?: boolean
+  allowPhone?: boolean
+  allowEmail?: boolean
+  isSold?: boolean
+  buyerId?: string | null
+  sellerId: string
+  viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
+  categoryId: string
+  subCategoryId: string
+  isBoosted?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutAdInput
+  images?: Prisma.AdImageUncheckedCreateNestedManyWithoutAdInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutAdInput
+  bids?: Prisma.BidUncheckedCreateNestedManyWithoutAdInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAdInput
+  payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutAdInput
+}
+
+export type AdCreateOrConnectWithoutBoostInput = {
+  where: Prisma.AdWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdCreateWithoutBoostInput, Prisma.AdUncheckedCreateWithoutBoostInput>
+}
+
+export type AdUpsertWithoutBoostInput = {
+  update: Prisma.XOR<Prisma.AdUpdateWithoutBoostInput, Prisma.AdUncheckedUpdateWithoutBoostInput>
+  create: Prisma.XOR<Prisma.AdCreateWithoutBoostInput, Prisma.AdUncheckedCreateWithoutBoostInput>
+  where?: Prisma.AdWhereInput
+}
+
+export type AdUpdateToOneWithWhereWithoutBoostInput = {
+  where?: Prisma.AdWhereInput
+  data: Prisma.XOR<Prisma.AdUpdateWithoutBoostInput, Prisma.AdUncheckedUpdateWithoutBoostInput>
+}
+
+export type AdUpdateWithoutBoostInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumAdTypeFieldUpdateOperationsInput | $Enums.AdType
+  price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  basePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  releasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  propertyFor?: Prisma.EnumPropertyForFieldUpdateOperationsInput | $Enums.PropertyFor
+  rentalPeriod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  specifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showAddress?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowPhone?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  buyer?: Prisma.AuthUpdateOneWithoutBoughtAdsNestedInput
+  seller?: Prisma.AuthUpdateOneRequiredWithoutPostedAdsNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutAdNestedInput
+  images?: Prisma.AdImageUpdateManyWithoutAdNestedInput
+  category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
+  subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
+  bids?: Prisma.BidUpdateManyWithoutAdNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
+}
+
+export type AdUncheckedUpdateWithoutBoostInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumAdTypeFieldUpdateOperationsInput | $Enums.AdType
+  price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  basePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  releasePrice?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  propertyFor?: Prisma.EnumPropertyForFieldUpdateOperationsInput | $Enums.PropertyFor
+  rentalPeriod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  specifications?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  country?: Prisma.StringFieldUpdateOperationsInput | string
+  state?: Prisma.StringFieldUpdateOperationsInput | string
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  zipCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  showAddress?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowPhone?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  allowEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  buyerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sellerId?: Prisma.StringFieldUpdateOperationsInput | string
+  viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
+  images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
@@ -2692,6 +2972,7 @@ export type AdCreateManySellerInput = {
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
   categoryId: string
   subCategoryId: string
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2723,6 +3004,7 @@ export type AdCreateManyBuyerInput = {
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
   categoryId: string
   subCategoryId: string
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2751,6 +3033,7 @@ export type AdUpdateWithoutSellerInput = {
   allowEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   buyer?: Prisma.AuthUpdateOneWithoutBoughtAdsNestedInput
@@ -2759,6 +3042,7 @@ export type AdUpdateWithoutSellerInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
@@ -2791,11 +3075,13 @@ export type AdUncheckedUpdateWithoutSellerInput = {
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUncheckedUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
@@ -2828,6 +3114,7 @@ export type AdUncheckedUpdateManyWithoutSellerInput = {
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2856,6 +3143,7 @@ export type AdUpdateWithoutBuyerInput = {
   allowEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   seller?: Prisma.AuthUpdateOneRequiredWithoutPostedAdsNestedInput
@@ -2864,6 +3152,7 @@ export type AdUpdateWithoutBuyerInput = {
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
@@ -2896,11 +3185,13 @@ export type AdUncheckedUpdateWithoutBuyerInput = {
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUncheckedUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
@@ -2933,6 +3224,7 @@ export type AdUncheckedUpdateManyWithoutBuyerInput = {
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2964,6 +3256,7 @@ export type AdCreateManyCategoryInput = {
   sellerId: string
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
   subCategoryId: string
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2992,6 +3285,7 @@ export type AdUpdateWithoutCategoryInput = {
   allowEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   buyer?: Prisma.AuthUpdateOneWithoutBoughtAdsNestedInput
@@ -3000,6 +3294,7 @@ export type AdUpdateWithoutCategoryInput = {
   images?: Prisma.AdImageUpdateManyWithoutAdNestedInput
   subCategory?: Prisma.SubCategoryUpdateOneRequiredWithoutAdsNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
@@ -3032,11 +3327,13 @@ export type AdUncheckedUpdateWithoutCategoryInput = {
   sellerId?: Prisma.StringFieldUpdateOperationsInput | string
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
   subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUncheckedUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
@@ -3069,6 +3366,7 @@ export type AdUncheckedUpdateManyWithoutCategoryInput = {
   sellerId?: Prisma.StringFieldUpdateOperationsInput | string
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
   subCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -3100,6 +3398,7 @@ export type AdCreateManySubCategoryInput = {
   sellerId: string
   viewerIds?: Prisma.AdCreateviewerIdsInput | string[]
   categoryId: string
+  isBoosted?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -3128,6 +3427,7 @@ export type AdUpdateWithoutSubCategoryInput = {
   allowEmail?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isSold?: Prisma.BoolFieldUpdateOperationsInput | boolean
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   buyer?: Prisma.AuthUpdateOneWithoutBoughtAdsNestedInput
@@ -3136,6 +3436,7 @@ export type AdUpdateWithoutSubCategoryInput = {
   images?: Prisma.AdImageUpdateManyWithoutAdNestedInput
   category?: Prisma.CategoryUpdateOneRequiredWithoutAdsNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutAdNestedInput
@@ -3168,11 +3469,13 @@ export type AdUncheckedUpdateWithoutSubCategoryInput = {
   sellerId?: Prisma.StringFieldUpdateOperationsInput | string
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reports?: Prisma.ReportUncheckedUpdateManyWithoutAdNestedInput
   images?: Prisma.AdImageUncheckedUpdateManyWithoutAdNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutAdNestedInput
+  boost?: Prisma.AdBoostUncheckedUpdateOneWithoutAdNestedInput
   bids?: Prisma.BidUncheckedUpdateManyWithoutAdNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAdNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutAdNestedInput
@@ -3205,6 +3508,7 @@ export type AdUncheckedUpdateManyWithoutSubCategoryInput = {
   sellerId?: Prisma.StringFieldUpdateOperationsInput | string
   viewerIds?: Prisma.AdUpdateviewerIdsInput | string[]
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  isBoosted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -3304,6 +3608,7 @@ export type AdSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
   viewerIds?: boolean
   categoryId?: boolean
   subCategoryId?: boolean
+  isBoosted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   buyer?: boolean | Prisma.Ad$buyerArgs<ExtArgs>
@@ -3313,6 +3618,7 @@ export type AdSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   subCategory?: boolean | Prisma.SubCategoryDefaultArgs<ExtArgs>
   notifications?: boolean | Prisma.Ad$notificationsArgs<ExtArgs>
+  boost?: boolean | Prisma.Ad$boostArgs<ExtArgs>
   bids?: boolean | Prisma.Ad$bidsArgs<ExtArgs>
   comments?: boolean | Prisma.Ad$commentsArgs<ExtArgs>
   payment?: boolean | Prisma.Ad$paymentArgs<ExtArgs>
@@ -3347,6 +3653,7 @@ export type AdSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions
   viewerIds?: boolean
   categoryId?: boolean
   subCategoryId?: boolean
+  isBoosted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   buyer?: boolean | Prisma.Ad$buyerArgs<ExtArgs>
@@ -3383,6 +3690,7 @@ export type AdSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions
   viewerIds?: boolean
   categoryId?: boolean
   subCategoryId?: boolean
+  isBoosted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   buyer?: boolean | Prisma.Ad$buyerArgs<ExtArgs>
@@ -3419,11 +3727,12 @@ export type AdSelectScalar = {
   viewerIds?: boolean
   categoryId?: boolean
   subCategoryId?: boolean
+  isBoosted?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AdOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "type" | "price" | "basePrice" | "releasePrice" | "propertyFor" | "rentalPeriod" | "startTime" | "endTime" | "latitude" | "longitude" | "specifications" | "country" | "state" | "city" | "zipCode" | "showAddress" | "allowPhone" | "allowEmail" | "isSold" | "buyerId" | "sellerId" | "viewerIds" | "categoryId" | "subCategoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["ad"]>
+export type AdOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "type" | "price" | "basePrice" | "releasePrice" | "propertyFor" | "rentalPeriod" | "startTime" | "endTime" | "latitude" | "longitude" | "specifications" | "country" | "state" | "city" | "zipCode" | "showAddress" | "allowPhone" | "allowEmail" | "isSold" | "buyerId" | "sellerId" | "viewerIds" | "categoryId" | "subCategoryId" | "isBoosted" | "createdAt" | "updatedAt", ExtArgs["result"]["ad"]>
 export type AdInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   buyer?: boolean | Prisma.Ad$buyerArgs<ExtArgs>
   seller?: boolean | Prisma.AuthDefaultArgs<ExtArgs>
@@ -3432,6 +3741,7 @@ export type AdInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   subCategory?: boolean | Prisma.SubCategoryDefaultArgs<ExtArgs>
   notifications?: boolean | Prisma.Ad$notificationsArgs<ExtArgs>
+  boost?: boolean | Prisma.Ad$boostArgs<ExtArgs>
   bids?: boolean | Prisma.Ad$bidsArgs<ExtArgs>
   comments?: boolean | Prisma.Ad$commentsArgs<ExtArgs>
   payment?: boolean | Prisma.Ad$paymentArgs<ExtArgs>
@@ -3460,6 +3770,7 @@ export type $AdPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
     category: Prisma.$CategoryPayload<ExtArgs>
     subCategory: Prisma.$SubCategoryPayload<ExtArgs>
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
+    boost: Prisma.$AdBoostPayload<ExtArgs> | null
     bids: Prisma.$BidPayload<ExtArgs>[]
     comments: Prisma.$CommentPayload<ExtArgs>[]
     payment: Prisma.$PaymentPayload<ExtArgs> | null
@@ -3492,6 +3803,7 @@ export type $AdPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
     viewerIds: string[]
     categoryId: string
     subCategoryId: string
+    isBoosted: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["ad"]>
@@ -3895,6 +4207,7 @@ export interface Prisma__AdClient<T, Null = never, ExtArgs extends runtime.Types
   category<T extends Prisma.CategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   subCategory<T extends Prisma.SubCategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SubCategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__SubCategoryClient<runtime.Types.Result.GetResult<Prisma.$SubCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   notifications<T extends Prisma.Ad$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Ad$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  boost<T extends Prisma.Ad$boostArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Ad$boostArgs<ExtArgs>>): Prisma.Prisma__AdBoostClient<runtime.Types.Result.GetResult<Prisma.$AdBoostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   bids<T extends Prisma.Ad$bidsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Ad$bidsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BidPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   comments<T extends Prisma.Ad$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Ad$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payment<T extends Prisma.Ad$paymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Ad$paymentArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -3954,6 +4267,7 @@ export interface AdFieldRefs {
   readonly viewerIds: Prisma.FieldRef<"Ad", 'String[]'>
   readonly categoryId: Prisma.FieldRef<"Ad", 'String'>
   readonly subCategoryId: Prisma.FieldRef<"Ad", 'String'>
+  readonly isBoosted: Prisma.FieldRef<"Ad", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Ad", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Ad", 'DateTime'>
 }
@@ -4440,6 +4754,25 @@ export type Ad$notificationsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
+}
+
+/**
+ * Ad.boost
+ */
+export type Ad$boostArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AdBoost
+   */
+  select?: Prisma.AdBoostSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AdBoost
+   */
+  omit?: Prisma.AdBoostOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdBoostInclude<ExtArgs> | null
+  where?: Prisma.AdBoostWhereInput
 }
 
 /**

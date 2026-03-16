@@ -91,7 +91,37 @@ export class PaymentController {
     return await this.paymentService.createCheckoutSession(userId, planId);
   }
 
-  @Get('all-history')
+  @Post('create-boost-session')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Create Stripe Checkout Session for Ad Boost' })
+  async createBoostCheckout(
+    @Req() req: any,
+    @Body() dto: { adId: string; packageId: string },
+  ) {
+    return await this.paymentService.createBoostCheckoutSession(
+      req.user.id,
+      dto.adId,
+      dto.packageId,
+    );
+  }
+
+  @Get('boost-history')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Get personal boost history (Seller)' })
+  async getMyBoosts(@Req() req: any) {
+    return await this.paymentService.getUserBoostHistory(req.user.id);
+  }
+
+  // --- Admin History ---
+  @Get('all-boost-history')
+  @Roles(Role.ADMIN)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @ApiOperation({ summary: 'Get all boost history (Admin Only)' })
+  async getAllBoosts() {
+    return await this.paymentService.getAllBoostHistory();
+  }
+
+  @Get('all-sub-history')
   @Roles(Role.ADMIN)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @ApiOperation({ summary: 'Get all payment history (Admin Only)' })
@@ -99,7 +129,7 @@ export class PaymentController {
     return await this.paymentService.getAllSubscriptions();
   }
 
-  @Get('history/:id')
+  @Get('sub-history/:id')
   @Roles(Role.ADMIN)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @ApiOperation({ summary: 'Get single payment details' })

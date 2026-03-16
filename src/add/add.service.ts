@@ -369,15 +369,26 @@ export class AddService {
       )
         where.subCategoryId = subCategoryId;
 
-      const orderBy: any = sortByPrice
-        ? { price: sortByPrice as 'asc' | 'desc' }
-        : { createdAt: 'desc' };
+      const orderBy: any = [
+        { isBoosted: 'desc' },
+        sortByPrice
+          ? { price: sortByPrice as 'asc' | 'desc' }
+          : { createdAt: 'desc' },
+      ];
 
       const [total, ads] = await Promise.all([
         this.prisma.ad.count({ where }),
         this.prisma.ad.findMany({
           where,
-          include: { images: true, category: true, seller: true },
+          include: {
+            images: true,
+            category: true,
+            seller: true,
+            boost: {
+              include: { package: { select: { name: true } } },
+            },
+          },
+
           orderBy,
           skip,
           take: Number(limit),

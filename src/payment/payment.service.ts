@@ -138,6 +138,7 @@ import {
   Injectable,
   NotFoundException,
   InternalServerErrorException,
+  HttpException,
   // ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
@@ -247,5 +248,81 @@ export class PaymentService {
         'Failed to fetch subscription details',
       );
     }
+  }
+
+  async createBoostCheckoutSession(
+    userId: string,
+    adId: string,
+    packageId: string,
+  ) {
+    try {
+      const [ad, pkg] = await Promise.all([
+        this.prisma.ad.findUnique({ where: { id: adId } }),
+        this.prisma.adBoostPackage.findUnique({ where: { id: packageId } }),
+      ]);
+
+      if (!ad) throw new NotFoundException('Ad not found');
+      if (!pkg) throw new NotFoundException('Boost package not found');
+
+      const session = await this.stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'pln',
+              product_data: {
+                name: `Boost: ${pkg.name}`,
+                description: `Boosting Ad: ${ad.title} for ${pkg.durationDays} days.`,
+              },
+              unit_amount: Math.round(pkg.price * 100),
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: `${process.env.FRONTEND_URL}/seller/dashboard/my-ads?status=success`,
+        cancel_url: `${process.env.FRONTEND_URL}/seller/dashboard/my-ads?status=cancel`,
+        metadata: {
+          sellerId: userId,
+          adId: ad.id,
+          packageId: pkg.id,
+          type: 'AD_BOOST_PURCHASE',
+        },
+      });
+
+      return { success: true, url: session.url };
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new InternalServerErrorException(
+        'Failed to initiate boost payment',
+      );
+    }
+  }
+
+  // 2. Get All Boost History (Admin)
+  async getAllBoostHistory() {
+    return {
+      success: true,
+      data: await this.prisma.adBoost.findMany({
+        include: {
+          seller: { select: { email: true, firstName: true, lastName: true } },
+          ad: { select: { title: true } },
+          package: true,
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+    };
+  }
+
+  // 3. Get User Specific Boost History (Seller)
+  async getUserBoostHistory(userId: string) {
+    return {
+      success: true,
+      data: await this.prisma.adBoost.findMany({
+        where: { sellerId: userId },
+        include: { ad: { select: { title: true } }, package: true },
+        orderBy: { createdAt: 'desc' },
+      }),
+    };
   }
 }

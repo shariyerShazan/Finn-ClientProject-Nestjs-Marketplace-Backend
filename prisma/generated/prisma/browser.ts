@@ -97,3 +97,13 @@ export type Subscription = Prisma.SubscriptionModel
  * 
  */
 export type Notification = Prisma.NotificationModel
+/**
+ * Model AdBoostPackage
+ * 
+ */
+export type AdBoostPackage = Prisma.AdBoostPackageModel
+/**
+ * Model AdBoost
+ * 
+ */
+export type AdBoost = Prisma.AdBoostModel
