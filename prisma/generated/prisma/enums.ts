@@ -87,3 +87,20 @@ export const NotificationType = {
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
+export const BoostType = {
+  BASIC: 'BASIC',
+  PREMIUM: 'PREMIUM',
+  ULTRA: 'ULTRA'
+} as const
+
+export type BoostType = (typeof BoostType)[keyof typeof BoostType]
+
+
+export const BoostStatus = {
+  ACTIVE: 'ACTIVE',
+  EXPIRED: 'EXPIRED'
+} as const
+
+export type BoostStatus = (typeof BoostStatus)[keyof typeof BoostStatus]

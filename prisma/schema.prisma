@@ -62,6 +62,8 @@ model Auth {
 
   notifications  Notification[] @relation("UserNotifications")
 
+  boosts         AdBoost[] @relation("SellerBoosts")
+
   conversations   Participant[]
 
   reports Report[] @relation("UserReports")
@@ -182,6 +184,9 @@ model Ad {
   subCategoryId String
 
   notifications Notification[] @relation("AdNotifications")
+
+  boost          AdBoost?
+  isBoosted      Boolean   @default(false)
 
   bids          Bid[]
   comments       Comment[]
@@ -453,4 +458,52 @@ enum NotificationType {
   NEW_COMMENT
   NEW_REPLY
   NEW_MESSAGE
+}
+
+
+model AdBoostPackage {
+  id           String      @id @default(uuid())
+  name         String      // e.g., "Gold Boost"
+  description  String?
+  price        Float
+  durationDays Int         // How many days the boost lasts
+  type         BoostType   @default(BASIC)
+  isActive     Boolean     @default(true)
+  
+  boosts       AdBoost[]   // Relation to active boosts
+  
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model AdBoost {
+  id            String      @id @default(uuid())
+  status        BoostStatus @default(ACTIVE)
+  startDate     DateTime    @default(now())
+  endDate       DateTime
+  
+  ad            Ad          @relation(fields: [adId], references: [id], onDelete: Cascade)
+  adId          String      @unique 
+  
+  seller        Auth        @relation("SellerBoosts", fields: [sellerId], references: [id])
+  sellerId      String
+
+  // Link to the package purchased
+  package       AdBoostPackage @relation(fields: [packageId], references: [id])
+  packageId     String
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+
+enum BoostType {
+  BASIC      
+  PREMIUM    
+  ULTRA      
+}
+
+enum BoostStatus {
+  ACTIVE
+  EXPIRED
 }

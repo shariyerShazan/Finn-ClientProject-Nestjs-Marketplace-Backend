@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 
@@ -137,12 +140,9 @@
 //     }
 //   }
 // }
-
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable, BadRequestException } from '@nestjs/common';
 import Stripe from 'stripe';
 import { PrismaService } from '../prisma/prisma.service';
-import { AllMailService } from 'src/mail/all-mail.service';
 import { TranslationService } from 'src/translation/translation.service';
 
 @Injectable()
@@ -151,7 +151,6 @@ export class StripeWebhookService {
 
   constructor(
     private readonly prisma: PrismaService,
-    // private readonly allMailService: AllMailService,
     private readonly translationService: TranslationService,
   ) {
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -174,12 +173,71 @@ export class StripeWebhookService {
 
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session;
-      await this.activateSubscription(session);
+      const type = session.metadata?.type;
+
+      // Route to correct handler based on metadata type
+      if (type === 'SUBSCRIPTION_PURCHASE') {
+        await this.activateSubscription(session);
+      } else if (type === 'AD_BOOST_PURCHASE') {
+        await this.activateAdBoost(session);
+      }
     }
 
     return { received: true };
   }
 
+  // --- Ad Boost Activation Logic ---
+  private async activateAdBoost(session: Stripe.Checkout.Session) {
+    const { adId, packageId, sellerId, lang = 'en' } = session.metadata || {};
+    if (!adId || !packageId || !sellerId) return;
+
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        // 1. Get package details for duration
+        const pkg = await tx.adBoostPackage.findUnique({
+          where: { id: packageId },
+        });
+        if (!pkg) throw new Error('Boost Package not found');
+
+        // 2. Calculate end date
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + pkg.durationDays);
+
+        // 3. Create or Update the Boost record
+        await tx.adBoost.upsert({
+          where: { adId: adId },
+          update: {
+            packageId: pkg.id,
+            status: 'ACTIVE',
+            endDate: endDate,
+            startDate: new Date(),
+          },
+          create: {
+            adId: adId,
+            packageId: pkg.id,
+            sellerId: sellerId,
+            status: 'ACTIVE',
+            endDate: endDate,
+            startDate: new Date(),
+          },
+        });
+
+        // 4. Update the Ad flag for fast filtering
+        await tx.ad.update({
+          where: { id: adId },
+          data: { isBoosted: true },
+        });
+      });
+
+      console.log(
+        `Ad ${adId} successfully boosted via Stripe Session ${session.id}`,
+      );
+    } catch (error) {
+      console.error('Ad Boost Webhook Error:', error);
+    }
+  }
+
+  // --- Existing Subscription Logic ---
   private async activateSubscription(session: Stripe.Checkout.Session) {
     const { planId, sellerId, type, lang = 'en' } = session.metadata || {};
     if (type !== 'SUBSCRIPTION_PURCHASE' || !planId || !sellerId) return;
@@ -245,18 +303,9 @@ export class StripeWebhookService {
 
         return { seller, newPlan, subscription };
       });
-      if (result) {
-        const { seller, newPlan } = result;
-        const subject = await this.translationService.translate(
-          'Subscription Activated!',
-          lang,
-        );
-        const body = await this.translationService.translate(
-          `Your ${newPlan.name} plan is now active. You have ${newPlan.postLimit} post limits added.`,
-          lang,
-        );
 
-        console.log(`Sending email to ${seller.email} in ${lang} language...`);
+      if (result) {
+        console.log(`Subscription updated for ${result.seller.email}`);
       }
     } catch (error) {
       console.error('Webhook Merging Error:', error);

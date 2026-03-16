@@ -27,6 +27,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
 import { TranslationService } from './translation/translation.service';
 import { TranslationModule } from './translation/translation.module';
 import { NotificationModule } from './notification/notification.module';
+import { AdBoostModule } from './ad-boost/ad-boost.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { NotificationModule } from './notification/notification.module';
     SubscriptionModule,
     TranslationModule,
     NotificationModule,
+    AdBoostModule,
     // SellerBankModule,
   ],
   controllers: [AppController],

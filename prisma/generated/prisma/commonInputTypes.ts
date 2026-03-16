@@ -416,6 +416,40 @@ export type EnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumNotificationTypeFilter<$PrismaModel>
 }
 
+export type EnumBoostTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.BoostType | Prisma.EnumBoostTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.BoostType[] | Prisma.ListEnumBoostTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BoostType[] | Prisma.ListEnumBoostTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBoostTypeFilter<$PrismaModel> | $Enums.BoostType
+}
+
+export type EnumBoostTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BoostType | Prisma.EnumBoostTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.BoostType[] | Prisma.ListEnumBoostTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BoostType[] | Prisma.ListEnumBoostTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBoostTypeWithAggregatesFilter<$PrismaModel> | $Enums.BoostType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBoostTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBoostTypeFilter<$PrismaModel>
+}
+
+export type EnumBoostStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.BoostStatus | Prisma.EnumBoostStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BoostStatus[] | Prisma.ListEnumBoostStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BoostStatus[] | Prisma.ListEnumBoostStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBoostStatusFilter<$PrismaModel> | $Enums.BoostStatus
+}
+
+export type EnumBoostStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BoostStatus | Prisma.EnumBoostStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BoostStatus[] | Prisma.ListEnumBoostStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BoostStatus[] | Prisma.ListEnumBoostStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBoostStatusWithAggregatesFilter<$PrismaModel> | $Enums.BoostStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBoostStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBoostStatusFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -791,6 +825,40 @@ export type NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel = never>
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumNotificationTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumNotificationTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumBoostTypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.BoostType | Prisma.EnumBoostTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.BoostType[] | Prisma.ListEnumBoostTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BoostType[] | Prisma.ListEnumBoostTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBoostTypeFilter<$PrismaModel> | $Enums.BoostType
+}
+
+export type NestedEnumBoostTypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BoostType | Prisma.EnumBoostTypeFieldRefInput<$PrismaModel>
+  in?: $Enums.BoostType[] | Prisma.ListEnumBoostTypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BoostType[] | Prisma.ListEnumBoostTypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBoostTypeWithAggregatesFilter<$PrismaModel> | $Enums.BoostType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBoostTypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBoostTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumBoostStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.BoostStatus | Prisma.EnumBoostStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BoostStatus[] | Prisma.ListEnumBoostStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BoostStatus[] | Prisma.ListEnumBoostStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBoostStatusFilter<$PrismaModel> | $Enums.BoostStatus
+}
+
+export type NestedEnumBoostStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.BoostStatus | Prisma.EnumBoostStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.BoostStatus[] | Prisma.ListEnumBoostStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.BoostStatus[] | Prisma.ListEnumBoostStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumBoostStatusWithAggregatesFilter<$PrismaModel> | $Enums.BoostStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumBoostStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumBoostStatusFilter<$PrismaModel>
 }
 
 

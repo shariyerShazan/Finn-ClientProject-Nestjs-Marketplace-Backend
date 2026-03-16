@@ -399,7 +399,9 @@ export const ModelName = {
   Message: 'Message',
   SubscriptionPlan: 'SubscriptionPlan',
   Subscription: 'Subscription',
-  Notification: 'Notification'
+  Notification: 'Notification',
+  AdBoostPackage: 'AdBoostPackage',
+  AdBoost: 'AdBoost'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -415,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "auth" | "sellerProfile" | "category" | "subCategory" | "ad" | "report" | "comment" | "adImage" | "bid" | "payment" | "conversation" | "participant" | "message" | "subscriptionPlan" | "subscription" | "notification"
+    modelProps: "auth" | "sellerProfile" | "category" | "subCategory" | "ad" | "report" | "comment" | "adImage" | "bid" | "payment" | "conversation" | "participant" | "message" | "subscriptionPlan" | "subscription" | "notification" | "adBoostPackage" | "adBoost"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1603,6 +1605,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AdBoostPackage: {
+      payload: Prisma.$AdBoostPackagePayload<ExtArgs>
+      fields: Prisma.AdBoostPackageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdBoostPackageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPackagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdBoostPackageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPackagePayload>
+        }
+        findFirst: {
+          args: Prisma.AdBoostPackageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPackagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdBoostPackageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPackagePayload>
+        }
+        findMany: {
+          args: Prisma.AdBoostPackageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPackagePayload>[]
+        }
+        create: {
+          args: Prisma.AdBoostPackageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPackagePayload>
+        }
+        createMany: {
+          args: Prisma.AdBoostPackageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdBoostPackageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPackagePayload>[]
+        }
+        delete: {
+          args: Prisma.AdBoostPackageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPackagePayload>
+        }
+        update: {
+          args: Prisma.AdBoostPackageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPackagePayload>
+        }
+        deleteMany: {
+          args: Prisma.AdBoostPackageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdBoostPackageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdBoostPackageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPackagePayload>[]
+        }
+        upsert: {
+          args: Prisma.AdBoostPackageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPackagePayload>
+        }
+        aggregate: {
+          args: Prisma.AdBoostPackageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdBoostPackage>
+        }
+        groupBy: {
+          args: Prisma.AdBoostPackageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdBoostPackageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdBoostPackageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdBoostPackageCountAggregateOutputType> | number
+        }
+      }
+    }
+    AdBoost: {
+      payload: Prisma.$AdBoostPayload<ExtArgs>
+      fields: Prisma.AdBoostFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdBoostFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdBoostFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPayload>
+        }
+        findFirst: {
+          args: Prisma.AdBoostFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdBoostFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPayload>
+        }
+        findMany: {
+          args: Prisma.AdBoostFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPayload>[]
+        }
+        create: {
+          args: Prisma.AdBoostCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPayload>
+        }
+        createMany: {
+          args: Prisma.AdBoostCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdBoostCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPayload>[]
+        }
+        delete: {
+          args: Prisma.AdBoostDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPayload>
+        }
+        update: {
+          args: Prisma.AdBoostUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPayload>
+        }
+        deleteMany: {
+          args: Prisma.AdBoostDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdBoostUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdBoostUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPayload>[]
+        }
+        upsert: {
+          args: Prisma.AdBoostUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdBoostPayload>
+        }
+        aggregate: {
+          args: Prisma.AdBoostAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdBoost>
+        }
+        groupBy: {
+          args: Prisma.AdBoostGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdBoostGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdBoostCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdBoostCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1737,6 +1887,7 @@ export const AdScalarFieldEnum = {
   viewerIds: 'viewerIds',
   categoryId: 'categoryId',
   subCategoryId: 'subCategoryId',
+  isBoosted: 'isBoosted',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1887,6 +2038,36 @@ export const NotificationScalarFieldEnum = {
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const AdBoostPackageScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  price: 'price',
+  durationDays: 'durationDays',
+  type: 'type',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdBoostPackageScalarFieldEnum = (typeof AdBoostPackageScalarFieldEnum)[keyof typeof AdBoostPackageScalarFieldEnum]
+
+
+export const AdBoostScalarFieldEnum = {
+  id: 'id',
+  status: 'status',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  adId: 'adId',
+  sellerId: 'sellerId',
+  packageId: 'packageId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AdBoostScalarFieldEnum = (typeof AdBoostScalarFieldEnum)[keyof typeof AdBoostScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2124,6 +2305,34 @@ export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<
 export type ListEnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType[]'>
     
 
+
+/**
+ * Reference to a field of type 'BoostType'
+ */
+export type EnumBoostTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BoostType'>
+    
+
+
+/**
+ * Reference to a field of type 'BoostType[]'
+ */
+export type ListEnumBoostTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BoostType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'BoostStatus'
+ */
+export type EnumBoostStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BoostStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'BoostStatus[]'
+ */
+export type ListEnumBoostStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BoostStatus[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -2235,6 +2444,8 @@ export type GlobalOmitConfig = {
   subscriptionPlan?: Prisma.SubscriptionPlanOmit
   subscription?: Prisma.SubscriptionOmit
   notification?: Prisma.NotificationOmit
+  adBoostPackage?: Prisma.AdBoostPackageOmit
+  adBoost?: Prisma.AdBoostOmit
 }
 
 /* Types for Logging */

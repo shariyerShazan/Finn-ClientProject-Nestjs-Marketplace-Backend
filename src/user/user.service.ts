@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
@@ -206,6 +208,13 @@ export class UserService {
           category: { select: { name: true } },
           images: { select: { url: true } },
           _count: { select: { bids: true } },
+          boost: {
+            include: {
+              package: {
+                select: { name: true, type: true },
+              },
+            },
+          },
         },
         orderBy: { createdAt: 'desc' },
       }),
@@ -220,11 +229,22 @@ export class UserService {
         ),
       ),
     );
+    const finalData = translatedAds.map((ad: any) => ({
+      ...ad,
+      boostInfo: ad.boost
+        ? {
+            endDate: ad.boost.endDate,
+            packageName: ad.boost.package?.name,
+            type: ad.boost.package?.type,
+            status: ad.boost.status,
+          }
+        : null,
+    }));
 
     return {
       success: true,
       meta: { total, page, lastPage: Math.ceil(total / limit) },
-      data: translatedAds,
+      data: finalData,
     };
   }
 
