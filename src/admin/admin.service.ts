@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
@@ -541,26 +542,49 @@ export class AdminService {
         totalAds,
         totalSoldAds,
         paymentStats,
-        subscriptions,
+        subscriptionStats,
+        activeBoostsWithPrice,
       ] = await Promise.all([
         this.prisma.auth.count({ where: { isSeller: false, role: 'USER' } }),
         this.prisma.auth.count({ where: { isSeller: true } }),
+
         this.prisma.ad.count(),
         this.prisma.ad.count({ where: { isSold: true } }),
+
         this.prisma.payment.aggregate({
           where: { status: 'COMPLETED' },
           _sum: { totalAmount: true, adminFee: true, sellerAmount: true },
         }),
-        this.prisma.subscription.findMany({
-          where: { paymentStatus: 'COMPLETED' },
-          include: { plan: { select: { price: true } } },
+
+        this.prisma.subscription.aggregate({
+          where: { status: 'ACTIVE' },
+          _sum: { totalSpent: true },
+          _count: { id: true },
+        }),
+        this.prisma.adBoost.findMany({
+          where: { status: 'ACTIVE' },
+          include: {
+            package: {
+              select: { price: true },
+            },
+          },
         }),
       ]);
 
-      const totalSubscriptionRevenue = subscriptions.reduce(
-        (sum, sub) => sum + (sub.plan?.price || 0),
+      const totalBoostRevenue = activeBoostsWithPrice.reduce(
+        (sum, boost) => sum + (boost.package?.price || 0),
         0,
       );
+      const totalSubscriptionRevenue = subscriptionStats._sum.totalSpent || 0;
+      const totalGeneralRevenue = paymentStats._sum.totalAmount || 0;
+
+      const totalPlatformRevenue =
+        totalGeneralRevenue + totalSubscriptionRevenue + totalBoostRevenue;
+
+      const netProfit =
+        (paymentStats._sum.adminFee || 0) +
+        totalSubscriptionRevenue +
+        totalBoostRevenue;
 
       return {
         success: true,
@@ -571,20 +595,24 @@ export class AdminService {
             totalAds,
             totalSoldAds,
             conversionRate:
-              totalAds > 0 ? ((totalSoldAds / totalAds) * 100).toFixed(2) : 0,
+              totalAds > 0 ? ((totalSoldAds / totalAds) * 100).toFixed(2) : '0',
           },
           financials: {
-            totalRevenue:
-              (paymentStats._sum.totalAmount || 0) + totalSubscriptionRevenue,
-            netProfit:
-              (paymentStats._sum.adminFee || 0) + totalSubscriptionRevenue,
+            totalRevenue: totalPlatformRevenue,
+            netProfit: netProfit,
             sellerPayouts: paymentStats._sum.sellerAmount || 0,
+
+            // ব্রেকডাউন সেকশন
             subscriptionRevenue: totalSubscriptionRevenue,
-            totalSubscriptionsSold: subscriptions.length,
+            totalSubscriptionsSold: subscriptionStats._count.id,
+
+            boostRevenue: totalBoostRevenue,
+            totalBoostsActive: activeBoostsWithPrice.length,
           },
         },
       };
     } catch (error) {
+      console.error('Admin Stats Error:', error);
       throw new InternalServerErrorException('Failed to generate statistics');
     }
   }
