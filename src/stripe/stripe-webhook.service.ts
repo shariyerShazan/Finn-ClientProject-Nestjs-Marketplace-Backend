@@ -239,23 +239,16 @@ export class StripeWebhookService {
 
   // --- Existing Subscription Logic ---
   private async activateSubscription(session: Stripe.Checkout.Session) {
-    const { planId, sellerId, type, lang = 'en' } = session.metadata || {};
+    const { planId, sellerId, type } = session.metadata || {};
     if (type !== 'SUBSCRIPTION_PURCHASE' || !planId || !sellerId) return;
 
     try {
-      const result = await this.prisma.$transaction(async (tx) => {
+      await this.prisma.$transaction(async (tx) => {
         const newPlan = await tx.subscriptionPlan.findUnique({
           where: { id: planId },
         });
 
         if (!newPlan) throw new Error('Plan not found');
-
-        const seller = await tx.auth.findUnique({
-          where: { id: sellerId },
-          select: { email: true, firstName: true },
-        });
-
-        if (!seller) throw new Error('Seller not found');
 
         const currentSub = await tx.subscription.findUnique({
           where: { sellerId: sellerId },
@@ -265,6 +258,10 @@ export class StripeWebhookService {
         let finalEndDate: Date;
         let finalTotalLimit: number;
 
+        const paidAmount = session.amount_total
+          ? session.amount_total / 100
+          : newPlan.price;
+
         if (
           currentSub &&
           currentSub.status === 'ACTIVE' &&
@@ -272,6 +269,7 @@ export class StripeWebhookService {
         ) {
           finalEndDate = new Date(currentSub.endDate);
           finalEndDate.setDate(finalEndDate.getDate() + newPlan.durationDays);
+
           finalTotalLimit = currentSub.totalLimit + newPlan.postLimit;
         } else {
           finalEndDate = new Date();
@@ -279,12 +277,16 @@ export class StripeWebhookService {
           finalTotalLimit = newPlan.postLimit;
         }
 
-        const subscription = await tx.subscription.upsert({
+        // ৩. Upsert logic with totalSpent increment
+        await tx.subscription.upsert({
           where: { sellerId: sellerId },
           update: {
             planId: newPlan.id,
             endDate: finalEndDate,
             totalLimit: finalTotalLimit,
+            totalSpent: {
+              increment: paidAmount,
+            },
             status: 'ACTIVE',
             paymentStatus: 'COMPLETED',
             transactionId: session.id,
@@ -295,18 +297,17 @@ export class StripeWebhookService {
             startDate: today,
             endDate: finalEndDate,
             totalLimit: finalTotalLimit,
+            totalSpent: paidAmount,
             status: 'ACTIVE',
             paymentStatus: 'COMPLETED',
             transactionId: session.id,
           },
         });
-
-        return { seller, newPlan, subscription };
       });
 
-      if (result) {
-        console.log(`Subscription updated for ${result.seller.email}`);
-      }
+      console.log(
+        `Successfully updated totalSpent and limits for seller: ${sellerId}`,
+      );
     } catch (error) {
       console.error('Webhook Merging Error:', error);
     }

@@ -280,8 +280,8 @@ export class PaymentService {
           },
         ],
         mode: 'payment',
-        success_url: `${process.env.FRONTEND_URL}/seller/dashboard/my-ads?status=success`,
-        cancel_url: `${process.env.FRONTEND_URL}/seller/dashboard/my-ads?status=cancel`,
+        success_url: `${process.env.FRONTEND_URL}/seller/dashboard/all-ads?status=success`,
+        cancel_url: `${process.env.FRONTEND_URL}/seller/dashboard/all-ads?status=cancel`,
         metadata: {
           sellerId: userId,
           adId: ad.id,

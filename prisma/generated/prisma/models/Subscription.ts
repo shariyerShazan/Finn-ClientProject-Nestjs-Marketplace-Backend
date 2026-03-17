@@ -27,10 +27,12 @@ export type AggregateSubscription = {
 }
 
 export type SubscriptionAvgAggregateOutputType = {
+  totalSpent: number | null
   totalLimit: number | null
 }
 
 export type SubscriptionSumAggregateOutputType = {
+  totalSpent: number | null
   totalLimit: number | null
 }
 
@@ -38,6 +40,7 @@ export type SubscriptionMinAggregateOutputType = {
   id: string | null
   sellerId: string | null
   planId: string | null
+  totalSpent: number | null
   startDate: Date | null
   endDate: Date | null
   totalLimit: number | null
@@ -52,6 +55,7 @@ export type SubscriptionMaxAggregateOutputType = {
   id: string | null
   sellerId: string | null
   planId: string | null
+  totalSpent: number | null
   startDate: Date | null
   endDate: Date | null
   totalLimit: number | null
@@ -66,6 +70,7 @@ export type SubscriptionCountAggregateOutputType = {
   id: number
   sellerId: number
   planId: number
+  totalSpent: number
   startDate: number
   endDate: number
   usedAdIds: number
@@ -80,10 +85,12 @@ export type SubscriptionCountAggregateOutputType = {
 
 
 export type SubscriptionAvgAggregateInputType = {
+  totalSpent?: true
   totalLimit?: true
 }
 
 export type SubscriptionSumAggregateInputType = {
+  totalSpent?: true
   totalLimit?: true
 }
 
@@ -91,6 +98,7 @@ export type SubscriptionMinAggregateInputType = {
   id?: true
   sellerId?: true
   planId?: true
+  totalSpent?: true
   startDate?: true
   endDate?: true
   totalLimit?: true
@@ -105,6 +113,7 @@ export type SubscriptionMaxAggregateInputType = {
   id?: true
   sellerId?: true
   planId?: true
+  totalSpent?: true
   startDate?: true
   endDate?: true
   totalLimit?: true
@@ -119,6 +128,7 @@ export type SubscriptionCountAggregateInputType = {
   id?: true
   sellerId?: true
   planId?: true
+  totalSpent?: true
   startDate?: true
   endDate?: true
   usedAdIds?: true
@@ -221,6 +231,7 @@ export type SubscriptionGroupByOutputType = {
   id: string
   sellerId: string
   planId: string
+  totalSpent: number
   startDate: Date
   endDate: Date
   usedAdIds: string[]
@@ -259,6 +270,7 @@ export type SubscriptionWhereInput = {
   id?: Prisma.StringFilter<"Subscription"> | string
   sellerId?: Prisma.StringFilter<"Subscription"> | string
   planId?: Prisma.StringFilter<"Subscription"> | string
+  totalSpent?: Prisma.FloatFilter<"Subscription"> | number
   startDate?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   usedAdIds?: Prisma.StringNullableListFilter<"Subscription">
@@ -276,6 +288,7 @@ export type SubscriptionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   sellerId?: Prisma.SortOrder
   planId?: Prisma.SortOrder
+  totalSpent?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   usedAdIds?: Prisma.SortOrder
@@ -296,6 +309,7 @@ export type SubscriptionWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.SubscriptionWhereInput[]
   NOT?: Prisma.SubscriptionWhereInput | Prisma.SubscriptionWhereInput[]
   planId?: Prisma.StringFilter<"Subscription"> | string
+  totalSpent?: Prisma.FloatFilter<"Subscription"> | number
   startDate?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   usedAdIds?: Prisma.StringNullableListFilter<"Subscription">
@@ -313,6 +327,7 @@ export type SubscriptionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   sellerId?: Prisma.SortOrder
   planId?: Prisma.SortOrder
+  totalSpent?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   usedAdIds?: Prisma.SortOrder
@@ -336,6 +351,7 @@ export type SubscriptionScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Subscription"> | string
   sellerId?: Prisma.StringWithAggregatesFilter<"Subscription"> | string
   planId?: Prisma.StringWithAggregatesFilter<"Subscription"> | string
+  totalSpent?: Prisma.FloatWithAggregatesFilter<"Subscription"> | number
   startDate?: Prisma.DateTimeWithAggregatesFilter<"Subscription"> | Date | string
   endDate?: Prisma.DateTimeWithAggregatesFilter<"Subscription"> | Date | string
   usedAdIds?: Prisma.StringNullableListFilter<"Subscription">
@@ -349,6 +365,7 @@ export type SubscriptionScalarWhereWithAggregatesInput = {
 
 export type SubscriptionCreateInput = {
   id?: string
+  totalSpent?: number
   startDate?: Date | string
   endDate: Date | string
   usedAdIds?: Prisma.SubscriptionCreateusedAdIdsInput | string[]
@@ -366,6 +383,7 @@ export type SubscriptionUncheckedCreateInput = {
   id?: string
   sellerId: string
   planId: string
+  totalSpent?: number
   startDate?: Date | string
   endDate: Date | string
   usedAdIds?: Prisma.SubscriptionCreateusedAdIdsInput | string[]
@@ -379,6 +397,7 @@ export type SubscriptionUncheckedCreateInput = {
 
 export type SubscriptionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usedAdIds?: Prisma.SubscriptionUpdateusedAdIdsInput | string[]
@@ -396,6 +415,7 @@ export type SubscriptionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   sellerId?: Prisma.StringFieldUpdateOperationsInput | string
   planId?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usedAdIds?: Prisma.SubscriptionUpdateusedAdIdsInput | string[]
@@ -411,6 +431,7 @@ export type SubscriptionCreateManyInput = {
   id?: string
   sellerId: string
   planId: string
+  totalSpent?: number
   startDate?: Date | string
   endDate: Date | string
   usedAdIds?: Prisma.SubscriptionCreateusedAdIdsInput | string[]
@@ -424,6 +445,7 @@ export type SubscriptionCreateManyInput = {
 
 export type SubscriptionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usedAdIds?: Prisma.SubscriptionUpdateusedAdIdsInput | string[]
@@ -439,6 +461,7 @@ export type SubscriptionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   sellerId?: Prisma.StringFieldUpdateOperationsInput | string
   planId?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usedAdIds?: Prisma.SubscriptionUpdateusedAdIdsInput | string[]
@@ -469,6 +492,7 @@ export type SubscriptionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sellerId?: Prisma.SortOrder
   planId?: Prisma.SortOrder
+  totalSpent?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   usedAdIds?: Prisma.SortOrder
@@ -481,6 +505,7 @@ export type SubscriptionCountOrderByAggregateInput = {
 }
 
 export type SubscriptionAvgOrderByAggregateInput = {
+  totalSpent?: Prisma.SortOrder
   totalLimit?: Prisma.SortOrder
 }
 
@@ -488,6 +513,7 @@ export type SubscriptionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sellerId?: Prisma.SortOrder
   planId?: Prisma.SortOrder
+  totalSpent?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   totalLimit?: Prisma.SortOrder
@@ -502,6 +528,7 @@ export type SubscriptionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sellerId?: Prisma.SortOrder
   planId?: Prisma.SortOrder
+  totalSpent?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   totalLimit?: Prisma.SortOrder
@@ -513,6 +540,7 @@ export type SubscriptionMinOrderByAggregateInput = {
 }
 
 export type SubscriptionSumOrderByAggregateInput = {
+  totalSpent?: Prisma.SortOrder
   totalLimit?: Prisma.SortOrder
 }
 
@@ -605,6 +633,7 @@ export type EnumSubscriptionStatusFieldUpdateOperationsInput = {
 
 export type SubscriptionCreateWithoutSellerInput = {
   id?: string
+  totalSpent?: number
   startDate?: Date | string
   endDate: Date | string
   usedAdIds?: Prisma.SubscriptionCreateusedAdIdsInput | string[]
@@ -620,6 +649,7 @@ export type SubscriptionCreateWithoutSellerInput = {
 export type SubscriptionUncheckedCreateWithoutSellerInput = {
   id?: string
   planId: string
+  totalSpent?: number
   startDate?: Date | string
   endDate: Date | string
   usedAdIds?: Prisma.SubscriptionCreateusedAdIdsInput | string[]
@@ -649,6 +679,7 @@ export type SubscriptionUpdateToOneWithWhereWithoutSellerInput = {
 
 export type SubscriptionUpdateWithoutSellerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usedAdIds?: Prisma.SubscriptionUpdateusedAdIdsInput | string[]
@@ -664,6 +695,7 @@ export type SubscriptionUpdateWithoutSellerInput = {
 export type SubscriptionUncheckedUpdateWithoutSellerInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   planId?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usedAdIds?: Prisma.SubscriptionUpdateusedAdIdsInput | string[]
@@ -677,6 +709,7 @@ export type SubscriptionUncheckedUpdateWithoutSellerInput = {
 
 export type SubscriptionCreateWithoutPlanInput = {
   id?: string
+  totalSpent?: number
   startDate?: Date | string
   endDate: Date | string
   usedAdIds?: Prisma.SubscriptionCreateusedAdIdsInput | string[]
@@ -692,6 +725,7 @@ export type SubscriptionCreateWithoutPlanInput = {
 export type SubscriptionUncheckedCreateWithoutPlanInput = {
   id?: string
   sellerId: string
+  totalSpent?: number
   startDate?: Date | string
   endDate: Date | string
   usedAdIds?: Prisma.SubscriptionCreateusedAdIdsInput | string[]
@@ -736,6 +770,7 @@ export type SubscriptionScalarWhereInput = {
   id?: Prisma.StringFilter<"Subscription"> | string
   sellerId?: Prisma.StringFilter<"Subscription"> | string
   planId?: Prisma.StringFilter<"Subscription"> | string
+  totalSpent?: Prisma.FloatFilter<"Subscription"> | number
   startDate?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   endDate?: Prisma.DateTimeFilter<"Subscription"> | Date | string
   usedAdIds?: Prisma.StringNullableListFilter<"Subscription">
@@ -750,6 +785,7 @@ export type SubscriptionScalarWhereInput = {
 export type SubscriptionCreateManyPlanInput = {
   id?: string
   sellerId: string
+  totalSpent?: number
   startDate?: Date | string
   endDate: Date | string
   usedAdIds?: Prisma.SubscriptionCreateusedAdIdsInput | string[]
@@ -763,6 +799,7 @@ export type SubscriptionCreateManyPlanInput = {
 
 export type SubscriptionUpdateWithoutPlanInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usedAdIds?: Prisma.SubscriptionUpdateusedAdIdsInput | string[]
@@ -778,6 +815,7 @@ export type SubscriptionUpdateWithoutPlanInput = {
 export type SubscriptionUncheckedUpdateWithoutPlanInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   sellerId?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usedAdIds?: Prisma.SubscriptionUpdateusedAdIdsInput | string[]
@@ -792,6 +830,7 @@ export type SubscriptionUncheckedUpdateWithoutPlanInput = {
 export type SubscriptionUncheckedUpdateManyWithoutPlanInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   sellerId?: Prisma.StringFieldUpdateOperationsInput | string
+  totalSpent?: Prisma.FloatFieldUpdateOperationsInput | number
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   usedAdIds?: Prisma.SubscriptionUpdateusedAdIdsInput | string[]
@@ -809,6 +848,7 @@ export type SubscriptionSelect<ExtArgs extends runtime.Types.Extensions.Internal
   id?: boolean
   sellerId?: boolean
   planId?: boolean
+  totalSpent?: boolean
   startDate?: boolean
   endDate?: boolean
   usedAdIds?: boolean
@@ -826,6 +866,7 @@ export type SubscriptionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   sellerId?: boolean
   planId?: boolean
+  totalSpent?: boolean
   startDate?: boolean
   endDate?: boolean
   usedAdIds?: boolean
@@ -843,6 +884,7 @@ export type SubscriptionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   sellerId?: boolean
   planId?: boolean
+  totalSpent?: boolean
   startDate?: boolean
   endDate?: boolean
   usedAdIds?: boolean
@@ -860,6 +902,7 @@ export type SubscriptionSelectScalar = {
   id?: boolean
   sellerId?: boolean
   planId?: boolean
+  totalSpent?: boolean
   startDate?: boolean
   endDate?: boolean
   usedAdIds?: boolean
@@ -871,7 +914,7 @@ export type SubscriptionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SubscriptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sellerId" | "planId" | "startDate" | "endDate" | "usedAdIds" | "totalLimit" | "status" | "paymentStatus" | "transactionId" | "createdAt" | "updatedAt", ExtArgs["result"]["subscription"]>
+export type SubscriptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sellerId" | "planId" | "totalSpent" | "startDate" | "endDate" | "usedAdIds" | "totalLimit" | "status" | "paymentStatus" | "transactionId" | "createdAt" | "updatedAt", ExtArgs["result"]["subscription"]>
 export type SubscriptionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   seller?: boolean | Prisma.AuthDefaultArgs<ExtArgs>
   plan?: boolean | Prisma.SubscriptionPlanDefaultArgs<ExtArgs>
@@ -895,6 +938,7 @@ export type $SubscriptionPayload<ExtArgs extends runtime.Types.Extensions.Intern
     id: string
     sellerId: string
     planId: string
+    totalSpent: number
     startDate: Date
     endDate: Date
     usedAdIds: string[]
@@ -1332,6 +1376,7 @@ export interface SubscriptionFieldRefs {
   readonly id: Prisma.FieldRef<"Subscription", 'String'>
   readonly sellerId: Prisma.FieldRef<"Subscription", 'String'>
   readonly planId: Prisma.FieldRef<"Subscription", 'String'>
+  readonly totalSpent: Prisma.FieldRef<"Subscription", 'Float'>
   readonly startDate: Prisma.FieldRef<"Subscription", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"Subscription", 'DateTime'>
   readonly usedAdIds: Prisma.FieldRef<"Subscription", 'String[]'>

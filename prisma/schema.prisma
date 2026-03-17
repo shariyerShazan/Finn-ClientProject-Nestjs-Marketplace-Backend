@@ -408,7 +408,9 @@ model Subscription {
   seller             Auth             @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   planId             String
   plan               SubscriptionPlan @relation(fields: [planId], references: [id])
-  
+   
+   totalSpent         Float            @default(0)
+   
   startDate          DateTime         @default(now())
   endDate            DateTime      
   
