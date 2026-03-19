@@ -339,14 +339,21 @@ export class AddService {
         categoryId,
         subCategoryId,
         sortByPrice,
+        isBoosted,
         lang = 'en',
       } = query;
+
       const skip = (Number(page) - 1) * Number(limit);
+      const now = new Date();
+
       const where: any = {};
 
-      if (isSold !== undefined && isSold !== '')
+      // ✅ isSold filter
+      if (isSold !== undefined && isSold !== '') {
         where.isSold = isSold === 'true';
+      }
 
+      // ✅ search
       if (search && search.trim() !== '') {
         where.OR = [
           { title: { contains: search, mode: 'insensitive' } },
@@ -354,28 +361,37 @@ export class AddService {
         ];
       }
 
+      // ✅ category filter
       if (
         categoryId &&
         categoryId !== 'all' &&
         categoryId !== 'undefined' &&
         categoryId !== ''
-      )
+      ) {
         where.categoryId = categoryId;
+      }
+
+      // ✅ subCategory filter
       if (
         subCategoryId &&
         subCategoryId !== 'all' &&
         subCategoryId !== 'undefined' &&
         subCategoryId !== ''
-      )
+      ) {
         where.subCategoryId = subCategoryId;
+      }
 
-      const orderBy: any = [
-        { isBoosted: 'desc' },
-        sortByPrice
-          ? { price: sortByPrice as 'asc' | 'desc' }
-          : { createdAt: 'desc' },
-      ];
+      // ✅ boost filter (ONLY active boost)
+      if (isBoosted === 'true') {
+        where.boost = {
+          status: 'ACTIVE',
+          endDate: {
+            gt: now,
+          },
+        };
+      }
 
+      // ✅ DB query (no wrong sorting here)
       const [total, ads] = await Promise.all([
         this.prisma.ad.count({ where }),
         this.prisma.ad.findMany({
@@ -385,19 +401,51 @@ export class AddService {
             category: true,
             seller: true,
             boost: {
-              include: { package: { select: { name: true } } },
+              include: {
+                package: {
+                  select: { name: true },
+                },
+              },
             },
           },
-
-          orderBy,
           skip,
           take: Number(limit),
         }),
       ]);
 
-      // ট্রান্সলেশন: টাইটেল এবং ডেসক্রিপশন
+      // ✅ Add computed field (isActiveBoost)
+      const processedAds = ads.map((ad) => {
+        const isActiveBoost =
+          ad.boost &&
+          ad.boost.status === 'ACTIVE' &&
+          new Date(ad.boost.endDate) > now;
+
+        return {
+          ...ad,
+          isActiveBoost,
+        };
+      });
+
+      // ✅ Sorting (Active boost first)
+      processedAds.sort((a, b) => {
+        if (a.isActiveBoost && !b.isActiveBoost) return -1;
+        if (!a.isActiveBoost && b.isActiveBoost) return 1;
+
+        // তারপর price বা createdAt
+        if (sortByPrice) {
+          return sortByPrice === 'asc'
+            ? (a.price || 0) - (b.price || 0)
+            : (b.price || 0) - (a.price || 0);
+        }
+
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      });
+
+      // ✅ Translation
       const translatedAds = await this.translationService.translateData(
-        ads,
+        processedAds,
         ['title', 'description'],
         lang,
       );
