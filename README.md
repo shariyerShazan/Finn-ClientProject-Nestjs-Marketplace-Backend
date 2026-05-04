@@ -5,7 +5,7 @@
 
 A full-featured marketplace and auction platform backend built with NestJS and PostgreSQL. Shazan enables users to buy, sell, and auction products with secure payments, real-time messaging, and a comprehensive seller management system.
 
-## Features
+## Features 
 
 ### Core Functionality
 - **User Authentication** - Email/password authentication with JWT and OTP verification
