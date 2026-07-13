@@ -7,6 +7,7 @@
 A comprehensive, enterprise-ready marketplace and auction platform backend built with **NestJS**, **Prisma**, **PostgreSQL**, **Stripe**, and **Socket.io**. Finn enables dual listing models (fixed-price and time-based bidding), real-time user messaging, Stripe Connect seller integration, automatic platform fee splitting, and seller subscription memberships.
 
 ---
+## Features 
 
 ## ⚡ Core Features
 
