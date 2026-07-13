@@ -1,116 +1,109 @@
-# Shazan - Marketplace & Auction Platform
+# Finn Backend - Marketplace & Auction Platform
 
-**LiveLink: https://shazan-ad-marketplace-project.onrender.com**
-**Swagger: https://shazan-ad-marketplace-project.onrender.com/docs**
+**Live Link**: [Production Deployment](https://shazan-ad-marketplace-project.onrender.com)  
+**API Documentation (Swagger)**: [Swagger UI](https://shazan-ad-marketplace-project.onrender.com/docs)  
+*(Note: Deployed under the domain `shazan-ad-marketplace-project` for hosting, serving as the core API server for the Finn application).*
 
-A full-featured marketplace and auction platform backend built with NestJS and PostgreSQL. Shazan enables users to buy, sell, and auction products with secure payments, real-time messaging, and a comprehensive seller management system.
+A comprehensive, enterprise-ready marketplace and auction platform backend built with **NestJS**, **Prisma**, **PostgreSQL**, **Stripe**, and **Socket.io**. Finn enables dual listing models (fixed-price and time-based bidding), real-time user messaging, Stripe Connect seller integration, automatic platform fee splitting, and seller subscription memberships.
 
+---
 ## Features 
 
-### Core Functionality
-- **User Authentication** - Email/password authentication with JWT and OTP verification
-- **Marketplace Listings** - Create, update, and manage product listings (Fixed price & Auction)
-- **Auction System** - Time-based auctions with bidding functionality
-- **Payment Processing** - Stripe integration for secure transactions with platform fee splitting
-- **Seller Management** - Seller verification, Stripe account linking, and seller profiles
-- **Commenting & Reviews** - Thread-based comments on listings
-- **Real-time Messaging** - User-to-user messaging with conversation management
-- **Image Management** - Cloudinary integration for product image hosting
-- **Categorization** - Hierarchical category system with custom specification fields
+## ⚡ Core Features
 
-### User Roles
-- **User** - Can browse, purchase, bid, and message
-- **Seller** - Can list products and manage inventory
-- **Admin** - Platform management and seller verification
+*   **Secure Authentication**: JWT-based authentication with OTP verification using Gmail SMTP (Nodemailer).
+*   **Dual Price Model**: Set fixed prices or activate time-bound auctions (with support for start, end, base, and release pricing).
+*   **Real-time Messaging**: Socket.io-driven bi-directional messaging with conversation blocking, attachment handling, and unread counts.
+*   **Stripe Connect Integration**: Links sellers' Stripe accounts to process purchases with automatic 10% platform fee settlements and 90% payouts.
+*   **Subscribers & Boosts**: Subscription plans governing listings limits and premium packages (e.g. Gold Boost) to promote items.
+*   **Structured Feedback**: Threaded user reviews and comment branches on marketplace listings.
+*   **Geo-Tagging**: Geospatial coordinate tracking (latitude & longitude) for location-based listing searches.
+*   **API Exploration**: Interactive API documentation generated dynamically via Swagger.
 
-## Tech Stack
+---
 
-- **Backend**: NestJS
-- **Database**: PostgreSQL
-- **ORM**: Prisma
-- **Authentication**: JWT
-- **Payments**: Stripe
-- **File Storage**: Cloudinary
-- **Email**: Gmail SMTP
-- **Environment**: Node.js
+## 🛠️ Technology Stack
 
-## Project Structure
+*   **Framework**: [NestJS](https://nestjs.com/) (TypeScript)
+*   **Database**: [PostgreSQL](https://www.postgresql.org/)
+*   **ORM**: [Prisma ORM](https://www.prisma.io/)
+*   **Payments**: [Stripe SDK](https://stripe.com/)
+*   **Websockets**: [Socket.io](https://socket.io/) (Real-time gateway/polling)
+*   **Image Management**: [Cloudinary API](https://cloudinary.com/) (Multer Storage Integration)
+*   **Emailing**: [Nodemailer](https://nodemailer.com/)
+
+---
+
+## 📂 Project Structure
 
 ```
 ├── src/
-│   ├── auth/              # Authentication module
-│   ├── users/             # User management
-│   ├── sellers/           # Seller profiles
-│   ├── ads/               # Marketplace listings
-│   ├── bids/              # Bidding system
-│   ├── payments/          # Payment processing
-│   ├── messages/          # Messaging system
-│   ├── comments/          # Comments & reviews
-│   ├── categories/        # Category management
-│   └── common/            # Shared utilities
+│   ├── auth/              # JWT & Register/Login authentication module
+│   ├── users/             # User profiles and access security
+│   ├── sellers/           # Seller profiles, onboarding, and Stripe linking
+│   ├── ads/               # Listing management (Fixed/Auction models)
+│   ├── bids/              # Bids and highest-bid resolver for auctions
+│   ├── payments/          # Stripe checkout, webhook handler, and fee math
+│   ├── messages/          # Conversations and Message history
+│   ├── comments/          # Listing reviews and nested comment threads
+│   ├── categories/        # Categories & sub-categories (with custom specification schemas)
+│   ├── mail/              # Mail services (Nodemailer wrappers)
+│   └── common/            # Shared guards, decorators, exceptions, and utilities
 ├── prisma/
-│   └── schema.prisma      # Database schema
-├── .env                   # Environment variables
-└── package.json           # Dependencies
+│   ├── schema.prisma      # Main database schema file
+│   └── migrations/        # Automatic SQL migration history files
+├── docs.md/               # Detailed documentation guides
+└── package.json           # Modules, build scripts, and engine parameters
 ```
 
-## Getting Started
+---
 
-### Prerequisites
-- Node.js (v16 or higher)
-- PostgreSQL (v12 or higher)
-- npm or yarn
+## ⚙️ Getting Started
 
-### Installation
+### 1. Prerequisites
+Verify that you have these installed:
+*   [Node.js](https://nodejs.org/) (v16.0.0 or higher)
+*   [PostgreSQL](https://www.postgresql.org/) database server running
+*   [npm](https://www.npmjs.com/)
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd shazan
-   ```
+### 2. Install dependencies
+```bash
+npm install
+```
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+### 3. Environment Secrets Setup
+Copy the example file and configure it with your credentials:
+```bash
+cp .env.example .env
+# Edit .env with your system configurations.
+```
+*(Reference the [Environment Variables Guide](./docs.md/ENV.md) for details on setting up Stripe, Cloudinary, and Nodemailer secrets).*
 
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
-   ```
+### 4. Migrate the Database
+Initialize tables in your PostgreSQL database instance:
+```bash
+npx prisma migrate dev --name init
+```
 
-4. **Set up the database**
-   ```bash
-   npx prisma migrate dev --name init
-   ```
+### 5. Run the Server
+Start the server in Development mode with hot-reloading:
+```bash
+npm run start:dev
+```
+The server will start, checking endpoints on `http://localhost:3000`.
 
-5. **Start the development server**
-   ```bash
-   npm run start:dev
-   ```
+---
 
-The API will be available at `http://localhost:3000`
+## 📖 Sub-Documentation Guides
 
-## Documentation
+Additional backend development manuals are available in [docs.md](./docs.md/):
+*   📄 **[Setup Guide](./docs.md/SETUP.md)**: Detailed step-by-step local preparation guide.
+*   📄 **[Database Relationships](./docs.md/DATABASE.md)**: Prisma schema overview, database rules, and Entity-Relationship models.
+*   📄 **[Environment Variables](./docs.md/ENV.md)**: Details of all required keys (Stripe, Cloudinary, Nodemailer, etc.).
+*   📄 **[API Reference Documentation](./docs.md/API.md)**: Exhaustive JSON request/payload references for all REST routes.
+*   📄 **[Contributing Guidelines](./docs.md/CONTRIBUITION.md)**: Git conventions, branch naming structure, linting rules, and tests.
 
-- **[Setup Guide](./SETUP.md)** - Detailed setup and configuration instructions
-- **[Database Schema](./DATABASE.md)** - Complete database documentation
-- **[Environment Variables](./ENV.md)** - Environment configuration guide
-- **[API Endpoints](./API.md)** - API documentation and examples
+---
 
-## Environment Configuration
-
-See [ENV.md](./ENV.md) for detailed environment variable setup.
-
-## Database
-
-See [DATABASE.md](./DATABASE.md) for complete schema documentation and relationships.
-
-## Contributing
-
-Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for details on code standards and submission process.
-
-## License
-
-Proprietary - All rights reserved
+## ⚖️ License
+Proprietary - All rights reserved. Registered by Shariyer Shazan.
